@@ -1,16 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>benjaaa</title>
+    <title>Formulario</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>asd</h1>
-    <h2>pruebita</h2>
-    <h2>pruebita</h2>
-    <h2>pruebita 2</h2>
-    <h3>pruebita de verdad</h3>
-    <h4>pruebita ahora si real</h4>
+
+    <h2>Formulario</h2>
+
+    <form action="procesar.php" method="post">
+    <!-- Nombre -->
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+    <br><br>
+
+    <!-- Email -->
+    <label for="email">Correo:</label>
+    <input type="email" id="email" name="email" placeholder="ejemplo@mail.com" required>
+    <br><br>
+
+    <!-- Contraseña -->
+    <label for="pwd">Contraseña:</label>
+    <input type="password" id="pwd" name="pwd" required>
+    <br><br>
+
+    <!-- Opciones con radio -->
+    <label>Género:</label>
+    <input type="radio" id="masculino" name="genero" value="M">
+    <label for="masculino">Masculino</label>
+    <input type="radio" id="femenino" name="genero" value="F">
+    <label for="femenino">Femenino</label>
+    <br><br>
+
+    <!-- Checkbox -->
+    <input type="checkbox" id="terminos" required>
+    <label for="terminos">Acepto los términos y condiciones</label>
+    <br><br>
+
+    <!-- Botón -->
+    <button type="submit">Enviar</button>
+    </form>
+
+</body>
+</html>
+
 </body>
 </html>
