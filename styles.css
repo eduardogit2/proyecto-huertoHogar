@@ -1,0 +1,62 @@
+/* --- 1. IMPORTACIÓN DE FUENTES DE GOOGLE --- */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+/* --- 2. VARIABLES CSS GLOBALES (CUSTOM PROPERTIES) --- */
+:root {
+  --color-fondo: #F7F7F7;
+  --color-acento-verde: #2E8B57;
+  --color-acento-amarillo: #FFD700;
+  --color-acento-marron: #8B4513;
+  --color-texto-principal: #333333;
+  --color-texto-secundario: #666666;
+  --fuente-principal: 'Montserrat', sans-serif;
+  --fuente-encabezados: 'Playfair Display', serif;
+}
+
+/* --- 3. ESTILOS GENERALES Y SOBRESCRITURA DE BOOTSTRAP --- */
+body {
+  background-color: var(--color-fondo);
+  font-family: var(--fuente-principal);
+  color: var(--color-texto-principal);
+}
+
+/* Sobrescribir tipografía de los encabezados de Bootstrap */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--fuente-encabezados);
+  color: var(--color-acento-marron);
+}
+
+/* Personalizar los botones primarios de Bootstrap */
+.btn-primary {
+  background-color: var(--color-acento-verde);
+  border-color: var(--color-acento-verde);
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background-color: #256d44; /* Un verde un poco más oscuro */
+  border-color: #256d44;
+}
+
+/* Personalizar los enlaces */
+a {
+  color: var(--color-acento-verde);
+}
+
+a:hover {
+  color: #256d44;
+}
+
+/* Clase para descripciones y texto secundario */
+.text-muted {
+  color: var(--color-texto-secundario) !important; /* Usamos !important para asegurar la sobrescritura */
+}
+
+/* Clase para resaltar ofertas */
+.resaltado-oferta {
+  background-color: var(--color-acento-amarillo);
+  color: var(--color-texto-principal);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
