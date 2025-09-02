@@ -1,62 +1,74 @@
-/* --- 1. IMPORTACIÓN DE FUENTES DE GOOGLE --- */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap');
-
-/* --- 2. VARIABLES CSS GLOBALES (CUSTOM PROPERTIES) --- */
-:root {
-  --color-fondo: #F7F7F7;
-  --color-acento-verde: #2E8B57;
-  --color-acento-amarillo: #FFD700;
-  --color-acento-marron: #8B4513;
-  --color-texto-principal: #333333;
-  --color-texto-secundario: #666666;
-  --fuente-principal: 'Montserrat', sans-serif;
-  --fuente-encabezados: 'Playfair Display', serif;
+:root{
+  --primary-green: #59b8b0;   /* cambia aquí el color principal si quieres */
+  --accent: #FFD700;
+  --card-shadow: rgba(46, 139, 87, 0.12);
 }
 
-/* --- 3. ESTILOS GENERALES Y SOBRESCRITURA DE BOOTSTRAP --- */
-body {
-  background-color: var(--color-fondo);
-  font-family: var(--fuente-principal);
-  color: var(--color-texto-principal);
+/* Reset/estética básica */
+body{
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #db8b8b;
+  color: #222;
 }
 
-/* Sobrescribir tipografía de los encabezados de Bootstrap */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--fuente-encabezados);
-  color: var(--color-acento-marron);
+/* Logo pequeño */
+.logo-img{
+  width:36px;
+  height:36px;
+  object-fit:cover;
+  border-radius:6px;
 }
 
-/* Personalizar los botones primarios de Bootstrap */
-.btn-primary {
-  background-color: var(--color-acento-verde);
-  border-color: var(--color-acento-verde);
-  font-weight: 700;
+/* HERO */
+.hero{
+  background-image: url('/img/hero.jpg'); /* reemplaza por img/hero.jpg */
+  background-size: cover;
+  background-position: center;
+  min-height: 350px;
+  display:flex;
+  align-items:center;
+}
+.hero-overlay{
+  width:100%;
+  background: rgba(0,0,0,0.35);
+  padding: 60px 0;
+}
+.hero-content { max-width:900px; margin:auto; }
+
+/* Sidebar sticky (queda fijo en pantallas grandes al hacer scroll) */
+.sticky-sidebar{
+  position: sticky;
+  top: 20px;
 }
 
-.btn-primary:hover {
-  background-color: #256d44; /* Un verde un poco más oscuro */
-  border-color: #256d44;
+/* Cards de producto */
+.product-card{
+  transition: transform .12s ease, box-shadow .12s ease;
+  border: none;
+  box-shadow: 0 6px 18px var(--card-shadow);
+  border-radius: 8px;
+}
+.product-card:hover{
+  transform: translateY(-6px);
 }
 
-/* Personalizar los enlaces */
-a {
-  color: var(--color-acento-verde);
+/* Imagen de la tarjeta */
+.product-img{
+  width:100%;
+  height:160px;
+  object-fit: cover;
+  border-top-left-radius:8px;
+  border-top-right-radius:8px;
 }
 
-a:hover {
-  color: #256d44;
+/* Precio destacado */
+.price{
+  font-weight:700;
+  color: var(--primary-green);
 }
 
-/* Clase para descripciones y texto secundario */
-.text-muted {
-  color: var(--color-texto-secundario) !important; /* Usamos !important para asegurar la sobrescritura */
-}
-
-/* Clase para resaltar ofertas */
-.resaltado-oferta {
-  background-color: var(--color-acento-amarillo);
-  color: var(--color-texto-principal);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.9em;
+/* Pequeños ajustes responsive */
+@media (max-width: 767px){
+  .hero { min-height: 220px; }
+  .product-img{ height:140px; }
 }
