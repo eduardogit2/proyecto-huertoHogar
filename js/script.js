@@ -7,7 +7,9 @@ const products = [
     { id: 5, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod5.jpg" },
     { id: 6, name: "Pan Integral", price: 3500, category: "Panadería", img: "img/prod6.jpg" },
     { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg" },
-    { id: 8, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod8.jpg" }
+    { id: 8, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod8.jpg"},
+    { id: 8, name: "Pimienta Tricolores", price: 700, category: "Orgánicos", img: "img/prod9.jpg"
+    }
 ];
 
 const productsContainer = document.getElementById('productsContainer');
