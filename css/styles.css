@@ -1,74 +1,175 @@
-:root{
-  --primary-green: #59b8b0;   /* cambia aquí el color principal si quieres */
-  --accent: #FFD700;
-  --card-shadow: rgba(46, 139, 87, 0.12);
+:root {
+  /* Colores de la paleta de HuertoHogar */
+  --color-primary: #2E8B57;        /* Verde Esmeralda para acciones principales */
+  --color-secondary: #8B4513;      /* Marrón para títulos y acentos rústicos */
+  --color-accent: #2E8B57;         /* Amarillo Mostaza para resaltar */
+  --color-text-main: #fffdfd;      /* Gris oscuro para texto principal */
+  --color-text-secondary: #666666; /* Gris medio para texto secundario */
+  --color-bg-main: #F7F7F7;        /* Blanco suave para fondo principal */
+  --color-green-fresh: #6FBF73;    /* Verde fresco para botones de acción */
+  --color-beige-soft: #FAF3E0;     /* Beige para secciones alternas */
+  --shadow-card: rgba(46, 139, 87, 0.12); /* Sombra suave para tarjetas */
 }
 
-/* Reset/estética básica */
-body{
-  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: #6fcf7f;
-  color: #222;
+/* =======================
+  Estilos globales
+======================= */
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: var(--color-bg-main); /* Color base */
+  background-image: url("../img/fondo3.jpg"); /* Ruta de tu textura */
+  background-repeat: repeat; /* Se repite para cubrir toda la página */
+  background-size: auto;
+  background-attachment: fixed;
+  color: var(--color-text-main);
 }
 
-/* Logo pequeño */
-.logo-img{
-  width:36px;
-  height:36px;
-  object-fit:cover;
-  border-radius:6px;
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display", serif;
+  color: var(--color-secondary);
 }
 
-/* HERO */
-.hero{
-  background-image: url('/img/hero.jpg'); /* reemplaza por img/hero.jpg */
+/* =======================
+  Diseño de la página
+======================= */
+.logo-img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.navbar {
+  background: var(--color-bg-main);
+}
+
+.nav-link {
+  color: var(--color-text-main);
+  font-weight: 500;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--color-primary);
+}
+
+.hero {
+  background-image: url('/img/hero.jpg');
   background-size: cover;
   background-position: center;
-  min-height: 240px;
-  display:flex;
-  align-items:center;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
 }
-.hero-overlay{
-  width:100%;
-  background: rgba(0,0,0,0.35);
-  padding: 20px 0;
-}
-.hero-content { max-width:900px; margin:auto; }
 
-/* Sidebar sticky (queda fijo en pantallas grandes al hacer scroll) */
-.sticky-sidebar{
+.hero-overlay {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 40px 0;
+}
+
+.hero-content { 
+  max-width: 900px; 
+  margin: auto; 
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+
+/* =======================
+  Tarjetas y componentes
+======================= */
+.sticky-sidebar {
   position: sticky;
   top: 20px;
 }
 
-/* Cards de producto */
-.product-card{
+.list-group-item.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.product-card {
   transition: transform .12s ease, box-shadow .12s ease;
   border: none;
-  box-shadow: 0 6px 18px var(--card-shadow);
+  box-shadow: 0 6px 18px var(--shadow-card);
   border-radius: 8px;
+  background-color: #ffffff;
+  overflow: hidden;
 }
-.product-card:hover{
+
+.product-card:hover {
   transform: translateY(-6px);
 }
 
-/* Imagen de la tarjeta */
-.product-img{
-  width:100%;
-  height:160px;
+.product-img {
+  width: 100%;
+  height: 160px;
   object-fit: cover;
-  border-top-left-radius:8px;
-  border-top-right-radius:8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
-/* Precio destacado */
-.price{
-  font-weight:700;
-  color: var(--primary-green);
+.price {
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
-/* Pequeños ajustes responsive */
-@media (max-width: 767px){
+/* =======================
+  Botones
+======================= */
+.btn-primary {
+  background: var(--color-primary);
+  border: none;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #246b4a;
+}
+
+.btn-accent {
+  background: var(--color-accent);
+  color: var(--color-text-main);
+  border: none;
+}
+.btn-accent:hover {
+  background: #2E8B57;
+}
+
+.btn-add {
+  background: var(--color-green-fresh);
+  color: #fff;
+  border: none;
+}
+.btn-add:hover {
+  background: #4e9e58;
+}
+
+/* =======================
+  Utilidades y secciones
+======================= */
+.text-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+.section-alt {
+  background: var(--color-beige-soft);
+  padding: 40px 0;
+}
+
+footer {
+  background: var(--color-bg-main);
+  border-top: 1px solid #ddd;
+  color: var(--color-text-secondary);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* =======================
+  Ajustes responsive
+======================= */
+@media (max-width: 767px) {
   .hero { min-height: 220px; }
-  .product-img{ height:140px; }
+  .product-img { height: 140px; }
 }

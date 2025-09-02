@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HuertoHogar - Inicio</title>
 
-    <!-- Bootstrap CSS (CDN) -->
+    <!-- Bootstrap CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
 
     <!-- Tus estilos -->
     <link rel="stylesheet" href="css/styles.css">
@@ -16,11 +21,13 @@
 <body>
 
     <!-- HEADER -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow-sm" style="background: var(--soft-white-bg);">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
                 <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
-                <span class="fw-bold">HuertoHogar</span>
+                <span style="font-family:'Playfair Display', serif; color: var(--secondary-brown); font-weight:700;">
+                    HuertoHogar
+                </span>
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -29,20 +36,23 @@
 
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" style="color: var(--primary-green);"
+                            href="index.html">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="ofertas.html">Ofertas</a></li>
                     <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                 </ul>
 
+                <!-- Búsqueda -->
                 <form class="d-flex align-items-center me-3" role="search" id="searchForm">
                     <input id="searchInput" class="form-control form-control-sm me-2" type="search"
                         placeholder="Buscar productos">
-                    <button class="btn btn-sm btn-outline-success" type="button" id="searchBtn">Buscar</button>
+                    <button class="btn btn-sm btn-accent" type="button" id="searchBtn">Buscar</button>
                 </form>
 
+                <!-- Botones sesión/carrito -->
                 <div class="d-flex gap-2">
-                    <a href="login.html" class="btn btn-outline-primary btn-sm">Iniciar sesión</a>
-                    <a href="registro.html" class="btn btn-primary btn-sm">Regístrate</a>
+                    <a href="login.html" class="btn btn-accent btn-sm">Iniciar sesión</a>
+                    <a href="registro.html" class="btn btn-accent btn-sm">Regístrate</a>
                     <button class="btn btn-outline-secondary btn-sm position-relative">
                         🛒
                         <span id="cartCount"
@@ -56,10 +66,10 @@
     <!-- HERO -->
     <header class="hero">
         <div class="hero-overlay">
-            <div class="container hero-content text-center text-white">
-                <h1 class="display-5 fw-bold">Productos frescos directo a tu hogar</h1>
+            <div class="container hero-content text-center">
+                <h1 class="fw-bold">Productos frescos directo a tu hogar</h1>
                 <p class="lead">Frutas, verduras y productos orgánicos seleccionados por productores locales.</p>
-                <a href="#catalog" class="btn btn-lg btn-success">Ver catálogo</a>
+                <a href="#catalog" class="btn btn-lg btn-primary">Ver catálogo</a>
             </div>
         </div>
     </header>
@@ -73,11 +83,11 @@
                     <div class="card-body">
                         <h5 class="card-title">Categorías</h5>
                         <ul id="categoryList" class="list-group list-group-flush">
-                            <!-- categorias se renderizan con JS -->
+                            <!-- categorías se renderizan con JS -->
                         </ul>
 
                         <hr>
-                        <h6>Filtrar por</h6>
+                        <h6 style="color: var(--primary-green);">Filtrar por</h6>
                         <div class="mb-3">
                             <label class="form-label small">Precio hasta</label>
                             <input id="priceRange" type="range" class="form-range" min="0" max="10000" step="500"
@@ -105,17 +115,15 @@
         </div>
     </main>
 
-    <!-- FOOTER simple -->
-    <footer class="bg-light py-4 mt-auto">
-        <div class="container text-center small text-muted">
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
             © 2025 HuertoHogar — Productos frescos y sostenibles
         </div>
     </footer>
 
-    <!-- Bootstrap JS bundle -->
+    <!-- Bootstrap JS -->
     <script src="js/bootstrap.bundle.min.js"></script>
-
-    <!-- Tu JS -->
     <script src="js/script.js"></script>
 </body>
 
