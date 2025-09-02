@@ -24,14 +24,14 @@ body{
   background-image: url('/img/hero.jpg'); /* reemplaza por img/hero.jpg */
   background-size: cover;
   background-position: center;
-  min-height: 350px;
+  min-height: 240px;
   display:flex;
   align-items:center;
 }
 .hero-overlay{
   width:100%;
   background: rgba(0,0,0,0.35);
-  padding: 60px 0;
+  padding: 20px 0;
 }
 .hero-content { max-width:900px; margin:auto; }
 
