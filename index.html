@@ -1,12 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sesion</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HuertoHogar - Inicio</title>
+
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Tus estilos -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <div class="login-container"></div>
-        <h2>Iniciar sesión</h2>
+
+    <!-- HEADER -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
+                <span class="fw-bold">HuertoHogar</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+                </ul>
+
+                <form class="d-flex align-items-center me-3" role="search" id="searchForm">
+                    <input id="searchInput" class="form-control form-control-sm me-2" type="search"
+                        placeholder="Buscar productos">
+                    <button class="btn btn-sm btn-outline-success" type="button" id="searchBtn">Buscar</button>
+                </form>
+
+                <div class="d-flex gap-2">
+                    <a href="login.html" class="btn btn-outline-primary btn-sm">Iniciar sesión</a>
+                    <a href="registro.html" class="btn btn-primary btn-sm">Regístrate</a>
+                    <button class="btn btn-outline-secondary btn-sm position-relative">
+                        🛒
+                        <span id="cartCount"
+                            class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-overlay">
+            <div class="container hero-content text-center text-white">
+                <h1 class="display-5 fw-bold">Productos frescos directo a tu hogar</h1>
+                <p class="lead">Frutas, verduras y productos orgánicos seleccionados por productores locales.</p>
+                <a href="#catalog" class="btn btn-lg btn-success">Ver catálogo</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- LAYOUT: sidebar + productos -->
+    <main class="container my-5">
+        <div class="row">
+            <!-- SIDEBAR -->
+            <aside class="col-lg-3 mb-4">
+                <div class="card shadow-sm sticky-sidebar">
+                    <div class="card-body">
+                        <h5 class="card-title">Categorías</h5>
+                        <ul id="categoryList" class="list-group list-group-flush">
+                            <!-- categorias se renderizan con JS -->
+                        </ul>
+
+                        <hr>
+                        <h6>Filtrar por</h6>
+                        <div class="mb-3">
+                            <label class="form-label small">Precio hasta</label>
+                            <input id="priceRange" type="range" class="form-range" min="0" max="50000" step="500"
+                                value="50000">
+                            <div class="small text-muted">Máx: <span id="priceValue">50.000</span> CLP</div>
+                        </div>
+
+                        <button id="clearFilters" class="btn btn-sm btn-outline-secondary w-100 mt-2">Limpiar
+                            filtros</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- PRODUCTOS -->
+            <section id="catalog" class="col-lg-9">
+                <div class="row" id="productsContainer">
+                    <!-- tarjetas se renderizan con JS -->
+                </div>
+
+                <!-- mensaje cuando no hay productos -->
+                <div id="noResults" class="text-center text-muted mt-4" style="display:none;">
+                    No se encontraron productos.
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER simple -->
+    <footer class="bg-light py-4 mt-auto">
+        <div class="container text-center small text-muted">
+            © 2025 HuertoHogar — Productos frescos y sostenibles
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Tu JS -->
+    <script src="js/script.js"></script>
 </body>
+
 </html>
