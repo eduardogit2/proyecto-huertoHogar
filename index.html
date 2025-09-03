@@ -2,7 +2,7 @@
 <html lang="es">
 /* =======================
 cambios a hacer:
-revision de los colores basicos, cambio de algunos textos a negro ya que no se ven
+reset del carrito o mejor dicho el poder apretartle -1
 ======================= */
 
 <head>
@@ -56,11 +56,13 @@ revision de los colores basicos, cambio de algunos textos a negro ya que no se v
 
                 <!-- Botones sesión/carrito -->
                 <div class="d-flex gap-2">
-                    <a href="login.html" class="btn btn-accent btn-sm"><span style="color:#fffdfd;">Iniciar sesión</span></a>
-                    <a href="registro.html" class="btn btn-accent btn-sm"><span style="color:#fffdfd;">Regístrate</span></a>
+                    <a href="login.html" class="btn btn-accent btn-sm"><span style="color:#fffdfd;">Iniciar
+                            sesión</span></a>
+                    <a href="registro.html" class="btn btn-accent btn-sm"><span
+                            style="color:#fffdfd;">Regístrate</span></a>
                     <!-- Botón carrito -->
                     <div class="dropdown">
-                        <button class="btn btn-outline-secondary btn-sm position-relative dropdown-toggle"
+                        <button class="btn btn-accent btn-sm position-relative dropdown-toggle"
                             id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             🛒
                             <span id="cartCount"
@@ -80,9 +82,13 @@ revision de los colores basicos, cambio de algunos textos a negro ya que no se v
                             <li class="mt-2">
                                 <a href="compra.html" class="btn btn-sm btn-primary w-100">Continuar con la compra</a>
                             </li>
+                            <li class="mt-2">
+                                <button id="clearCartBtn" class="btn btn-sm btn-primary w-100">
+                                    Limpiar el carrito
+                                </button>
+                            </li>
                         </ul>
                     </div>
-
                 </div>
             </div>
         </div>

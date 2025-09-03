@@ -8,8 +8,7 @@ const products = [
     { id: 6, name: "Pan Integral", price: 3500, category: "Panadería", img: "img/prod6.jpg" },
     { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg" },
     { id: 8, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod8.jpg" },
-    {
-        id: 8, name: "Pimienta Tricolores", price: 700, category: "Orgánicos", img: "img/prod9.jpg"
+    { id: 9, name: "Pimienta Tricolores", price: 700, category: "Orgánicos", img: "img/prod9.jpg"
     }
 ];
 
@@ -153,15 +152,22 @@ function renderCartDropdown() {
     cartItems.innerHTML = "";
     let total = 0;
 
-    cart.forEach(item => {
+    cart.forEach((item, index) => {
         total += item.price * item.quantity;
 
         cartItems.innerHTML += `
-      <div class="d-flex justify-content-between mb-2">
-        <span>${item.name} (x${item.quantity})</span>
-        <span>$${item.price * item.quantity}</span>
-      </div>
-    `;
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <strong>${item.name}</strong><br>
+                <small>$${item.price}</small>
+              </div>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-outline-secondary" data-action="decrease" data-index="${index}">-</button>
+                <span class="mx-2">${item.quantity}</span>
+                <button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="${index}">+</button>
+              </div>
+            </div>
+        `;
     });
 
     cartTotal.textContent = `$${total}`;
@@ -182,8 +188,11 @@ function addToCart(product) {
     renderCartDropdown();
 }
 
-// Detectar clicks en botones "Agregar al carrito"
-document.addEventListener("click", e => {
+// *** CÓDIGO CORREGIDO PARA EVITAR DUPLICACIÓN DE EVENTOS ***
+
+// Delegación de eventos para los botones de "Agregar al carrito"
+// Esto escucha clics en el contenedor principal de productos
+productsContainer.addEventListener("click", e => {
     if (e.target.classList.contains("add-to-cart")) {
         const btn = e.target;
         const product = {
@@ -195,6 +204,39 @@ document.addEventListener("click", e => {
         addToCart(product);
     }
 });
+
+// Delegación de eventos para los botones de cantidad (+/-) dentro del carrito
+// Esto escucha clics en el contenedor de ítems del carrito
+cartItems.addEventListener("click", (e) => {
+    e.stopPropagation(); // Detiene la propagación del clic para mantener el dropdown abierto
+    const target = e.target;
+    if (target.dataset.action === "decrease" || target.dataset.action === "increase") {
+        const index = parseInt(target.dataset.index);
+        const amount = target.dataset.action === "increase" ? 1 : -1;
+        changeQuantity(index, amount);
+    }
+});
+
+document.getElementById("clearCartBtn").addEventListener("click", (e) => {
+    e.stopPropagation(); // Detiene la propagación del clic
+    localStorage.removeItem("cart");
+    cart = [];
+    updateCartCount();
+    renderCartDropdown();
+});
+
+function changeQuantity(index, amount) {
+    cart[index].quantity += amount;
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1); // eliminar producto si llega a 0
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    renderCartDropdown();
+}
+
 
 // Inicializar al cargar
 updateCartCount();
