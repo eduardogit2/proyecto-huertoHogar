@@ -1,11 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Registro - HuertoHogar</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tus estilos -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <h1>pagina en construcción para registrarse</h1>
+
+    <!-- NAVBAR SIMPLE -->
+    <nav class="navbar navbar-expand-lg shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
+                <span class="fw-bold">HuertoHogar</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- FORMULARIO DE REGISTRO -->
+    <main class="d-flex align-items-center justify-content-center" style="min-height: 90vh;">
+        <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
+            <h2 class="text-center mb-4">Crear cuenta</h2>
+
+            <form action="index.html" method="get">
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Juan Pérez"
+                        required>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@correo.com"
+                        required>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label for="pwd" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mínimo 6 caracteres"
+                        required>
+                </div>
+
+                <!-- Confirmar contraseña -->
+                <div class="mb-3">
+                    <label for="pwd2" class="form-label">Confirmar contraseña</label>
+                    <input type="password" class="form-control" id="pwd2" name="pwd2" placeholder="Repite la contraseña"
+                        required>
+                </div>
+
+                <!-- Botón -->
+                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+            </form>
+
+            <p class="text-center mt-3">
+                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        © 2025 HuertoHogar — Productos frescos y sostenibles
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
