@@ -1,4 +1,3 @@
-/* Datos de ejemplo: agrega/edita estos productos según necesites */
 const products = [
     { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco" },
     { id: 2, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod2.jpg" },
@@ -22,7 +21,6 @@ let currentCategory = 'Todas';
 let currentMaxPrice = Number(priceRange.value);
 let currentQuery = '';
 
-/* Renders */
 function renderCategories() {
     const cats = ['Todas', ...new Set(products.map(p => p.category))];
     categoryList.innerHTML = '';
@@ -67,21 +65,21 @@ function renderProducts() {
         col.innerHTML = `
         <div class="card product-card h-100">
             <img src="${p.img}" alt="${p.name}" class="product-img card-img-top">
-          <div class="card-body d-flex flex-column">
-            <h6 class="card-title">${p.name}</h6>
-            <p class="mb-2 small text-muted">${p.category} ${p.badge ? ` • ${p.badge}` : ''}</p>
-            <div class="mt-auto d-flex justify-content-between align-items-center">
-            <div class="price">${formatPrice(p.price)}</div>
-            <button class="btn btn-sm btn-success add-to-cart" 
+                <div class="card-body d-flex flex-column">
+                <h6 class="card-title">${p.name}</h6>
+                    <p class="mb-2 small text-muted">${p.category} ${p.badge ? ` • ${p.badge}` : ''}</p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <div class="price">${formatPrice(p.price)}</div>
+                    <button class="btn btn-sm btn-success add-to-cart" 
                     data-id="${p.id}" 
                     data-name="${p.name}" 
                     data-price="${p.price}">
-                Agregar
-            </button>
-        </div>  
-          </div>
+                        Agregar
+                    </button>
+                </div>  
+            </div>
         </div>
-      `;
+        `;
         productsContainer.appendChild(col);
     });
 }
@@ -90,7 +88,6 @@ function formatPrice(n) {
     return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
 }
 
-/* Controles UI */
 priceRange.addEventListener('input', (e) => {
     currentMaxPrice = Number(e.target.value);
     priceValue.textContent = currentMaxPrice.toLocaleString('es-CL');
@@ -119,27 +116,22 @@ searchInput.addEventListener('keyup', (e) => {
     }
 });
 
-/* Init */
 priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
 renderCategories();
 renderProducts();
 
 
-// ==============================
-// Carrito de compras - HuertoHogar
-// ==============================
+
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 const cartCount = document.getElementById("cartCount");
 const cartItems = document.getElementById("cartItems");
 const cartTotal = document.getElementById("cartTotal");
 
-// Actualizar contador
 function updateCartCount() {
     cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
 }
 
-// Renderizar carrito en dropdown
 function renderCartDropdown() {
     if (cart.length === 0) {
         cartItems.innerHTML = `<span class="text-muted">Tu carrito está vacío</span>`;
@@ -155,15 +147,15 @@ function renderCartDropdown() {
 
         cartItems.innerHTML += `
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <div>
-                <strong>${item.name}</strong><br>
-                <small>$${item.price}</small>
-              </div>
-              <div class="d-flex align-items-center">
-                <button class="btn btn-sm btn-outline-secondary" data-action="decrease" data-index="${index}">-</button>
-                <span class="mx-2">${item.quantity}</span>
-                <button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="${index}">+</button>
-              </div>
+                <div>
+                    <strong>${item.name}</strong><br>
+                    <small>$${item.price}</small>
+                </div>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-outline-secondary" data-action="decrease" data-index="${index}">-</button>
+                    <span class="mx-2">${item.quantity}</span>
+                    <button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="${index}">+</button>
+                </div>
             </div>
         `;
     });
@@ -171,7 +163,6 @@ function renderCartDropdown() {
     cartTotal.textContent = `$${total}`;
 }
 
-// Agregar al carrito
 function addToCart(product) {
     const existing = cart.find(p => p.id === product.id);
 
@@ -186,10 +177,7 @@ function addToCart(product) {
     renderCartDropdown();
 }
 
-// *** CÓDIGO CORREGIDO PARA EVITAR DUPLICACIÓN DE EVENTOS ***
 
-// Delegación de eventos para los botones de "Agregar al carrito"
-// Esto escucha clics en el contenedor principal de productos
 productsContainer.addEventListener("click", e => {
     if (e.target.classList.contains("add-to-cart")) {
         const btn = e.target;
@@ -203,10 +191,8 @@ productsContainer.addEventListener("click", e => {
     }
 });
 
-// Delegación de eventos para los botones de cantidad (+/-) dentro del carrito
-// Esto escucha clics en el contenedor de ítems del carrito
 cartItems.addEventListener("click", (e) => {
-    e.stopPropagation(); // Detiene la propagación del clic para mantener el dropdown abierto
+    e.stopPropagation(); 
     const target = e.target;
     if (target.dataset.action === "decrease" || target.dataset.action === "increase") {
         const index = parseInt(target.dataset.index);
@@ -216,7 +202,7 @@ cartItems.addEventListener("click", (e) => {
 });
 
 document.getElementById("clearCartBtn").addEventListener("click", (e) => {
-    e.stopPropagation(); // Detiene la propagación del clic
+    e.stopPropagation(); 
     localStorage.removeItem("cart");
     cart = [];
     updateCartCount();
@@ -227,7 +213,7 @@ function changeQuantity(index, amount) {
     cart[index].quantity += amount;
 
     if (cart[index].quantity <= 0) {
-        cart.splice(index, 1); // eliminar producto si llega a 0
+        cart.splice(index, 1); 
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -236,6 +222,5 @@ function changeQuantity(index, amount) {
 }
 
 
-// Inicializar al cargar
 updateCartCount();
 renderCartDropdown();

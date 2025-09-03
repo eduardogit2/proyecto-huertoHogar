@@ -1,24 +1,21 @@
 :root {
-  /* Colores de la paleta de HuertoHogar */
-  --color-primary: #2E8B57;        /* Verde Esmeralda para acciones principales */
-  --color-secondary: #8B4513;      /* Marrón para títulos y acentos rústicos */
-  --color-accent: #2E8B57;         /* Amarillo Mostaza para resaltar */
-  --color-text-main: #333333;      /* Gris oscuro para texto principal */
-  --color-text-secondary: #666666; /* Gris medio para texto secundario */
-  --color-bg-main: #F7F7F7;        /* Blanco suave para fondo principal */
-  --color-green-fresh: #6FBF73;    /* Verde fresco para botones de acción */
-  --color-beige-soft: #FAF3E0;     /* Beige para secciones alternas */
-  --shadow-card: rgba(46, 139, 87, 0.12); /* Sombra suave para tarjetas */
+  --color-primary: #2E8B57;        
+  --color-secondary: #8B4513;      
+  --color-accent: #2E8B57;         
+  --color-text-main: #333333;      
+  --color-text-secondary: #666666; 
+  --color-bg-main: #F7F7F7;        
+  --color-green-fresh: #6FBF73;    
+  --color-beige-soft: #FAF3E0;     
+  --shadow-card: rgba(46, 139, 87, 0.12); 
 }
 
-/* =======================
-  Estilos globales
-======================= */
+
 body {
   font-family: "Montserrat", sans-serif;
-  background-color: var(--color-bg-main); /* Color base */
-  background-image: url("../img/fondo3.jpg"); /* Ruta de tu textura */
-  background-repeat: repeat; /* Se repite para cubrir toda la página */
+  background-color: var(--color-bg-main); 
+  background-image: url("../img/fondo3.jpg"); 
+  background-repeat: repeat; 
   background-size: auto;
   background-attachment: fixed;
   color: var(--color-text-main);
@@ -34,9 +31,6 @@ h3, h4, h5, h6, p {
   color: var(--color-secondary);
 }
 
-/* =======================
-  Diseño de la página
-======================= */
 .logo-img {
   width: 36px;
   height: 36px;
@@ -81,9 +75,6 @@ h3, h4, h5, h6, p {
   text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
 }
 
-/* =======================
-  Tarjetas y componentes
-======================= */
 .sticky-sidebar {
   position: sticky;
   top: 20px;
@@ -120,9 +111,6 @@ h3, h4, h5, h6, p {
   color: var(--color-primary);
 }
 
-/* =======================
-  Botones
-======================= */
 .btn-primary {
   background: var(--color-primary);
   border: none;
@@ -150,9 +138,6 @@ h3, h4, h5, h6, p {
   background: #4e9e58;
 }
 
-/* =======================
-  Utilidades y secciones
-======================= */
 .text-secondary {
   color: var(--color-text-secondary) !important;
 }
@@ -171,9 +156,6 @@ footer {
   font-size: 0.9rem;
 }
 
-/* =======================
-  Ajustes responsive
-======================= */
 @media (max-width: 767px) {
   .hero { min-height: 220px; }
   .product-img { height: 140px; }
