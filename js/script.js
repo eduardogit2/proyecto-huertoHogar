@@ -7,8 +7,9 @@ const products = [
     { id: 5, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod5.jpg" },
     { id: 6, name: "Pan Integral", price: 3500, category: "Panadería", img: "img/prod6.jpg" },
     { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg" },
-    { id: 8, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod8.jpg"},
-    { id: 8, name: "Pimienta Tricolores", price: 700, category: "Orgánicos", img: "img/prod9.jpg"
+    { id: 8, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod8.jpg" },
+    {
+        id: 8, name: "Pimienta Tricolores", price: 700, category: "Orgánicos", img: "img/prod9.jpg"
     }
 ];
 
@@ -73,23 +74,18 @@ function renderProducts() {
             <h6 class="card-title">${p.name}</h6>
             <p class="mb-2 small text-muted">${p.category} ${p.badge ? ` • ${p.badge}` : ''}</p>
             <div class="mt-auto d-flex justify-content-between align-items-center">
-              <div class="price">${formatPrice(p.price)}</div>
-              <button class="btn btn-sm btn-success add-cart" data-id="${p.id}">Agregar</button>
-            </div>
+            <div class="price">${formatPrice(p.price)}</div>
+            <button class="btn btn-sm btn-success add-to-cart" 
+                    data-id="${p.id}" 
+                    data-name="${p.name}" 
+                    data-price="${p.price}">
+                Agregar
+            </button>
+        </div>  
           </div>
         </div>
       `;
         productsContainer.appendChild(col);
-    });
-
-    // listeners add-to-cart (mock)
-    document.querySelectorAll('.add-cart').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = Number(btn.dataset.id);
-            // Demo: aumentar contador visual de carrito
-            const counter = document.getElementById('cartCount');
-            counter.textContent = Number(counter.textContent) + 1;
-        });
     });
 }
 
@@ -130,3 +126,76 @@ searchInput.addEventListener('keyup', (e) => {
 priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
 renderCategories();
 renderProducts();
+
+
+// ==============================
+// Carrito de compras - HuertoHogar
+// ==============================
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const cartCount = document.getElementById("cartCount");
+const cartItems = document.getElementById("cartItems");
+const cartTotal = document.getElementById("cartTotal");
+
+// Actualizar contador
+function updateCartCount() {
+    cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+}
+
+// Renderizar carrito en dropdown
+function renderCartDropdown() {
+    if (cart.length === 0) {
+        cartItems.innerHTML = `<span class="text-muted">Tu carrito está vacío</span>`;
+        cartTotal.textContent = "$0";
+        return;
+    }
+
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach(item => {
+        total += item.price * item.quantity;
+
+        cartItems.innerHTML += `
+      <div class="d-flex justify-content-between mb-2">
+        <span>${item.name} (x${item.quantity})</span>
+        <span>$${item.price * item.quantity}</span>
+      </div>
+    `;
+    });
+
+    cartTotal.textContent = `$${total}`;
+}
+
+// Agregar al carrito
+function addToCart(product) {
+    const existing = cart.find(p => p.id === product.id);
+
+    if (existing) {
+        existing.quantity++;
+    } else {
+        cart.push(product);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    renderCartDropdown();
+}
+
+// Detectar clicks en botones "Agregar al carrito"
+document.addEventListener("click", e => {
+    if (e.target.classList.contains("add-to-cart")) {
+        const btn = e.target;
+        const product = {
+            id: btn.dataset.id,
+            name: btn.dataset.name,
+            price: parseInt(btn.dataset.price),
+            quantity: 1
+        };
+        addToCart(product);
+    }
+});
+
+// Inicializar al cargar
+updateCartCount();
+renderCartDropdown();

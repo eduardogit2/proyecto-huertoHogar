@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 /* =======================
-cambios a hacer: 
+cambios a hacer:
 revision de los colores basicos, cambio de algunos textos a negro ya que no se ven
 ======================= */
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,7 +25,7 @@ revision de los colores basicos, cambio de algunos textos a negro ya que no se v
 <body>
 
     <!-- HEADER -->
-    <nav class="navbar navbar-expand-lg shadow-sm" >
+    <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
                 <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
@@ -39,9 +40,8 @@ revision de los colores basicos, cambio de algunos textos a negro ya que no se v
 
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" style="color: var(--primary-zgreen);"
-                            href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="ofertas.html">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ofertas.html" s>Ofertas</a></li>
                     <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                 </ul>
 
@@ -49,18 +49,40 @@ revision de los colores basicos, cambio de algunos textos a negro ya que no se v
                 <form class="d-flex align-items-center me-3" role="search" id="searchForm">
                     <input id="searchInput" class="form-control form-control-sm me-2" type="search"
                         placeholder="Buscar productos">
-                    <button class="btn btn-sm btn-accent" type="button" id="searchBtn">Buscar</button>
+                    <button class="btn btn-sm btn-accent" type="button" id="searchBtn">
+                        <span style="color:#fffdfd;">Buscar</span>
+                    </button>
                 </form>
 
                 <!-- Botones sesión/carrito -->
                 <div class="d-flex gap-2">
-                    <a href="login.html" class="btn btn-accent btn-sm">Iniciar sesión</a>
-                    <a href="registro.html" class="btn btn-accent btn-sm">Regístrate</a>
-                    <button class="btn btn-outline-secondary btn-sm position-relative">
-                        🛒
-                        <span id="cartCount"
-                            class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
-                    </button>
+                    <a href="login.html" class="btn btn-accent btn-sm"><span style="color:#fffdfd;">Iniciar sesión</span></a>
+                    <a href="registro.html" class="btn btn-accent btn-sm"><span style="color:#fffdfd;">Regístrate</span></a>
+                    <!-- Botón carrito -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm position-relative dropdown-toggle"
+                            id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            🛒
+                            <span id="cartCount"
+                                class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+                        </button>
+
+                        <!-- Menú desplegable -->
+                        <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 300px;"
+                            aria-labelledby="cartDropdown">
+                            <li id="cartItems">Tu carrito está vacío</li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="d-flex justify-content-between fw-bold">
+                                <span>Total:</span> <span id="cartTotal">$0</span>
+                            </li>
+                            <li class="mt-2">
+                                <a href="compra.html" class="btn btn-sm btn-primary w-100">Continuar con la compra</a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </div>
