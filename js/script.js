@@ -1,13 +1,13 @@
 const products = [
     { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco" },
-    { id: 2, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod2.jpg" },
-    { id: 3, name: "Quínoa Orgánica", price: 4500, category: "Orgánicos", img: "img/prod3.jpg" },
-    { id: 4, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod4.jpg" },
-    { id: 5, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod5.jpg" },
-    { id: 9, name: "Pimiento Tricolores", price: 700, category: "Orgánicos", img: "img/prod6.jpg"},
+    { id: 2, name: "Naranjas Valencia", price: 1000, category: "Frutas", img: "img/prod2.jpg", badge: "Fresco" },
+    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg" },
+    { id: 4, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod4.jpg" },
+    { id: 5, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod5.jpg" }, 
+    { id: 6, name: "Pimiento Tricolores KG", price: 1500, category: "Orgánicos", img: "img/prod6.jpg"},
     { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg" },
-    { id: 8, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod8.jpg" }, 
-];
+    { id: 8, name: "Quínoa Orgánica", price: 4500, category: "Orgánicos", img: "img/prod8.jpg" },
+    { id: 9, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod9.jpg" }];
 
 const productsContainer = document.getElementById('productsContainer');
 const categoryList = document.getElementById('categoryList');
