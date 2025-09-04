@@ -1,13 +1,14 @@
 const products = [
-    { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco" },
-    { id: 2, name: "Naranjas Valencia", price: 1000, category: "Frutas", img: "img/prod2.jpg", badge: "Fresco" },
-    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg" },
-    { id: 4, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod4.jpg" },
-    { id: 5, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod5.jpg" }, 
-    { id: 6, name: "Pimiento Tricolores KG", price: 1500, category: "Orgánicos", img: "img/prod6.jpg"},
-    { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg" },
-    { id: 8, name: "Quínoa Orgánica", price: 4500, category: "Orgánicos", img: "img/prod8.jpg" },
-    { id: 9, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod9.jpg" }];
+    { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco", description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.", stock: 150 },
+    { id: 2, name: "Naranjas Valencia", price: 1000, category: "Frutas", img: "img/prod2.jpg", badge: "Fresco", description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.", stock: 200 },
+    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg", description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.", stock: 250 },
+    { id: 4, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod4.jpg", description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.", stock: 100 },
+    { id: 5, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod5.jpg", description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.", stock: 80 },
+    { id: 6, name: "Pimiento Tricolores KG", price: 1500, category: "Orgánicos", img: "img/prod6.jpg", description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.", stock: 120 },
+    { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg", description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.", stock: 50 },
+    { id: 8, name: "Quínoa Orgánica", price: 4500, category: "Orgánicos", img: "img/prod8.jpg", description: "Quínoa orgánica de alta calidad, perfecta para ensaladas o como acompañamiento. Es un superalimento rico en proteínas y fibra, ideal para una dieta balanceada.", stock: 75 },
+    { id: 9, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod9.jpg", description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.", stock: 90 }
+];
 
 const productsContainer = document.getElementById('productsContainer');
 const categoryList = document.getElementById('categoryList');
@@ -39,6 +40,10 @@ function renderCategories() {
     });
 }
 
+const productDetailModal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+const modalTitle = document.getElementById('productDetailModalLabel');
+const modalContent = document.getElementById('productDetailContent');
+
 function renderProducts() {
     const maxPrice = currentMaxPrice;
     const query = currentQuery.trim().toLowerCase();
@@ -62,27 +67,82 @@ function renderProducts() {
         const col = document.createElement('div');
         col.className = 'col-sm-6 col-md-4 mb-4';
 
+        // Ahora toda la tarjeta es clickeable
         col.innerHTML = `
-        <div class="card product-card h-100">
+        <div class="card product-card h-100" style="cursor: pointer;" data-id="${p.id}">
             <img src="${p.img}" alt="${p.name}" class="product-img card-img-top">
-                <div class="card-body d-flex flex-column">
+            <div class="card-body d-flex flex-column">
                 <h6 class="card-title">${p.name}</h6>
-                    <p class="mb-2 small text-muted">${p.category} ${p.badge ? ` • ${p.badge}` : ''}</p>
-                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                <p class="mb-2 small text-muted">${p.category} ${p.badge ? ` • ${p.badge}` : ''}</p>
+                <div class="mt-auto d-flex justify-content-between align-items-center">
                     <div class="price">${formatPrice(p.price)}</div>
-                    <button class="btn btn-sm btn-success add-to-cart" 
-                    data-id="${p.id}" 
-                    data-name="${p.name}" 
-                    data-price="${p.price}">
-                        Agregar
-                    </button>
-                </div>  
+                </div>  
             </div>
         </div>
         `;
         productsContainer.appendChild(col);
     });
 }
+
+function showProductDetails(productId) {
+    const product = products.find(p => p.id === parseInt(productId));
+
+    if (!product) {
+        console.error("Producto no encontrado");
+        return;
+    }
+
+    modalTitle.textContent = product.name;
+    modalContent.innerHTML = `
+        <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3">
+        <p><strong>Precio:</strong> ${formatPrice(product.price)}</p>
+        <p><strong>Categoría:</strong> ${product.category}</p>
+        <p><strong>Descripción:</strong> ${product.description}</p>
+        <p><strong>Stock:</strong> ${product.stock} kilos</p>
+        <button class="btn btn-success mt-3 add-to-cart-modal" 
+                data-id="${product.id}" 
+                data-name="${product.name}" 
+                data-price="${product.price}">
+            Agregar al Carrito
+        </button>
+    `;
+
+    // Muestra la ventana modal
+    productDetailModal.show();
+}
+
+// Evento para abrir el modal al hacer clic en una tarjeta de producto
+productsContainer.addEventListener("click", e => {
+    const card = e.target.closest('.product-card');
+    if (card) {
+        const productId = card.dataset.id;
+        showProductDetails(productId);
+    }
+});
+
+// Evento para agregar al carrito desde el modal
+modalContent.addEventListener("click", (e) => {
+    if (e.target.classList.contains("add-to-cart-modal")) {
+        const btn = e.target;
+        const product = {
+            id: btn.dataset.id,
+            name: btn.dataset.name,
+            price: parseInt(btn.dataset.price),
+            quantity: 1
+        };
+        addToCart(product);
+        productDetailModal.hide(); // Opcional: cierra el modal después de agregar al carrito
+    }
+});
+
+    // Nuevo manejador de eventos para las tarjetas de producto
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            const productId = card.dataset.id;
+            showProductDetails(productId);
+        });
+    });
 
 function formatPrice(n) {
     return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
@@ -179,6 +239,7 @@ function addToCart(product) {
 
 
 productsContainer.addEventListener("click", e => {
+    // Clic en el botón "Agregar" de la tarjeta de producto
     if (e.target.classList.contains("add-to-cart")) {
         const btn = e.target;
         const product = {
@@ -188,6 +249,14 @@ productsContainer.addEventListener("click", e => {
             quantity: 1
         };
         addToCart(product);
+    } 
+    // Clic en la tarjeta de producto completa
+    else {
+        const card = e.target.closest('.product-card');
+        if (card) {
+            const productId = card.dataset.id;
+            showProductDetails(productId);
+        }
     }
 });
 
