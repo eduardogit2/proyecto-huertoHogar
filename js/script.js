@@ -1,7 +1,7 @@
 const products = [
     { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco", description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.", stock: 150, origin: "Valle del Maule, Chile", unit: "kg" },
     { id: 2, name: "Naranjas Valencia", price: 1000, category: "Frutas", img: "img/prod2.jpg", badge: "Fresco", description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.", stock: 200, origin: "Región de Coquimbo, Chile", unit: "kg" },
-    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg", description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.", stock: 250, origin: "Ecuador", unit: "unidad" },
+    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg", description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.", stock: 250, origin: "Guayas, Ecuador", unit: "kg" },
     { id: 4, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod4.jpg", description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.", stock: 100, origin: "Región de O'Higgins, Chile", unit: "kg" },
     { id: 5, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod5.jpg", description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.", stock: 80, origin: "Ñuble, Chile", unit: "bolsa" },
     { id: 6, name: "Pimiento Tricolores", price: 1500, category: "Orgánicos", img: "img/prod6.jpg", description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.", stock: 120, origin: "Región de Valparaíso, Chile", unit: "kg" },
@@ -92,8 +92,6 @@ function renderProducts() {
         productsContainer.appendChild(col);
     });
 }
-
-
 
 function showProductDetails(productId) {
     const product = products.find(p => p.id === parseInt(productId));
