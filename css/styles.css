@@ -1,6 +1,6 @@
 :root {
   --color-primary: #2E8B57;        
-  --color-secondary: #8B4513;      
+  --color-secondary: #ff700a;      
   --color-accent: #2E8B57;         
   --color-text-main: #333333;      
   --color-text-secondary: #666666; 
@@ -28,7 +28,7 @@ h1, h2 {
 
 h3, h4, h5, h6, p {
   font-family: "Montserrat", sans-serif;
-  color: var(--color-secondary);
+  color: var(--color-text-secondary);
 }
 
 .logo-img {

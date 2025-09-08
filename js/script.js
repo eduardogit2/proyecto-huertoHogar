@@ -1,13 +1,13 @@
 const products = [
-    { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco", description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.", stock: 150 },
-    { id: 2, name: "Naranjas Valencia", price: 1000, category: "Frutas", img: "img/prod2.jpg", badge: "Fresco", description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.", stock: 200 },
-    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg", description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.", stock: 250 },
-    { id: 4, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod4.jpg", description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.", stock: 100 },
-    { id: 5, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod5.jpg", description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.", stock: 80 },
-    { id: 6, name: "Pimiento Tricolores KG", price: 1500, category: "Orgánicos", img: "img/prod6.jpg", description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.", stock: 120 },
-    { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg", description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.", stock: 50 },
-    { id: 8, name: "Quínoa Orgánica", price: 4500, category: "Orgánicos", img: "img/prod8.jpg", description: "Quínoa orgánica de alta calidad, perfecta para ensaladas o como acompañamiento. Es un superalimento rico en proteínas y fibra, ideal para una dieta balanceada.", stock: 75 },
-    { id: 9, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod9.jpg", description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.", stock: 90 }
+    { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco", description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.", stock: 150, origin: "Valle del Maule, Chile", unit: "kg" },
+    { id: 2, name: "Naranjas Valencia", price: 1000, category: "Frutas", img: "img/prod2.jpg", badge: "Fresco", description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.", stock: 200, origin: "Región de Coquimbo, Chile", unit: "kg" },
+    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg", description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.", stock: 250, origin: "Ecuador", unit: "unidad" },
+    { id: 4, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod4.jpg", description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.", stock: 100, origin: "Región de O'Higgins, Chile", unit: "kg" },
+    { id: 5, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod5.jpg", description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.", stock: 80, origin: "Ñuble, Chile", unit: "bolsa" },
+    { id: 6, name: "Pimiento Tricolores", price: 1500, category: "Orgánicos", img: "img/prod6.jpg", description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.", stock: 120, origin: "Región de Valparaíso, Chile", unit: "kg" },
+    { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg", description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.", stock: 50, origin: "Aysén, Chile", unit: "frasco" },
+    { id: 8, name: "Quínoa Orgánica", price: 4500, category: "Orgánicos", img: "img/prod8.jpg", description: "Quínoa orgánica de alta calidad, perfecta para ensaladas o como acompañamiento. Es un superalimento rico en proteínas y fibra, ideal para una dieta balanceada.", stock: 75, origin: "Cajamarca, Perú", unit: "bolsa" },
+    { id: 9, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod9.jpg", description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.", stock: 90, origin: "Los Lagos, Chile", unit: "litro" }
 ];
 
 const productsContainer = document.getElementById('productsContainer');
@@ -21,6 +21,17 @@ const noResults = document.getElementById('noResults');
 let currentCategory = 'Todas';
 let currentMaxPrice = Number(priceRange.value);
 let currentQuery = '';
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const cartCount = document.getElementById("cartCount");
+const cartItems = document.getElementById("cartItems");
+const cartTotal = document.getElementById("cartTotal");
+
+const productDetailModal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+const modalTitle = document.getElementById('productDetailModalLabel');
+const modalContent = document.getElementById('productDetailContent');
+
 
 function renderCategories() {
     const cats = ['Todas', ...new Set(products.map(p => p.category))];
@@ -40,10 +51,6 @@ function renderCategories() {
     });
 }
 
-const productDetailModal = new bootstrap.Modal(document.getElementById('productDetailModal'));
-const modalTitle = document.getElementById('productDetailModalLabel');
-const modalContent = document.getElementById('productDetailContent');
-
 function renderProducts() {
     const maxPrice = currentMaxPrice;
     const query = currentQuery.trim().toLowerCase();
@@ -51,7 +58,7 @@ function renderProducts() {
     const filtered = products.filter(p => {
         const okCategory = (currentCategory === 'Todas') || (p.category === currentCategory);
         const okPrice = p.price <= maxPrice;
-        const okQuery = p.name.toLowerCase().includes(query);
+        const okQuery = p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query);
         return okCategory && okPrice && okQuery;
     });
 
@@ -67,16 +74,17 @@ function renderProducts() {
         const col = document.createElement('div');
         col.className = 'col-sm-6 col-md-4 mb-4';
 
-        // Ahora toda la tarjeta es clickeable
         col.innerHTML = `
-        <div class="card product-card h-100" style="cursor: pointer;" data-id="${p.id}">
+        <div class="card product-card h-100 shadow-sm" style="cursor: pointer;" data-id="${p.id}">
             <img src="${p.img}" alt="${p.name}" class="product-img card-img-top">
             <div class="card-body d-flex flex-column">
-                <h6 class="card-title">${p.name}</h6>
-                <p class="mb-2 small text-muted">${p.category} ${p.badge ? ` • ${p.badge}` : ''}</p>
-                <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <div class="price">${formatPrice(p.price)}</div>
-                </div>  
+                <h5 class="card-title text-center mb-1">${p.name}</h5>
+                <p class="text-center text-muted fw-light fst-italic mb-2">${p.origin}</p>
+                <p class="card-text text-center product-description">${p.description.substring(0, 70)}...</p>
+                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                    <span class="price fw-bold">${formatPrice(p.price)}</span>
+                    <span class="text-success fw-bold small">Stock: <span class="stock-display ">${p.stock} ${p.unit}${p.unit === 'bolsa' || p.unit === 'litro' || p.unit ==='frasco' ? 's' : ''}</span></span>
+                </div>
             </div>
         </div>
         `;
@@ -84,9 +92,10 @@ function renderProducts() {
     });
 }
 
+
+
 function showProductDetails(productId) {
     const product = products.find(p => p.id === parseInt(productId));
-
     if (!product) {
         console.error("Producto no encontrado");
         return;
@@ -94,24 +103,34 @@ function showProductDetails(productId) {
 
     modalTitle.textContent = product.name;
     modalContent.innerHTML = `
-        <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3">
-        <p><strong>Precio:</strong> ${formatPrice(product.price)}</p>
+        <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3 w-100 rounded">
+        <p><strong>Precio:</strong> ${formatPrice(product.price)} por ${product.unit}</p>
         <p><strong>Categoría:</strong> ${product.category}</p>
+        <p><strong>Origen:</strong> ${product.origin}</p>
         <p><strong>Descripción:</strong> ${product.description}</p>
-        <p><strong>Stock:</strong> ${product.stock} kilos</p>
-        <button class="btn btn-success mt-3 add-to-cart-modal" 
-                data-id="${product.id}" 
-                data-name="${product.name}" 
-                data-price="${product.price}">
-            Agregar al Carrito
-        </button>
+        <p class="mb-3"><strong>Stock disponible:</strong> <span class="stock-display-modal">${product.stock}</span> ${product.unit}${product.stock > 1 ? 's': ''}</p>
+        
+        <div class="d-flex align-items-center justify-content-between">
+            <label for="quantity-modal" class="me-2 fw-bold">Cantidad:</label>
+            <input type="number" id="quantity-modal" class="form-control w-25 text-center me-3" value="1" min="1" max="${product.stock}">
+            <button class="btn btn-primary add-to-cart-modal" data-id="${product.id}">
+                Agregar al Carrito
+            </button>
+        </div>
     `;
 
-    // Muestra la ventana modal
+    const quantityInput = document.getElementById('quantity-modal');
+    const addToCartBtn = document.querySelector('.add-to-cart-modal');
+    if (product.stock <= 0) {
+        quantityInput.value = 0;
+        quantityInput.setAttribute('disabled', 'disabled');
+        addToCartBtn.setAttribute('disabled', 'disabled');
+        addToCartBtn.textContent = 'Sin Stock';
+    }
+
     productDetailModal.show();
 }
 
-// Evento para abrir el modal al hacer clic en una tarjeta de producto
 productsContainer.addEventListener("click", e => {
     const card = e.target.closest('.product-card');
     if (card) {
@@ -120,33 +139,148 @@ productsContainer.addEventListener("click", e => {
     }
 });
 
-// Evento para agregar al carrito desde el modal
 modalContent.addEventListener("click", (e) => {
     if (e.target.classList.contains("add-to-cart-modal")) {
         const btn = e.target;
-        const product = {
-            id: btn.dataset.id,
-            name: btn.dataset.name,
-            price: parseInt(btn.dataset.price),
-            quantity: 1
-        };
-        addToCart(product);
-        productDetailModal.hide(); // Opcional: cierra el modal después de agregar al carrito
+        const productId = parseInt(btn.dataset.id);
+        const quantity = parseInt(document.getElementById('quantity-modal').value);
+        
+        const productToAdd = products.find(p => p.id === productId);
+
+        if (quantity <= 0) {
+            alert('La cantidad debe ser mayor a 0.');
+            return;
+        }
+
+        if (quantity > productToAdd.stock) {
+            alert(`No puedes comprar ${quantity} ${productToAdd.unit}${quantity > 1 ? 's' : ''}. El stock disponible es de ${productToAdd.stock} ${productToAdd.unit}${productToAdd.stock > 1 ? 's' : ''}.`);
+            return;
+        }
+
+        addToCart(productToAdd, quantity);
+        productDetailModal.hide();
     }
 });
 
-    // Nuevo manejador de eventos para las tarjetas de producto
-    const productCards = document.querySelectorAll('.product-card');
-    productCards.forEach(card => {
-        card.addEventListener('click', (e) => {
-            const productId = card.dataset.id;
-            showProductDetails(productId);
-        });
+function updateCartCount() {
+    cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+}
+
+function renderCartDropdown() {
+    if (cart.length === 0) {
+        cartItems.innerHTML = `<span class="text-muted">Tu carrito está vacío</span>`;
+        cartTotal.textContent = "$0";
+        return;
+    }
+
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        const product = products.find(p => p.id === item.id); // Encuentra el producto para obtener la unidad
+        if (!product) return; // Si el producto no existe, no lo renderiza
+
+        total += item.price * item.quantity;
+        cartItems.innerHTML += `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <strong>${item.name}</strong><br>
+                    <small>${formatPrice(item.price)} x ${item.quantity} ${product.unit}${item.quantity > 1 ? 's' : ''}</small>
+                </div>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-outline-secondary" data-action="decrease" data-index="${index}">-</button>
+                    <span class="mx-2">${item.quantity}</span>
+                    <button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="${index}">+</button>
+                </div>
+            </div>
+        `;
     });
 
-function formatPrice(n) {
-    return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+    cartTotal.textContent = formatPrice(total);
 }
+
+function addToCart(product, quantity) {
+    const productIndex = products.findIndex(p => p.id === product.id);
+
+    products[productIndex].stock -= quantity;
+    
+    const existingCartItem = cart.find(item => item.id === product.id);
+    if (existingCartItem) {
+        existingCartItem.quantity += quantity;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: quantity,
+            stock: product.stock 
+        });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    renderCartDropdown();
+    renderProducts(); 
+}
+
+cartItems.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+    const target = e.target;
+    if (target.dataset.action === "decrease" || target.dataset.action === "increase") {
+        const index = parseInt(target.dataset.index);
+        const amount = target.dataset.action === "increase" ? 1 : -1;
+        changeQuantity(index, amount);
+    }
+});
+
+document.getElementById("clearCartBtn").addEventListener("click", (e) => {
+    e.stopPropagation(); 
+    
+    cart.forEach(item => {
+        const product = products.find(p => p.id === parseInt(item.id));
+        if (product) {
+            product.stock += item.quantity;
+        }
+    });
+
+    localStorage.removeItem("cart");
+    cart = [];
+    updateCartCount();
+    renderCartDropdown();
+    renderProducts();
+});
+
+function changeQuantity(index, amount) {
+    const item = cart[index];
+    const product = products.find(p => p.id === parseInt(item.id));
+
+    if (!product) return;
+
+    
+    if (amount > 0) {
+        if (product.stock <= 0) {
+            alert("No hay más stock disponible de este producto.");
+            return;
+        }
+        product.stock -= amount;
+        item.quantity += amount;
+    } else { 
+        if (item.quantity <= 1) {
+            product.stock += item.quantity; 
+            cart.splice(index, 1);
+        } else {
+            product.stock -= amount; 
+            item.quantity += amount;
+        }
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    renderCartDropdown();
+    renderProducts();
+}
+
+
 
 priceRange.addEventListener('input', (e) => {
     currentMaxPrice = Number(e.target.value);
@@ -169,6 +303,7 @@ document.getElementById('searchBtn').addEventListener('click', () => {
     currentQuery = searchInput.value;
     renderProducts();
 });
+
 searchInput.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
         currentQuery = searchInput.value;
@@ -176,120 +311,12 @@ searchInput.addEventListener('keyup', (e) => {
     }
 });
 
+function formatPrice(n) {
+    return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+}
+
 priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
 renderCategories();
 renderProducts();
-
-
-
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-const cartCount = document.getElementById("cartCount");
-const cartItems = document.getElementById("cartItems");
-const cartTotal = document.getElementById("cartTotal");
-
-function updateCartCount() {
-    cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
-}
-
-function renderCartDropdown() {
-    if (cart.length === 0) {
-        cartItems.innerHTML = `<span class="text-muted">Tu carrito está vacío</span>`;
-        cartTotal.textContent = "$0";
-        return;
-    }
-
-    cartItems.innerHTML = "";
-    let total = 0;
-
-    cart.forEach((item, index) => {
-        total += item.price * item.quantity;
-
-        cartItems.innerHTML += `
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <strong>${item.name}</strong><br>
-                    <small>$${item.price}</small>
-                </div>
-                <div class="d-flex align-items-center">
-                    <button class="btn btn-sm btn-outline-secondary" data-action="decrease" data-index="${index}">-</button>
-                    <span class="mx-2">${item.quantity}</span>
-                    <button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="${index}">+</button>
-                </div>
-            </div>
-        `;
-    });
-
-    cartTotal.textContent = `$${total}`;
-}
-
-function addToCart(product) {
-    const existing = cart.find(p => p.id === product.id);
-
-    if (existing) {
-        existing.quantity++;
-    } else {
-        cart.push(product);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
-    renderCartDropdown();
-}
-
-
-productsContainer.addEventListener("click", e => {
-    // Clic en el botón "Agregar" de la tarjeta de producto
-    if (e.target.classList.contains("add-to-cart")) {
-        const btn = e.target;
-        const product = {
-            id: btn.dataset.id,
-            name: btn.dataset.name,
-            price: parseInt(btn.dataset.price),
-            quantity: 1
-        };
-        addToCart(product);
-    } 
-    // Clic en la tarjeta de producto completa
-    else {
-        const card = e.target.closest('.product-card');
-        if (card) {
-            const productId = card.dataset.id;
-            showProductDetails(productId);
-        }
-    }
-});
-
-cartItems.addEventListener("click", (e) => {
-    e.stopPropagation(); 
-    const target = e.target;
-    if (target.dataset.action === "decrease" || target.dataset.action === "increase") {
-        const index = parseInt(target.dataset.index);
-        const amount = target.dataset.action === "increase" ? 1 : -1;
-        changeQuantity(index, amount);
-    }
-});
-
-document.getElementById("clearCartBtn").addEventListener("click", (e) => {
-    e.stopPropagation(); 
-    localStorage.removeItem("cart");
-    cart = [];
-    updateCartCount();
-    renderCartDropdown();
-});
-
-function changeQuantity(index, amount) {
-    cart[index].quantity += amount;
-
-    if (cart[index].quantity <= 0) {
-        cart.splice(index, 1); 
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
-    renderCartDropdown();
-}
-
-
 updateCartCount();
 renderCartDropdown();
