@@ -5,27 +5,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
+    
+            const nombre = document.getElementById('nombre').value; // <-- NUEVA LÍNEA
             const email = document.getElementById('email').value;
             const pwd = document.getElementById('pwd').value;
             const pwd2 = document.getElementById('pwd2').value;
-
+    
             if (pwd !== pwd2) {
                 alert('Las contraseñas no coinciden.');
                 return;
             }
-
-            // Simular guardado de usuario en localStorage
+    
             const users = JSON.parse(localStorage.getItem('users')) || [];
             if (users.find(user => user.email === email)) {
                 alert('El correo electrónico ya está registrado.');
                 return;
             }
-
-            users.push({ email, pwd });
+    
+            // Guarda el nombre junto con el email y la contraseña
+            users.push({ nombre, email, pwd }); // <-- MODIFICACIÓN
             localStorage.setItem('users', JSON.stringify(users));
-
-            alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+    
+            alert('¡Registro exitoso! Ahora puedes iniciar sesión!');
             window.location.href = 'login.html';
         });
     }

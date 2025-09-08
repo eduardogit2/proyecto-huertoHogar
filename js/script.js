@@ -17,6 +17,7 @@ const priceValue = document.getElementById('priceValue');
 const clearBtn = document.getElementById('clearFilters');
 const searchInput = document.getElementById('searchInput');
 const noResults = document.getElementById('noResults');
+const authButtons = document.getElementById('authButtons');
 
 let currentCategory = 'Todas';
 let currentMaxPrice = Number(priceRange.value);
@@ -141,6 +142,14 @@ productsContainer.addEventListener("click", e => {
 
 modalContent.addEventListener("click", (e) => {
     if (e.target.classList.contains("add-to-cart-modal")) {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+        if (isLoggedIn !== 'true') {
+            alert('Debes iniciar sesión para comprar.');
+            productDetailModal.hide();
+            return;
+        }
+        
         const btn = e.target;
         const productId = parseInt(btn.dataset.id);
         const quantity = parseInt(document.getElementById('quantity-modal').value);
@@ -315,8 +324,41 @@ function formatPrice(n) {
     return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
 }
 
+function updateAuthUI() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (isLoggedIn === 'true' && currentUser) {
+        // Ahora usa el nombre completo del usuario
+        authButtons.innerHTML = `
+            <span class="d-flex align-items-center me-2" style="color: var(--color-text-main);">Hola, ${currentUser.nombre}</span>
+            <button id="logoutBtn" class="btn btn-sm" style="background-color: var(--color-primary); color: #fff;">Cerrar sesión</button>
+        `;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('currentUser');
+            alert('Has cerrado sesión.');
+            window.location.reload();
+        });
+
+    } else {
+        // Usuario no logueado: mostrar botones de login y registro
+        authButtons.innerHTML = `
+            <a href="login.html" class="btn btn-accent btn-sm" style="background-color: var(--color-primary);">
+                <span style="color:#fff;">Iniciar sesión</span>
+            </a>
+            <a href="registro.html" class="btn btn-accent btn-sm" style="background-color: var(--color-primary);">
+                <span style="color:#fff;">Regístrate</span>
+            </a>
+        `;
+    }
+}
+
+
 priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
 renderCategories();
 renderProducts();
 updateCartCount();
 renderCartDropdown();
+updateAuthUI();
