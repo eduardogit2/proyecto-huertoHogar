@@ -10,6 +10,7 @@ const products = [
     { id: 9, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod9.jpg", description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.", stock: 90, origin: "Los Lagos, Chile", unit: "litro" }
 ];
 
+// Mueve los elementos DOM al principio para que sean accesibles en todo el script.
 const productsContainer = document.getElementById('productsContainer');
 const categoryList = document.getElementById('categoryList');
 const priceRange = document.getElementById('priceRange');
@@ -18,35 +19,55 @@ const clearBtn = document.getElementById('clearFilters');
 const searchInput = document.getElementById('searchInput');
 const noResults = document.getElementById('noResults');
 const authButtons = document.getElementById('authButtons');
+const categoryDescriptionEl = document.getElementById('categoryDescription'); // Nuevo elemento
+
 
 let currentCategory = 'Todas';
 let currentMaxPrice = Number(priceRange.value);
 let currentQuery = '';
-
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
 const cartCount = document.getElementById("cartCount");
 const cartItems = document.getElementById("cartItems");
 const cartTotal = document.getElementById("cartTotal");
-
 const productDetailModal = new bootstrap.Modal(document.getElementById('productDetailModal'));
 const modalTitle = document.getElementById('productDetailModalLabel');
 const modalContent = document.getElementById('productDetailContent');
 
 
+// Nuevo objeto con las descripciones de las categorías
+const categoryDescriptions = {
+    'Todas': 'Explora nuestra amplia selección de productos frescos y de alta calidad para tu hogar.',
+    'Frutas': 'Deliciosas y jugosas frutas de temporada, directamente del huerto a tu mesa.',
+    'Verduras': 'Las verduras más frescas y nutritivas para una alimentación sana y equilibrada.',
+    'Lácteos': 'Productos lácteos cremosos y frescos, perfectos para tu desayuno y recetas.',
+    'Orgánicos': 'Productos cultivados de forma natural, sin pesticidas ni químicos, para una opción más saludable.'
+};
+
 function renderCategories() {
-    const cats = ['Todas', ...new Set(products.map(p => p.category))];
+    // Obtener las categorías únicas de los productos y agregar 'Todas'
+    const uniqueCategories = ['Todas', ...new Set(products.map(p => p.category))];
+    const categoryList = document.getElementById('categoryList');
     categoryList.innerHTML = '';
-    cats.forEach(cat => {
+
+    uniqueCategories.forEach(cat => {
         const li = document.createElement('li');
-        li.className = 'list-group-item list-group-item-action';
+        li.className = 'list-group-item';
+        // Agrega un data-attribute para la categoría
+        li.setAttribute('data-category', cat);
         li.textContent = cat;
-        li.style.cursor = 'pointer';
-        if (cat === currentCategory) li.classList.add('active');
+
+        if (cat === currentCategory) {
+            li.classList.add('active');
+        }
+
         li.addEventListener('click', () => {
             currentCategory = cat;
-            renderCategories();
+            renderCategories(); // Vuelve a renderizar para aplicar la clase 'active'
             renderProducts();
+
+            // Muestra la descripción de la categoría
+            categoryDescriptionEl.textContent = categoryDescriptions[cat] || '';
+            categoryDescriptionEl.style.display = 'block';
         });
         categoryList.appendChild(li);
     });
@@ -184,8 +205,8 @@ function renderCartDropdown() {
     let total = 0;
 
     cart.forEach((item, index) => {
-        const product = products.find(p => p.id === item.id); // Encuentra el producto para obtener la unidad
-        if (!product) return; // Si el producto no existe, no lo renderiza
+        const product = products.find(p => p.id === item.id);
+        if (!product) return;
 
         total += item.price * item.quantity;
         cartItems.innerHTML += `
@@ -263,7 +284,6 @@ function changeQuantity(index, amount) {
 
     if (!product) return;
 
-    
     if (amount > 0) {
         if (product.stock <= 0) {
             alert("No hay más stock disponible de este producto.");
@@ -286,7 +306,6 @@ function changeQuantity(index, amount) {
     renderCartDropdown();
     renderProducts();
 }
-
 
 
 priceRange.addEventListener('input', (e) => {
@@ -327,7 +346,6 @@ function updateAuthUI() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     if (isLoggedIn === 'true' && currentUser) {
-        // Ahora usa el nombre completo del usuario
         authButtons.innerHTML = `
             <span class="d-flex align-items-center me-2" style="color: var(--color-text-main);">Hola, ${currentUser.nombre}</span>
             <button id="logoutBtn" class="btn btn-sm" style="background-color: var(--color-primary); color: #fff;">Cerrar sesión</button>
@@ -341,7 +359,6 @@ function updateAuthUI() {
         });
 
     } else {
-        // Usuario no logueado: mostrar botones de login y registro
         authButtons.innerHTML = `
             <a href="login.html" class="btn btn-accent btn-sm" style="background-color: var(--color-primary);">
                 <span style="color:#fff;">Iniciar sesión</span>
@@ -353,10 +370,15 @@ function updateAuthUI() {
     }
 }
 
-
+// Inicializar la interfaz con los datos y estados correctos
 priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
 renderCategories();
 renderProducts();
 updateCartCount();
 renderCartDropdown();
 updateAuthUI();
+// Muestra la descripción por defecto al cargar la página.
+if (categoryDescriptionEl) {
+    categoryDescriptionEl.textContent = categoryDescriptions['Todas'];
+    categoryDescriptionEl.style.display = 'block';
+}
