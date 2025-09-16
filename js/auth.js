@@ -84,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const user = users.find(u => u.email === email);
             
-            // Verifica si el usuario existe y si la contraseña coincide
             if (user && user.pwd === pwd) {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('currentUser', JSON.stringify(user));
@@ -93,9 +92,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = 'index.html';
                 }, 1500);
             } else {
-                // Si el usuario no se encuentra o la contraseña no coincide
                 showAlert('Credenciales incorrectas.', 'danger');
             }
         });
     }
+
+    // --- LÓGICA DE LA BARRA DE NAVEGACIÓN (en todas las páginas) ---
+    window.updateAuthUI = function() {
+        const authButtons = document.getElementById('authButtons');
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+        if (authButtons) {
+            authButtons.innerHTML = ''; 
+
+            if (isLoggedIn && currentUser) {
+                const welcomeMessage = document.createElement('span');
+                welcomeMessage.className = 'nav-link text-main me-2';
+                welcomeMessage.textContent = `Hola, ${currentUser.nombre}`;
+                authButtons.appendChild(welcomeMessage);
+
+                const logoutButton = document.createElement('button');
+                logoutButton.className = 'btn btn-sm btn-primary';
+                logoutButton.textContent = 'Cerrar Sesión';
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('cart');
+                    window.location.href = 'index.html';
+                });
+                authButtons.appendChild(logoutButton);
+
+            } else {
+                const loginButton = document.createElement('a');
+                loginButton.className = 'btn btn-sm btn-primary';
+                loginButton.href = 'login.html';
+                loginButton.textContent = 'Iniciar Sesión';
+                authButtons.appendChild(loginButton);
+
+                const registerButton = document.createElement('a');
+                registerButton.className = 'btn btn-sm btn-primary';
+                registerButton.href = 'registro.html';
+                registerButton.textContent = 'Registrarse';
+                authButtons.appendChild(registerButton);
+            }
+        }
+    }
+
+    // Llamada inicial para renderizar la UI
+    updateAuthUI();
 });
