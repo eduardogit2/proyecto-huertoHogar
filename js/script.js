@@ -95,6 +95,7 @@ const products = [
         id: 7,
         name: "Miel Orgánica",
         price: 5000,
+        discountPrice: 4500,
         category: "Orgánicos",
         img: "img/prod7.jpg",
         description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.",
@@ -279,7 +280,12 @@ function renderProducts() {
                 </div>
                 <p class="card-text text-center product-description">${p.description.substring(0, 70)}...</p>
                 <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
-                    <span class="price fw-bold">${formatPrice(p.price)}</span>
+                    ${
+                        p.discountPrice 
+                        ? `<span class="price fw-bold text-danger">${formatPrice(p.discountPrice)}</span>
+                        <small class="text-muted text-decoration-line-through ms-2">${formatPrice(p.price)}</small>`
+                        : `<span class="price fw-bold">${formatPrice(p.price)}</span>`
+                    }
                     <span class="text-success fw-bold small">Stock: <span class="stock-display ">${p.stock} ${p.unit}${p.unit === 'bolsa' || p.unit === 'litro' || p.unit === 'frasco' ? 's' : ''}</span></span>
                 </div>
             </div>
