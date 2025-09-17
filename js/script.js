@@ -261,7 +261,7 @@ function renderProducts() {
     filtered.forEach(p => {
         const col = document.createElement('div');
         col.className = 'col-sm-6 col-md-4 mb-4';
-        
+
         const averageRating = p.reviews.length > 0
             ? (p.reviews.reduce((acc, r) => acc + r.rating, 0) / p.reviews.length).toFixed(1)
             : 'Sin valorar';
@@ -280,7 +280,7 @@ function renderProducts() {
                 <p class="card-text text-center product-description">${p.description.substring(0, 70)}...</p>
                 <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
                     <span class="price fw-bold">${formatPrice(p.price)}</span>
-                    <span class="text-success fw-bold small">Stock: <span class="stock-display ">${p.stock} ${p.unit}${p.unit === 'bolsa' || p.unit === 'litro' || p.unit ==='frasco' ? 's' : ''}</span></span>
+                    <span class="text-success fw-bold small">Stock: <span class="stock-display ">${p.stock} ${p.unit}${p.unit === 'bolsa' || p.unit === 'litro' || p.unit === 'frasco' ? 's' : ''}</span></span>
                 </div>
             </div>
         </div>
@@ -366,9 +366,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const productToReview = products.find(p => p.id === parseInt(currentProductId));
             productToReview.reviews.push(newReview);
-            
+
             saveProducts();
-            
+
             renderReviews(productToReview.reviews);
             renderProducts();
 
@@ -406,7 +406,7 @@ modalContent.addEventListener("click", (e) => {
             productDetailModal.hide();
             return;
         }
-        
+
         const btn = e.target;
         const productId = parseInt(btn.dataset.id);
         const quantity = parseInt(document.getElementById('quantity-modal').value);
@@ -607,3 +607,37 @@ document.getElementById('goToCheckoutBtn').addEventListener('click', () => {
         window.location.href = 'compra.html';
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const shareBtn = document.getElementById('shareProductBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            const productTitle = document.getElementById('productDetailModalLabel').textContent;
+            const productUrl = window.location.href;
+            const fullText = `${productTitle} - ${productUrl}`;
+
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+            if (isMobile && navigator.share) {
+                try {
+                    await navigator.share({
+                        title: `Mira este producto: ${productTitle}`,
+                        text: "Lo encontré en HuertoHogar 🌱",
+                        url: productUrl
+                    });
+                } catch (err) {
+                    console.log("Error al compartir:", err);
+                }
+            } else {
+                try {
+                    await navigator.clipboard.writeText(fullText);
+                    alert("📋 Enlace copiado al portapapeles");
+                } catch (err) {
+                    alert("❌ No se pudo copiar el enlace, copia manualmente:\n" + fullText);
+                }
+            }
+        });
+    }
+});
+
+

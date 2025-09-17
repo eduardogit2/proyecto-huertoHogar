@@ -33,7 +33,6 @@
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="ofertas.html">Ofertas</a></li>
                     <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
                 </ul>
@@ -152,8 +151,14 @@
                                 <label for="review-text" class="form-label">Comentario</label>
                                 <textarea id="review-text" class="form-control" rows="3" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Enviar Reseña</button>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">Enviar Reseña</button>
+                                <button type="button" id="shareProductBtn" class="btn btn-primary">Compartir Producto</button>
+                            </div>
                         </form>
+
+
                     </div>
 
                     <p id="review-section-message" class="text-muted text-center fst-italic" style="display: none;">
