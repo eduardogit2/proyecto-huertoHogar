@@ -308,7 +308,13 @@ function showProductDetails(productId) {
 
     document.getElementById('productDetailContent').innerHTML = `
         <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3 w-100 rounded">
-        <p><strong>Precio:</strong> ${formatPrice(product.price)} por ${product.unit}</p>
+        <p><strong>Precio:</strong> 
+            ${product.discountPrice 
+                ? `<span class="text-danger fw-bold">${formatPrice(product.discountPrice)}</span> 
+                <small class="text-muted text-decoration-line-through">${formatPrice(product.price)}</small>`
+                : formatPrice(product.price)
+            } por ${product.unit}
+        </p>
         <p><strong>Categoría:</strong> ${product.category}</p>
         <p><strong>Origen:</strong> ${product.origin}</p>
         <p><strong>Descripción:</strong> ${product.description}</p>
@@ -472,6 +478,9 @@ function renderCartDropdown() {
 function addToCart(product, quantity) {
     const productIndex = products.findIndex(p => p.id === product.id);
     products[productIndex].stock -= quantity;
+
+    const finalPrice = product.discountPrice ? product.discountPrice : product.price; 
+
     const existingCartItem = cart.find(item => item.id === product.id);
     if (existingCartItem) {
         existingCartItem.quantity += quantity;
@@ -479,7 +488,7 @@ function addToCart(product, quantity) {
         cart.push({
             id: product.id,
             name: product.name,
-            price: product.price,
+            price: finalPrice,   
             quantity: quantity,
             stock: product.stock
         });
@@ -489,6 +498,7 @@ function addToCart(product, quantity) {
     renderCartDropdown();
     renderProducts();
 }
+
 
 cartItems.addEventListener("click", (e) => {
     e.stopPropagation();
