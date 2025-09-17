@@ -569,33 +569,6 @@ function formatPrice(n) {
     return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
 }
 
-function updateAuthUI() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    if (isLoggedIn === 'true' && currentUser) {
-        authButtons.innerHTML = `
-            <span class="d-flex align-items-center me-2" style="color: var(--color-text-main);">Hola, ${currentUser.nombre}</span>
-            <button id="logoutBtn" class="btn btn-sm" style="background-color: var(--color-primary); color: #fff;">Cerrar sesión</button>
-        `;
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('currentUser');
-            alert('Has cerrado sesión.');
-            window.location.reload();
-        });
-    } else {
-        authButtons.innerHTML = `
-            <a href="login.html" class="btn btn-accent btn-sm" style="background-color: var(--color-primary);">
-                <span style="color:#fff;">Iniciar sesión</span>
-            </a>
-            <a href="registro.html" class="btn btn-accent btn-sm" style="background-color: var(--color-primary);">
-                <span style="color:#fff;">Regístrate</span>
-            </a>
-        `;
-    }
-}
-
 document.getElementById('goToCheckoutBtn').addEventListener('click', () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 

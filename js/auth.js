@@ -1,144 +1,91 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Función para mostrar alertas de Bootstrap (Accesible globalmente en este script) ---
-    function showAlert(message, type) {
-        const alertContainer = document.getElementById('alertContainer');
-        if (alertContainer) {
-            alertContainer.innerHTML = '';
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-            alertDiv.setAttribute('role', 'alert');
-            alertDiv.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
-            alertContainer.appendChild(alertDiv);
-        }
-    }
 
-    // --- Funciones de validación ---
-    function isValidEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-
-    function isValidPassword(pwd) {
-        const minLength = 8;
-        const hasUpperCase = /[A-Z]/.test(pwd);
-        const hasLowerCase = /[a-z]/.test(pwd);
-        const hasNumber = /[0-9]/.test(pwd);
-        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(pwd);
-        return pwd.length >= minLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
-    }
-
-    // --- LÓGICA DE REGISTRO (en registro.html) ---
+    // LÓGICA DE REGISTRO
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
             const nombre = document.getElementById('nombre').value;
             const email = document.getElementById('email').value;
             const pwd = document.getElementById('pwd').value;
             const pwd2 = document.getElementById('pwd2').value;
-
             if (pwd !== pwd2) {
-                showAlert('Las contraseñas no coinciden.', 'danger');
+                alert('Las contraseñas no coinciden.');
                 return;
             }
-
-            if (!isValidEmail(email)) {
-                showAlert('Por favor, introduce un correo electrónico con un formato válido.', 'danger');
-                return;
-            }
-
-            if (!isValidPassword(pwd)) {
-                showAlert('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial.', 'danger');
-                return;
-            }
-
             const users = JSON.parse(localStorage.getItem('users')) || [];
             if (users.find(user => user.email === email)) {
-                showAlert('El correo electrónico ya está registrado.', 'warning');
+                alert('El correo electrónico ya está registrado.');
                 return;
             }
-
-            users.push({ nombre, email, pwd });
+            users.push({ nombre, email, pwd, historial: [] });
             localStorage.setItem('users', JSON.stringify(users));
-
-            showAlert('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success');
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 1500);
+            alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+            window.location.href = 'login.html';
         });
     }
 
-    // --- LÓGICA DE INICIO DE SESIÓN (en login.html) ---
+    // LÓGICA DE INICIO DE SESIÓN
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
             const email = document.getElementById('email').value;
             const pwd = document.getElementById('pwd').value;
-
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const user = users.find(u => u.email === email);
-            
             if (user && user.pwd === pwd) {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                showAlert(`¡Bienvenido de nuevo, ${user.nombre}!`, 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                alert(`¡Bienvenido de nuevo, ${user.nombre}!`);
+                window.location.href = 'index.html';
             } else {
-                showAlert('Credenciales incorrectas.', 'danger');
+                alert('Credenciales incorrectas.');
             }
         });
     }
 
-    // --- LÓGICA DE LA BARRA DE NAVEGACIÓN (en todas las páginas) ---
-    window.updateAuthUI = function() {
+    // LÓGICA DE LA BARRA DE NAVEGACIÓN
+    function updateAuthUI() {
         const authButtons = document.getElementById('authButtons');
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
         if (authButtons) {
-            authButtons.innerHTML = ''; 
-
+            authButtons.innerHTML = '';
             if (isLoggedIn && currentUser) {
-                const welcomeMessage = document.createElement('span');
-                welcomeMessage.className = 'nav-link text-main me-2';
-                welcomeMessage.textContent = `Hola, ${currentUser.nombre}`;
-                authButtons.appendChild(welcomeMessage);
-
-                const logoutButton = document.createElement('button');
-                logoutButton.className = 'btn btn-sm btn-primary';
-                logoutButton.textContent = 'Cerrar Sesión';
-                logoutButton.addEventListener('click', () => {
+                authButtons.innerHTML = `
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--color-text-main);">
+                            Hola, ${currentUser.nombre}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button id="logoutBtn" class="dropdown-item">Cerrar sesión</button></li>
+                        </ul>
+                    </div>
+                `;
+                document.getElementById('logoutBtn').addEventListener('click', () => {
                     localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('currentUser');
                     localStorage.removeItem('cart');
+                    alert('Has cerrado sesión.');
                     window.location.href = 'index.html';
                 });
-                authButtons.appendChild(logoutButton);
-
             } else {
-                const loginButton = document.createElement('a');
-                loginButton.className = 'btn btn-sm btn-primary';
-                loginButton.href = 'login.html';
-                loginButton.textContent = 'Iniciar Sesión';
-                authButtons.appendChild(loginButton);
-
-                const registerButton = document.createElement('a');
-                registerButton.className = 'btn btn-sm btn-primary';
-                registerButton.href = 'registro.html';
-                registerButton.textContent = 'Registrarse';
-                authButtons.appendChild(registerButton);
+                authButtons.innerHTML = `
+                    <a href="login.html" class="btn btn-sm btn-accent" style="background-color: var(--color-primary);">
+                        <span style="color:#fff;">Iniciar sesión</span>
+                    </a>
+                    <a href="registro.html" class="btn btn-sm btn-accent" style="background-color: var(--color-primary);">
+                        <span style="color:#fff;">Regístrate</span>
+                    </a>
+                `;
             }
         }
     }
 
-    // Llamada inicial para renderizar la UI
+    // Llama a la función para que se ejecute al cargar la página
     updateAuthUI();
 });
