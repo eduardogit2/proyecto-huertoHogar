@@ -595,3 +595,15 @@ function updateAuthUI() {
         `;
     }
 }
+
+document.getElementById('goToCheckoutBtn').addEventListener('click', () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+        alert('Debes iniciar sesión para continuar con la compra.');
+    } else if (cart.length === 0) {
+        alert('Tu carrito está vacío. ¡Agrega productos para continuar!');
+    } else {
+        window.location.href = 'compra.html';
+    }
+});

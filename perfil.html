@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta - HuertoHogar</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
+                <span style="font-family:'Playfair Display', serif; color: var(--secondary-brown); font-weight:700;">
+                    HuertoHogar
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ofertas.html">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                </ul>
+                <div id="authButtons" class="d-flex align-items-center">
+                    </div>
+            </div>
+        </div>
+    </nav>
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <div class="card shadow-lg p-4">
+                    <h2 class="card-title text-center mb-4" style="color: var(--primary-green);">Mi Perfil</h2>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab">Datos Personales</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab">Dirección de Envío</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">Historial de Compras</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content pt-3" id="myTabContent">
+                        <div class="tab-pane fade show active" id="profile" role="tabpanel" tabindex="0">
+                            <form id="profileForm">
+                                <div class="mb-3">
+                                    <label for="profileNombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="profileNombre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profileEmail" class="form-label">Correo electrónico</label>
+                                    <input type="email" class="form-control" id="profileEmail" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profilePassword" class="form-label">Cambiar Contraseña</label>
+                                    <input type="password" class="form-control" id="profilePassword">
+                                    <div class="form-text">Déjalo en blanco si no quieres cambiarla.</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="address" role="tabpanel" tabindex="0">
+                            <form id="addressForm">
+                                <div class="mb-3">
+                                    <label for="addressCalle" class="form-label">Calle y Número</label>
+                                    <input type="text" class="form-control" id="addressCalle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="addressCiudad" class="form-label">Ciudad</label>
+                                    <input type="text" class="form-control" id="addressCiudad" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="addressRegion" class="form-label">Región</label>
+                                    <input type="text" class="form-control" id="addressRegion" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Guardar Dirección</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="history" role="tabpanel" tabindex="0">
+                            <div id="purchase-history" class="list-group">
+                                </div>
+                            <div id="no-history-message" class="text-center text-muted fst-italic mt-3" style="display: none;">
+                                Aún no tienes compras en tu historial.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            © 2025 HuertoHogar — Productos frescos y sostenibles
+        </div>
+    </footer>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/perfil.js"></script>
+</body>
+</html>
