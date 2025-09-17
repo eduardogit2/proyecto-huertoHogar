@@ -46,7 +46,7 @@
                     </form>
 
                     <div id="authButtons" class="d-flex gap-2">
-                        </div>
+                    </div>
 
                     <div class="dropdown">
                         <button class="btn btn-accent btn-sm position-relative dropdown-toggle" id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -92,7 +92,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Categorías</h5>
                         <ul id="categoryList" class="list-group list-group-flush">
-                            </ul>
+                        </ul>
 
                         <hr>
                         <h6 style="color: var(--primary-green);">Filtrar por</h6>
@@ -110,7 +110,7 @@
             <section id="catalog" class="col-lg-9">
                 <div id="categoryDescription" class="alert alert-info category-description" style="display:none;"></div>
                 <div class="row" id="productsContainer">
-                    </div>
+                </div>
 
                 <div id="noResults" class="text-center text-muted mt-4" style="display:none;">
                     No se encontraron productos.
@@ -126,7 +126,7 @@
     </footer>
 
     <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="productDetailModalLabel"></h5>
@@ -134,6 +134,30 @@
                 </div>
                 <div class="modal-body">
                     <div id="productDetailContent"></div>
+
+                    <hr>
+
+                    <h5 class="mb-3">Reseñas de Clientes</h5>
+                    <div id="reviews-container" class="mb-4"></div>
+
+                    <div id="review-form-section" style="display: none;">
+                        <h6 class="mb-3">Deja tu reseña</h6>
+                        <form id="review-form">
+                            <div class="mb-3">
+                                <label for="review-rating" class="form-label">Valoración (1-5)</label>
+                                <input type="number" id="review-rating" class="form-control" min="1" max="5" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="review-text" class="form-label">Comentario</label>
+                                <textarea id="review-text" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar Reseña</button>
+                        </form>
+                    </div>
+
+                    <p id="review-section-message" class="text-muted text-center fst-italic" style="display: none;">
+                        Debes <a href="login.html">iniciar sesión</a> para dejar una reseña.
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
