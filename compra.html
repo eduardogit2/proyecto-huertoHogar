@@ -1,11 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>compra</title>
+    <title>HuertoHogar - Finalizar Compra</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>pagina en construcción para compra</h1>
+    <nav class="navbar navbar-expand-lg shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
+                <span style="font-family:'Playfair Display', serif; color: var(--secondary-brown); font-weight:700;">
+                    HuertoHogar
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ofertas.html">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg p-4">
+                    <h2 class="card-title text-center mb-4" style="color: var(--primary-green);">Resumen de tu Compra</h2>
+                    
+                    <div id="purchase-summary">
+                        </div>
+
+                    <div id="no-products-message" class="text-center text-muted fst-italic mt-4" style="display: none;">
+                        Tu carrito está vacío. <a href="index.html">¡Vuelve a la tienda!</a>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex justify-content-between align-items-center fw-bold fs-5">
+                        <span>Total a pagar:</span>
+                        <span id="final-total"></span>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button id="checkout-btn" class="btn btn-primary btn-lg">Finalizar Compra</button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="index.html" class="btn btn-link text-muted">Volver a la tienda</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            © 2025 HuertoHogar — Productos frescos y sostenibles
+        </div>
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/compra.js"></script>
 </body>
 </html>
