@@ -37,9 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const rut = document.getElementById('rut').value;
             const pwd = document.getElementById('pwd').value;
             const pwd2 = document.getElementById('pwd2').value;
-            const address = document.getElementById('address').value;
-            const city = document.getElementById('city').value;
-            const region = document.getElementById('region').value;
 
             // VALIDACIONES
             if (!validarRut(rut)) {
@@ -65,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            users.push({ nombre, email, rut, pwd, address, city, region, historial: [] });
+            // Aquí se modificó el objeto de usuario para que no incluya los campos de dirección
+            users.push({ nombre, email, rut, pwd, historial: [] });
             localStorage.setItem('users', JSON.stringify(users));
             alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
             window.location.href = 'login.html';

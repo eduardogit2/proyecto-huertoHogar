@@ -139,12 +139,12 @@ const products = [
 
 document.addEventListener('DOMContentLoaded', () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     if (isLoggedIn !== 'true' || !currentUser) {
         alert('Debes iniciar sesión para acceder a esta página.');
-        window.location.href = 'login.html'; 
-        return; 
+        window.location.href = 'login.html';
+        return;
     }
 
     const purchaseSummary = document.getElementById('purchase-summary');
@@ -154,20 +154,88 @@ document.addEventListener('DOMContentLoaded', () => {
     const deliveryMethodSelect = document.getElementById('deliveryMethod');
     const sucursalSection = document.getElementById('sucursalSection');
     const addressSection = document.getElementById('addressSection');
-
-    // Inicializar los campos de dirección si el usuario ya los tiene
-    if (currentUser.direccion) {
-        document.getElementById('userAddress').value = currentUser.direccion.calle || '';
-        document.getElementById('userCity').value = currentUser.direccion.comuna || '';
-        document.getElementById('userRegion').value = currentUser.direccion.region || '';
-    }
+    const addressSelect = document.getElementById('addressSelect');
+    const newAddressInputs = document.getElementById('newAddressInputs');
+    const saveAddressCheckbox = document.getElementById('saveAddressCheckbox');
     
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let total = 0;
+    // CAMPOS DE DIRECCIÓN PARA EL AUTOCOMPLETADO
+    const addressCalleInput = document.getElementById('addressCalle');
+    const addressCiudadInput = document.getElementById('addressCiudad');
+    const addressRegionInput = document.getElementById('addressRegion');
+
+    if (!currentUser.addresses) {
+        currentUser.addresses = [];
+    }
 
     function formatPrice(n) {
         return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
     }
+
+    function renderAddressOptions() {
+        addressSelect.innerHTML = '<option value="new" selected>Usar una nueva dirección</option>';
+        if (currentUser.addresses.length > 0) {
+            currentUser.addresses.forEach((addr, index) => {
+                const option = document.createElement('option');
+                option.value = `savedAddress${index}`;
+                option.textContent = `${addr.calle}, ${addr.ciudad}, ${addr.region}`;
+                addressSelect.appendChild(option);
+            });
+        }
+    }
+
+    addressSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'new') {
+            newAddressInputs.style.display = 'block';
+        } else {
+            newAddressInputs.style.display = 'none';
+        }
+    });
+
+    // Lógica para autocompletado de dirección
+    if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+        const autocomplete = new google.maps.places.Autocomplete(addressCalleInput, {
+            types: ['address'],
+            componentRestrictions: { 'country': 'cl' }
+        });
+
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+
+            addressCalleInput.value = '';
+            addressCiudadInput.value = '';
+            addressRegionInput.value = '';
+
+            for (const component of place.address_components) {
+                const componentType = component.types[0];
+                switch (componentType) {
+                    case 'street_number': {
+                        addressCalleInput.value = `${component.long_name} `;
+                        break;
+                    }
+                    case 'route': {
+                        addressCalleInput.value += component.long_name;
+                        break;
+                    }
+                    case 'locality': {
+                        addressCiudadInput.value = component.long_name;
+                        break;
+                    }
+                    case 'administrative_area_level_1': {
+                        addressRegionInput.value = component.long_name;
+                        break;
+                    }
+                }
+            }
+        });
+    } else {
+        console.error("Google Maps Places API no se ha cargado correctamente.");
+    }
+    
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let total = 0;
 
     if (cart.length === 0) {
         noProductsMessage.style.display = 'block';
@@ -185,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         itemDiv.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
 
         const unitDisplay = item.quantity > 1 && (productInfo.unit === 'bolsa' || productInfo.unit === 'litro' || productInfo.unit === 'frasco' || productInfo.unit === 'kg')
-            ? productInfo.unit + 's' 
+            ? productInfo.unit + 's'
             : productInfo.unit;
 
         itemDiv.innerHTML = `
@@ -200,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     finalTotalElement.textContent = formatPrice(total);
 
-    // Lógica para mostrar/ocultar secciones
     deliveryMethodSelect.addEventListener('change', (e) => {
         if (e.target.value === 'sucursal') {
             sucursalSection.style.display = 'block';
@@ -208,23 +275,22 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (e.target.value === 'domicilio') {
             sucursalSection.style.display = 'none';
             addressSection.style.display = 'block';
+            renderAddressOptions();
         } else {
             sucursalSection.style.display = 'none';
             addressSection.style.display = 'none';
         }
     });
 
-    // Evento de clic en Finalizar Compra
     checkoutBtn.addEventListener('click', () => {
         const selectedMethod = deliveryMethodSelect.value;
-        const purchaseDetails = {
+        let purchaseDetails = {
             id: Date.now(),
             date: new Date().toISOString(),
             items: cart,
-            total: total,
-            method: selectedMethod
+            total: total
         };
-        
+
         let isValid = true;
         let alertMessage = '';
 
@@ -237,28 +303,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 isValid = false;
                 alertMessage = 'Por favor, selecciona una sucursal para el retiro.';
             } else {
+                purchaseDetails.tipoEntrega = 'retiro en sucursal';
                 purchaseDetails.sucursal = selectedSucursal;
             }
-        }else if (selectedMethod === 'domicilio') {
-            const address = document.getElementById('userAddress').value;
-            const city = document.getElementById('userCity').value;
-            const region = document.getElementById('userRegion').value;
-
-            if (!address || !city || !region) {
-                isValid = false;
-                alertMessage = 'Por favor, completa todos los campos de la dirección.';
+        } else if (selectedMethod === 'domicilio') {
+            const selectedOption = addressSelect.value;
+            let selectedAddress = null;
+            if (selectedOption === 'new') {
+                const newCalle = document.getElementById('addressCalle').value.trim();
+                const newCiudad = document.getElementById('addressCiudad').value.trim();
+                const newRegion = document.getElementById('addressRegion').value.trim();
+                if (!newCalle || !newCiudad || !newRegion) {
+                    isValid = false;
+                    alertMessage = 'Por favor, completa todos los campos de la nueva dirección.';
+                } else {
+                    selectedAddress = `${newCalle}, ${newCiudad}, ${newRegion}`;
+                    if (saveAddressCheckbox.checked) {
+                        const isDuplicate = currentUser.addresses.some(addr =>
+                            `${addr.calle}, ${addr.ciudad}, ${addr.region}` === selectedAddress
+                        );
+                        if (!isDuplicate) {
+                            currentUser.addresses.push({ calle: newCalle, ciudad: newCiudad, region: newRegion });
+                        }
+                    }
+                }
             } else {
-                purchaseDetails.direccion = {
-                    calle: address,
-                    comuna: city,
-                    region: region
-                };
-                // Guarda la dirección en el perfil del usuario para futuras compras
-                currentUser.direccion = {
-                    calle: address,
-                    comuna: city,
-                    region: region
-                };
+                const index = selectedOption.replace('savedAddress', '');
+                const addr = currentUser.addresses[index];
+                selectedAddress = `${addr.calle}, ${addr.ciudad}, ${addr.region}`;
+            }
+
+            if (isValid) {
+                purchaseDetails.tipoEntrega = 'domicilio';
+                purchaseDetails.direccion = selectedAddress;
             }
         }
 
@@ -267,7 +344,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Si la validación pasa, actualiza y guarda el historial de compra
         if (!currentUser.historial) {
             currentUser.historial = [];
         }
@@ -280,90 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
             allUsers[userIndex] = currentUser;
             localStorage.setItem('users', JSON.stringify(allUsers));
         }
-        
+
         localStorage.removeItem('cart');
         alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
         window.location.href = 'index.html';
     });
-});
-
-// Obtener elementos del formulario
-const deliveryMethodSelect = document.getElementById('deliveryMethod');
-const sucursalSection = document.getElementById('sucursalSection');
-const addressSection = document.getElementById('addressSection');
-const savedAddressRadioContainer = document.getElementById('savedAddressRadioContainer');
-const useSavedAddressRadio = document.getElementById('useSavedAddress');
-const useNewAddressRadio = document.getElementById('useNewAddress');
-const savedAddressText = document.getElementById('savedAddressText');
-const checkoutBtn = document.getElementById('checkout-btn');
-
-// Lógica para mostrar/ocultar secciones
-deliveryMethodSelect.addEventListener('change', (event) => {
-    const selectedMethod = event.target.value;
-    if (selectedMethod === 'sucursal') {
-        sucursalSection.style.display = 'block';
-        addressSection.style.display = 'none';
-    } else if (selectedMethod === 'domicilio') {
-        sucursalSection.style.display = 'none';
-        addressSection.style.display = 'block';
-    } else {
-        sucursalSection.style.display = 'none';
-        addressSection.style.display = 'none';
-    }
-});
-
-// Lógica para el perfil de usuario y la dirección guardada
-document.addEventListener('DOMContentLoaded', () => {
-    // Simular que el usuario está logueado y obtener su perfil
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    // Si hay un usuario logueado y tiene una dirección guardada...
-    if (currentUser && currentUser.address) {
-        // Mostrar la opción de usar la dirección guardada
-        savedAddressRadioContainer.style.display = 'block';
-        savedAddressText.textContent = `${currentUser.address}, ${currentUser.city}, ${currentUser.region}`;
-    }
-});
-
-// Lógica para cambiar entre dirección guardada y nueva
-useSavedAddressRadio.addEventListener('change', () => {
-    if (useSavedAddressRadio.checked) {
-        addressSection.style.display = 'none';
-    }
-});
-
-useNewAddressRadio.addEventListener('change', () => {
-    if (useNewAddressRadio.checked) {
-        addressSection.style.display = 'block';
-    }
-});
-
-// Evento al hacer clic en "Finalizar Compra"
-checkoutBtn.addEventListener('click', (event) => {
-    event.preventDefault();
-
-    // Obtener la dirección según la opción seleccionada
-    let finalAddress = null;
-    if (deliveryMethodSelect.value === 'domicilio') {
-        if (useSavedAddressRadio.checked) {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser && currentUser.address) {
-                finalAddress = {
-                    address: currentUser.address,
-                    city: currentUser.city,
-                    region: currentUser.region
-                };
-            }
-        } else {
-            finalAddress = {
-                address: document.getElementById('userAddress').value,
-                city: document.getElementById('userCity').value,
-                region: document.getElementById('userRegion').value
-            };
-        }
-    }
-    
-    // Aquí puedes continuar con el proceso de compra usando la dirección en la variable 'finalAddress'
-    console.log('Dirección final seleccionada:', finalAddress);
-    // ... tu código para finalizar la compra
 });

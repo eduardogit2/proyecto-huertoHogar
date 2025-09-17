@@ -8,6 +8,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUsLTP0cRh90vczvFUaKntQfaRi7UmCGk&callback=initMaps&libraries=marker" async defer></script>
 </head>
 
 <body>
@@ -26,8 +27,8 @@
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="blog.html">Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="sucursales.html">Sucursales</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
                     <form class="d-flex" role="search" id="searchForm">
@@ -37,19 +38,6 @@
                         </button>
                     </form>
                     <div id="authButtons" class="d-flex gap-2"></div>
-                    <div class="dropdown">
-                        <button class="btn btn-accent btn-sm position-relative dropdown-toggle" id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            🛒
-                            <span id="cartCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 300px;" aria-labelledby="cartDropdown">
-                            <li id="cartItems">Tu carrito está vacío</li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li class="d-flex justify-content-between fw-bold"><span>Total:</span> <span id="cartTotal">$0</span></li>
-                            <li class="mt-2"><a href="compra.html" class="btn btn-sm btn-primary w-100">Continuar con la compra</a></li>
-                            <li class="mt-2"><button id="clearCartBtn" class="btn btn-sm btn-primary w-100">Limpiar el carrito</button></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -65,9 +53,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Santiago Centro</h5>
                         <p class="text-secondary">Av. Libertador 123, Santiago</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.453870621342!2d-70.6372282!3d-33.4374799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c59b91e168ed%3A0xb2dc130dcad77232!2sAv.%20Alameda%20Libertador%20Bernardo%20O&#39;Higgins%20123%2C%208320135%20Santiago%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1758067571949!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-santiago-centro" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -77,9 +63,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Santiago Oriente</h5>
                         <p class="text-secondary">Av. Apoquindo 456, Las Condes</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3330.4875596625593!2d-70.57581412462734!3d-33.41053097340528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662cee0671af66f%3A0x1fcc645dd9767886!2sAv.%20Apoquindo%2C%20Las%20Condes%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1758067624263!5m2!1ses!2scl"
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-santiago-oriente" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -89,9 +73,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Santiago Poniente</h5>
                         <p class="text-secondary">Av. Pajaritos 789, Maipú</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3326.279241367071!2d-70.75980232462234!3d-33.52012477336191!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662dcdbc10314a5%3A0x26519d42e274c1aa!2sAv.%20Los%20Pajaritos%20789%2C%20Maip%C3%BA%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1758067949468!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-santiago-poniente" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -101,9 +83,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Concepción</h5>
                         <p class="text-secondary">Av. O’Higgins 321</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3193.55807534708!2d-73.0566755244639!3d-36.829108372238885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9669b5da1685d2bf%3A0xc3e49bbcc60adb70!2sLibertador%20Gral.%20Bernardo%20O&#39;Higgins%20321%2C%20Concepci%C3%B3n%2C%20B%C3%ADo%20B%C3%ADo!5e0!3m2!1ses!2scl!4v1758067996179!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-concepcion" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -113,9 +93,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Viña del Mar</h5>
                         <p class="text-secondary">Av. Valparaíso 654</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3345.19554035775!2d-71.55569632464488!3d-33.02497847356097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9689de0a724ff009%3A0x6096fa01f8c6c6d2!2sAv.%20Valpara%C3%ADso%20654%2C%20Vi%C3%B1a%20del%20Mar%2C%20Valpara%C3%ADso!5e0!3m2!1ses!2scl!4v1758068057849!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-vina-del-mar" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -125,9 +103,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Puerto Montt</h5>
                         <p class="text-secondary">Mall Paseo Costanera Piso 2 Local 21</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d610.5623537601607!2d-72.93694001761365!3d-41.472972346093066!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96183a502e23772d%3A0x8a5ee8b07ced1732!2sMall%20Paseo%20Costanera!5e0!3m2!1ses!2scl!4v1758068136596!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-puerto-montt" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -137,9 +113,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Villarrica</h5>
                         <p class="text-secondary">Av. Pedro de Valdivia 159</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2523.0496715759828!2d-72.2272104966149!3d-39.280360739159455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x961461f56ade678f%3A0x5b67f85ba6880399!2sAv.%20Pedro%20de%20Valdivia%20159%2C%20Villarrica%2C%20Araucan%C3%ADa!5e0!3m2!1ses!2scl!4v1758068264007!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-villarrica" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -149,21 +123,17 @@
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Nacimiento</h5>
                         <p class="text-secondary">San Martin 494</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.2777004658556!2d-72.67447742443007!3d-37.50136797205546!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966bd2f185b9a2e7%3A0x72107b11e9266bd5!2sSan%20Mart%C3%ADn%20494%2C%204550509%20Nacimiento%2C%20B%C3%ADo%20B%C3%ADo!5e0!3m2!1ses!2scl!4v1758068524580!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-nacimiento" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card product-card"> 
+                <div class="card product-card">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Valparaíso</h5>
                         <p class="text-secondary">Independencia 1713</p>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3344.36641433142!2d-71.62185182464387!3d-33.04681897355203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9689e0d872e7824d%3A0xb80aab2269dc50fe!2sIndependencia%201713%2C%202363364%20Valpara%C3%ADso!5e0!3m2!1ses!2scl!4v1758068570841!5m2!1ses!2scl" 
-                        width="450" height="450" style="border:0;" 
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div id="map-valparaiso" class="sucursal-map"></div>
                     </div>
                 </div>
             </div>
@@ -178,6 +148,7 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/sucursales.js"></script>
 </body>
 
 </html>

@@ -14,13 +14,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileNombreInput = document.getElementById('profileNombre');
     const profileEmailInput = document.getElementById('profileEmail');
     const profilePasswordInput = document.getElementById('profilePassword');
-    const profileRutInput = document.getElementById('profileRut'); // Nuevo campo de RUT
+    const profileRutInput = document.getElementById('profileRut');
     const addressForm = document.getElementById('addressForm');
-    const addressesContainer = document.getElementById('addressesContainer'); // Contenedor para direcciones dinámicas
+    const addressesContainer = document.getElementById('addressesContainer');
     const purchaseHistoryContainer = document.getElementById('purchase-history');
     const noHistoryMessage = document.getElementById('no-history-message');
 
-    // Función de validación de RUT (copiada de auth.js)
+    // DATOS DE SUCURSALES (CORREGIDOS para coincidir con el historial de compras)
+    const sucursales = {
+        'Santiago Centro': { lat: -33.447487, lng: -70.665365, direccion: 'Av. Libertador 123, Santiago' },
+        'Santiago Oriente': { lat: -33.414983, lng: -70.569426, direccion: 'Av. Apoquindo 456, Las Condes' },
+        'Santiago Poniente': { lat: -33.473531, lng: -70.766735, direccion: 'Av. Pajaritos 789, Maipú' },
+        'Concepción': { lat: -36.82766, lng: -73.05036, direccion: 'Av. O’Higgins 321' },
+        'Viña del Mar': { lat: -33.023215, lng: -71.551398, direccion: 'Av. Valparaíso 654' },
+        'Puerto Montt': { lat: -41.47294, lng: -72.93722, direccion: 'Mall Paseo Costanera Piso 2 Local 21' },
+        'Villarrica': { lat: -39.2842, lng: -72.2285, direccion: 'Calle Fresia 75, Villarrica' },
+        'Nacimiento': { lat: -37.5085, lng: -72.6369, direccion: 'Calle El Roble 10, Nacimiento' },
+        'Valparaíso': { lat: -33.0458, lng: -71.6197, direccion: 'Calle Condell 500, Valparaíso' }
+    };
+    
+    // Función para encontrar la sucursal más cercana basándose en la región de la dirección del usuario
+    function findNearestSucursal(userAddress) {
+        if (!userAddress) return 'Desconocida';
+        const region = userAddress.split(',').pop().trim().toLowerCase();
+
+        if (region.includes('metropolitana')) return 'Santiago Centro';
+        if (region.includes('valparaíso')) return 'Valparaíso';
+        if (region.includes('biobío')) return 'Concepción';
+        if (region.includes('los lagos')) return 'Puerto Montt';
+        if (region.includes('la araucanía')) return 'Villarrica';
+        if (region.includes('coquimbo')) return 'Coquimbo';
+        if (region.includes('o\'higgins')) return 'Santiago Poniente'; // Suponemos una sucursal cercana
+        return 'Santiago Centro'; // Sucursal por defecto
+    }
+    
+    // Función de validación de RUT
     function validarRut(rut) {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) {
             return false;
@@ -62,11 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Renderizar direcciones
     function renderAddresses() {
         addressesContainer.innerHTML = '';
-        const addresses = currentUser.addresses || [];
-        if (addresses.length === 0) {
+        if (!currentUser.addresses) {
+            currentUser.addresses = [];
+            saveCurrentUser(currentUser);
+        }
+        
+        if (currentUser.addresses.length === 0) {
             addressesContainer.innerHTML = '<p class="text-muted">No tienes direcciones guardadas.</p>';
         } else {
-            addresses.forEach((addr, index) => {
+            currentUser.addresses.forEach((addr, index) => {
                 const addressCard = document.createElement('div');
                 addressCard.className = 'card mb-2 shadow-sm p-3';
                 addressCard.innerHTML = `
@@ -91,20 +123,166 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         noHistoryMessage.style.display = 'none';
+
         history.forEach(purchase => {
             const purchaseItem = document.createElement('div');
             purchaseItem.className = 'list-group-item list-group-item-action mb-2';
-            purchaseItem.innerHTML = `
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Pedido #${purchase.id}</h5>
-                    <small>${new Date(purchase.date).toLocaleDateString()}</small>
-                </div>
-                <p class="mb-1">Total: ${purchase.total.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 })}</p>
-                <small>Productos: ${purchase.items.map(item => `${item.name} (${item.quantity})`).join(', ')}</small>
-            `;
+
+            const tipoEntrega = purchase.tipoEntrega || 'Retiro en Sucursal';
+            
+            let entregaInfoText = '';
+            let dataInfoValue = '';
+            let buttonText = 'Ver más';
+            let buttonClass = '';
+
+            if (tipoEntrega.toLowerCase() === 'domicilio') {
+                const nearestSucursal = findNearestSucursal(purchase.direccion);
+                entregaInfoText = `Dirección: ${purchase.direccion || 'Sin dirección'}`;
+                dataInfoValue = purchase.direccion || 'Sin dirección';
+                buttonText = 'Ver Seguimiento';
+                buttonClass = 'btn-success'; // CAMBIO A COLOR VERDE
+
+                purchaseItem.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Pedido #${purchase.id}</h5>
+                        <small>${new Date(purchase.date).toLocaleDateString()}</small>
+                    </div>
+                    <p class="mb-1">Tipo de Entrega: <strong class="text-capitalize">${tipoEntrega}</strong></p>
+                    <p class="mb-1">${entregaInfoText}</p>
+                    <p class="mb-1">Estado: <span class="badge bg-success">En Reparto</span></p>
+                    <p class="mb-1 text-muted small">Despachado desde sucursal: ${nearestSucursal}</p>
+                    <small>Productos: ${purchase.items.map(item => `${item.name} (${item.quantity})`).join(', ')}</small>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-sm ${buttonClass} track-btn" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#trackingModal"
+                            data-tipo-entrega="${tipoEntrega}" 
+                            data-info="${dataInfoValue}"
+                            data-sucursal-origen="${nearestSucursal}">
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+            } else {
+                entregaInfoText = `Sucursal: ${purchase.sucursal || 'Sin sucursal'}`;
+                dataInfoValue = purchase.sucursal || 'Sin sucursal';
+                buttonText = 'Ver Ubicación';
+                buttonClass = 'btn-success';
+
+                purchaseItem.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Pedido #${purchase.id}</h5>
+                        <small>${new Date(purchase.date).toLocaleDateString()}</small>
+                    </div>
+                    <p class="mb-1">Tipo de Entrega: <strong class="text-capitalize">${tipoEntrega}</strong></p>
+                    <p class="mb-1">${entregaInfoText}</p>
+                    <p class="mb-1">Estado: <span class="badge bg-primary">Listo para Retirar</span></p>
+                    <small>Productos: ${purchase.items.map(item => `${item.name} (${item.quantity})`).join(', ')}</small>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-sm ${buttonClass} track-btn" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#trackingModal"
+                            data-tipo-entrega="${tipoEntrega}" 
+                            data-info="${dataInfoValue}">
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+            }
+
             purchaseHistoryContainer.appendChild(purchaseItem);
         });
     }
+
+    // Lógica para mostrar la información del pedido en el modal
+    const trackingModal = document.getElementById('trackingModal');
+    trackingModal.addEventListener('shown.bs.modal', event => {
+        const button = event.relatedTarget;
+        const tipoEntrega = button.getAttribute('data-tipo-entrega');
+        const info = button.getAttribute('data-info');
+        const modalTitle = document.getElementById('trackingModalTitle');
+        const modalBody = document.getElementById('trackingModalBody');
+
+        let content = '';
+        if (tipoEntrega.toLowerCase() === 'retiro en sucursal') {
+            const sucursalData = sucursales[info];
+            modalTitle.textContent = 'Detalles de la Sucursal';
+            if (sucursalData) {
+                content = `
+                    <p><strong>Sucursal:</strong> ${info}</p>
+                    <p><strong>Dirección:</strong> ${sucursalData.direccion}</p>
+                    <p><strong>Estado:</strong> <span class="badge bg-primary">Listo para Retirar</span></p>
+                    <div id="sucursal-map" style="height: 300px; width: 100%;"></div>
+                `;
+            } else {
+                content = `<p><strong>Sucursal:</strong> ${info}</p>
+                           <p>Dirección no disponible. Contacte a soporte.</p>`;
+            }
+        } else if (tipoEntrega.toLowerCase() === 'domicilio') {
+            const sucursalOrigen = button.getAttribute('data-sucursal-origen');
+            modalTitle.textContent = 'Seguimiento del Pedido';
+            content = `<p>Tu pedido será enviado a la dirección: <strong>${info}</strong>.</p>
+                       <p><strong>Estado:</strong> <span class="badge bg-success">En Reparto</span></p>
+                       <p><strong>Origen:</strong> Sucursal ${sucursalOrigen}</p>
+                       <p><strong>Tiempo estimado de llegada:</strong> 1-2 días hábiles</p>
+                       <div id="tracking-map" style="height: 300px; width: 100%; margin-top: 1rem;"></div>`; // AÑADIDO: Elemento para el mapa de seguimiento
+        } else {
+            modalTitle.textContent = 'Información del Pedido';
+            content = `<p>No se encontró información detallada para este pedido.</p>`;
+        }
+        
+        modalBody.innerHTML = content;
+
+        if (tipoEntrega.toLowerCase() === 'retiro en sucursal' && sucursales[info]) {
+            const sucursalData = sucursales[info];
+            const mapOptions = {
+                center: { lat: sucursalData.lat, lng: sucursalData.lng },
+                zoom: 15
+            };
+            const map = new google.maps.Map(document.getElementById('sucursal-map'), mapOptions);
+            
+            new google.maps.marker.AdvancedMarkerElement({
+                position: { lat: sucursalData.lat, lng: sucursalData.lng },
+                map: map,
+                title: info
+            });
+        }
+        // AÑADIDO: Lógica para mostrar el mapa de seguimiento a domicilio
+        if (tipoEntrega.toLowerCase() === 'domicilio') {
+            const geocoder = new google.maps.Geocoder();
+            const sucursalOrigen = button.getAttribute('data-sucursal-origen');
+            const sucursalCoords = sucursales[sucursalOrigen];
+
+            if (sucursalCoords) {
+                geocoder.geocode({ 'address': info + ', Chile' }, (results, status) => {
+                    if (status === 'OK') {
+                        const userLocation = results[0].geometry.location;
+                        const mapOptions = {
+                            center: userLocation,
+                            zoom: 12
+                        };
+                        const map = new google.maps.Map(document.getElementById('tracking-map'), mapOptions);
+
+                        // Marcador para la dirección del usuario
+                        new google.maps.marker.AdvancedMarkerElement({
+                            position: userLocation,
+                            map: map,
+                            title: 'Tu Dirección'
+                        });
+
+                        // Marcador para la sucursal de origen
+                        new google.maps.marker.AdvancedMarkerElement({
+                            position: sucursalCoords,
+                            map: map,
+                            title: 'Sucursal de Origen'
+                        });
+                    } else {
+                        console.error('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+            }
+        }
+    });
 
     // Manejar el envío del formulario de perfil
     profileForm.addEventListener('submit', (e) => {
@@ -113,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const newPassword = profilePasswordInput.value;
         const newRut = profileRutInput.value;
 
-        // Validaciones
         if (!validarRut(newRut)) {
             alert('El RUT ingresado no es válido.');
             return;
@@ -123,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Actualizar datos del usuario
         currentUser.nombre = newNombre;
         currentUser.rut = newRut;
         if (newPassword) {
@@ -137,16 +313,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manejar el envío del formulario de dirección (agregar/editar)
     addressForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const calle = document.getElementById('addressCalle').value;
-        const ciudad = document.getElementById('addressCiudad').value;
-        const region = document.getElementById('addressRegion').value;
+        const calle = document.getElementById('addressCalle').value.trim();
+        const ciudad = document.getElementById('addressCiudad').value.trim();
+        const region = document.getElementById('addressRegion').value.trim();
 
-        if (!currentUser.addresses) {
-            currentUser.addresses = [];
-        }
+        const isDuplicate = currentUser.addresses.some(addr => 
+            addr.calle === calle && addr.ciudad === ciudad && addr.region === region
+        );
 
         const isEditing = addressForm.dataset.editing === 'true';
 
+        if (!isEditing && isDuplicate) {
+            alert('Esta dirección ya existe en tu lista.');
+            return;
+        }
+        
         if (isEditing) {
             const index = parseInt(addressForm.dataset.index);
             currentUser.addresses[index] = { calle, ciudad, region };
@@ -174,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
             addressForm.dataset.editing = 'true';
             addressForm.dataset.index = index;
             document.querySelector('#addressForm button[type="submit"]').textContent = 'Actualizar Dirección';
-            // Cambiar a la pestaña de dirección
             document.getElementById('address-tab').click();
         }
         if (e.target.classList.contains('delete-address-btn')) {
@@ -187,6 +367,57 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // Lógica para autocompletar la dirección con Google Maps Places API
+    const addressInput = document.getElementById('addressCalle');
+    const cityInput = document.getElementById('addressCiudad');
+    const regionInput = document.getElementById('addressRegion');
+
+    if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            types: ['address'],
+            componentRestrictions: { 'country': 'cl' } // Restringe los resultados a Chile
+        });
+
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry) {
+                return;
+            }
+
+            // Limpiar campos
+            addressInput.value = '';
+            cityInput.value = '';
+            regionInput.value = '';
+
+            // Obtener componentes de la dirección y rellenar los campos
+            for (const component of place.address_components) {
+                const componentType = component.types[0];
+
+                switch (componentType) {
+                    case 'street_number': {
+                        addressInput.value = `${component.long_name} `;
+                        break;
+                    }
+                    case 'route': {
+                        addressInput.value += component.long_name;
+                        break;
+                    }
+                    case 'locality': { // Ciudad
+                        cityInput.value = component.long_name;
+                        break;
+                    }
+                    case 'administrative_area_level_1': { // Región
+                        regionInput.value = component.long_name;
+                        break;
+                    }
+                }
+            }
+        });
+    } else {
+        console.error("Google Maps Places API no se ha cargado correctamente.");
+    }
 
     // Llama a las funciones iniciales para cargar los datos
     loadUserData();

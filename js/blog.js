@@ -202,15 +202,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         postsToShow.forEach(post => {
             const col = document.createElement('div');
-            col.className = 'col-md-6 mb-4';
+            col.className = 'col-md-6 mb-4 d-flex'; // <<-- Agregado: 'd-flex' para que las columnas se comporten como contenedores flex
+
+            // Crea un resumen de texto plano para evitar cortar HTML
+            const summaryText = new DOMParser().parseFromString(post.content, 'text/html').body.textContent;
+            const shortSummary = summaryText.substring(0, 150).trim() + '...';
 
             col.innerHTML = `
                 <div class="card h-100 shadow-sm blog-card">
                     <img src="${post.img}" class="card-img-top blog-img" alt="${post.title}">
                     <div class="card-body">
-                        <h5 class="card-title">${post.title}</h5>
-                        <p class="card-text text-muted small">${post.date} | Categoría: ${post.category}</p>
-                        <div class="blog-content-summary">${post.content.substring(0, 150)}...</div>
+                        <div class="card-text-container">
+                            <h5 class="card-title">${post.title}</h5>
+                            <p class="card-text text-muted small">${post.date} | Categoría: ${post.category}</p>
+                            <p class="blog-content-summary">${shortSummary}</p> </div>
                         <button class="btn btn-primary mt-3 read-more" data-post-id="${post.id}">Leer más</button>
                     </div>
                 </div>

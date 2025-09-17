@@ -5,15 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - HuertoHogar</title>
-    <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Tus estilos -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-    <!-- NAVBAR SIMPLE -->
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
@@ -23,60 +20,39 @@
         </div>
     </nav>
 
-    <!-- FORMULARIO DE REGISTRO -->
     <main class="d-flex align-items-center justify-content-center" style="min-height: 90vh;">
         <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
             <h2 class="text-center mb-4">Crear cuenta</h2>
                 <div id="alertContainer" class="mb-3"></div>
             <form id="registerForm">
-                <!-- Nombre -->
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre completo</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Juan Pérez"
                         required>
                 </div>
-                <!-- rut -->
                 <div class="mb-3">
                     <label for="rut" class="form-label">RUT</label>
                     <input type="text" class="form-control" id="rut" name="rut" placeholder="Ej: 12345678-9" required>
                 </div>
 
-                <!-- Email -->
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo electrónico</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@correo.com"
                         required>
                 </div>
 
-                <!-- Contraseña -->
                 <div class="mb-3">
                     <label for="pwd" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Mínimo 6 caracteres"
                         required>
                 </div>
 
-                <!-- Confirmar contraseña -->
                 <div class="mb-3">
                     <label for="pwd2" class="form-label">Confirmar contraseña</label>
                     <input type="password" class="form-control" id="pwd2" name="pwd2" placeholder="Repite la contraseña"
                         required>
                 </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Dirección</label>
-                    <input type="text" class="form-control" id="address" name="address" placeholder="Ej: Av. Principal 123" required>
-                </div>
 
-                <div class="mb-3">
-                    <label for="city" class="form-label">Comuna</label>
-                    <input type="text" class="form-control" id="city" name="city" placeholder="Ej: Santiago" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="region" class="form-label">Región</label>
-                    <input type="text" class="form-control" id="region" name="region" placeholder="Ej: Metropolitana" required>
-                </div>
-
-                <!-- Botón -->
                 <button type="submit" class="btn btn-primary w-100">Registrarse</button>
             </form>
 
@@ -94,6 +70,6 @@
 
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/auth.js"></script> 
-    </body>
+</body>
 
 </html>

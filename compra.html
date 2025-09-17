@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HuertoHogar - Finalizar Compra</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUsLTP0cRh90vczvFUaKntQfaRi7UmCGk&libraries=places" async defer></script>
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
@@ -26,26 +31,25 @@
                     <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
-
                 </ul>
             </div>
         </div>
     </nav>
-    
+
     <main class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-lg p-4">
                     <h2 class="card-title text-center mb-4" style="color: var(--color-primary);">Finalizar Compra</h2>
-                    
+
                     <div id="purchase-summary">
-                        </div>
+                    </div>
                     <div id="no-products-message" class="text-center text-muted fst-italic mt-4" style="display: none;">
                         Tu carrito está vacío. <a href="index.html">¡Vuelve a la tienda!</a>
                     </div>
 
                     <hr class="my-4">
-                    
+
                     <div class="mb-4">
                         <label for="deliveryMethod" class="form-label fw-bold">Elige cómo recibir tu pedido:</label>
                         <select class="form-select" id="deliveryMethod">
@@ -70,42 +74,46 @@
                             <option value="Valparaíso">Valparaíso</option>
                         </select>
                     </div>
+                    <div id="addressSection" style="display:none;">
+                        <h5 class="fw-bold">Dirección de Envío</h5>
 
-                    <div class="mb-4" id="deliveryAddressOptions">
-                        <div class="form-check" style="display: none;" id="savedAddressRadioContainer">
-                            <input class="form-check-input" type="radio" name="deliveryAddress" id="useSavedAddress" value="saved">
-                            <label class="form-check-label" for="useSavedAddress">
-                                Usar mi dirección guardada en el perfil (<span id="savedAddressText"></span>)
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="deliveryAddress" id="useNewAddress" value="new" checked>
-                            <label class="form-check-label" for="useNewAddress">
-                                Ingresar una nueva dirección
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="addressSection">
-                        <h5 class="fw-bold">Datos de Envío</h5>
                         <div class="mb-3">
-                            <label for="userAddress" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="userAddress" placeholder="Ingresa tu dirección">
+                            <label for="addressSelect" class="form-label">Direcciones guardadas</label>
+                            <select class="form-select" id="addressSelect">
+                                <option value="new" selected>Usar una nueva dirección</option>
+                            </select>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="userCity" class="form-label">Comuna</label>
-                                <input type="text" class="form-control" id="userCity" placeholder="Ingresa tu comuna">
+
+                        <div id="newAddressInputs">
+                            <div class="mb-3">
+                                <label for="addressCalle" class="form-label">Calle</label>
+                                <input type="text" class="form-control" id="addressCalle"
+                                    placeholder="Ej: Av. Principal 123">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="userRegion" class="form-label">Región</label>
-                                <input type="text" class="form-control" id="userRegion" placeholder="Ingresa tu región">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="addressCiudad" class="form-label">Ciudad</label>
+                                    <input type="text" class="form-control" id="addressCiudad"
+                                        placeholder="Ej: Santiago">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="addressRegion" class="form-label">Región</label>
+                                    <input type="text" class="form-control" id="addressRegion"
+                                        placeholder="Ej: Metropolitana">
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="saveAddressCheckbox">
+                                <label class="form-check-label" for="saveAddressCheckbox">
+                                    Guardar esta dirección para futuras compras
+                                </label>
                             </div>
                         </div>
                     </div>
 
                     <hr class="my-4">
-                    
+
                     <div class="d-flex justify-content-between align-items-center fw-bold fs-5">
                         <span>Total a pagar:</span>
                         <span id="final-total"></span>
@@ -132,4 +140,5 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/compra.js"></script>
 </body>
+
 </html>

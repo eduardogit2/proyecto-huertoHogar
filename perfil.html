@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUsLTP0cRh90vczvFUaKntQfaRi7UmCGk&libraries=places,geocoding" async defer></script>
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
@@ -74,7 +75,7 @@
                         </div>
                         <div class="tab-pane fade" id="address" role="tabpanel" tabindex="0">
                             <div id="addressesContainer" class="mb-4">
-                                </div>
+                            </div>
                             <h5 class="mt-4">Agregar/Editar Dirección</h5>
                             <form id="addressForm">
                                 <div class="mb-3">
@@ -109,7 +110,25 @@
             © 2025 HuertoHogar — Productos frescos y sostenibles
         </div>
     </footer>
+
+    <div class="modal fade" id="trackingModal" tabindex="-1" aria-labelledby="trackingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="trackingModalTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="trackingModalBody">
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/perfil.js"></script>
-    <script src="js/auth.js"></script> </body>
+    <script src="js/auth.js"></script>
+</body>
 </html>
