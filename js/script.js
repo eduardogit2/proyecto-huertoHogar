@@ -310,10 +310,11 @@ function showProductDetails(productId) {
         <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3 w-100 rounded">
         <p><strong>Precio:</strong> 
             ${product.discountPrice 
-                ? `<span class="text-danger fw-bold">${formatPrice(product.discountPrice)}</span> 
+                ? `<span style="color: #FFD700; font-weight:700;">${formatPrice(product.discountPrice)}</span> 
                 <small class="text-muted text-decoration-line-through">${formatPrice(product.price)}</small>`
                 : formatPrice(product.price)
-            } por ${product.unit}
+            }
+            por ${product.unit}
         </p>
         <p><strong>Categoría:</strong> ${product.category}</p>
         <p><strong>Origen:</strong> ${product.origin}</p>
