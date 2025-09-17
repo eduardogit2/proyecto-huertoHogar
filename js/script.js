@@ -1,16 +1,142 @@
 const products = [
-    { id: 1, name: "Manzana Fuji", price: 1200, category: "Frutas", img: "img/prod1.jpg", badge: "Fresco", description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.", stock: 150, origin: "Valle del Maule, Chile", unit: "kg" },
-    { id: 2, name: "Naranjas Valencia", price: 1000, category: "Frutas", img: "img/prod2.jpg", badge: "Fresco", description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.", stock: 200, origin: "Región de Coquimbo, Chile", unit: "kg" },
-    { id: 3, name: "Plátano Cavendish", price: 800, category: "Frutas", img: "img/prod3.jpg", description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.", stock: 250, origin: "Guayas, Ecuador", unit: "kg" },
-    { id: 4, name: "Zanahoria Orgánica", price: 900, category: "Verduras", img: "img/prod4.jpg", description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.", stock: 100, origin: "Región de O'Higgins, Chile", unit: "kg" },
-    { id: 5, name: "Espinaca Fresca", price: 700, category: "Verduras", img: "img/prod5.jpg", description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.", stock: 80, origin: "Ñuble, Chile", unit: "bolsa" },
-    { id: 6, name: "Pimiento Tricolores", price: 1500, category: "Orgánicos", img: "img/prod6.jpg", description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.", stock: 120, origin: "Región de Valparaíso, Chile", unit: "kg" },
-    { id: 7, name: "Miel Orgánica", price: 5000, category: "Orgánicos", img: "img/prod7.jpg", description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.", stock: 50, origin: "Aysén, Chile", unit: "frasco" },
-    { id: 8, name: "Quínoa Orgánica", price: 4500, category: "Orgánicos", img: "img/prod8.jpg", description: "Quínoa orgánica de alta calidad, perfecta para ensaladas o como acompañamiento. Es un superalimento rico en proteínas y fibra, ideal para una dieta balanceada.", stock: 75, origin: "Cajamarca, Perú", unit: "bolsa" },
-    { id: 9, name: "Leche Entera", price: 1400, category: "Lácteos", img: "img/prod9.jpg", description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.", stock: 90, origin: "Los Lagos, Chile", unit: "litro" }
+    {
+        id: 1,
+        name: "Manzana Fuji",
+        price: 1200,
+        category: "Frutas",
+        img: "img/prod1.jpg",
+        badge: "Fresco",
+        description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.",
+        stock: 150,
+        origin: "Valle del Maule, Chile",
+        unit: "kg",
+        reviews: [
+            { user: "Ana M.", rating: 5, text: "Excelente calidad, muy crujientes y dulces." },
+            { user: "Pedro V.", rating: 4, text: "Muy buenas, pero me gustaría que tuvieran un sabor más intenso." },
+            { user: "Luis R.", rating: 5, text: "Las mejores manzanas que he probado. ¡Repetiré!" }
+        ]
+    },
+    {
+        id: 2,
+        name: "Naranjas Valencia",
+        price: 1000,
+        category: "Frutas",
+        img: "img/prod2.jpg",
+        badge: "Fresco",
+        description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.",
+        stock: 200,
+        origin: "Región de Coquimbo, Chile",
+        unit: "kg",
+        reviews: [
+            { user: "María P.", rating: 5, text: "Muy jugosas y perfectas para el jugo de la mañana." },
+            { user: "Juan F.", rating: 4, text: "Sabor muy bueno, aunque algunas venían un poco pequeñas." },
+            { user: "Sofía C.", rating: 5, text: "Me encantaron. Dulces y sin semillas. Las recomiendo." }
+        ]
+    },
+    {
+        id: 3,
+        name: "Plátano Cavendish",
+        price: 800,
+        category: "Frutas",
+        img: "img/prod3.jpg",
+        description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.",
+        stock: 250,
+        origin: "Guayas, Ecuador",
+        unit: "kg",
+        reviews: [
+            { user: "Sofía G.", rating: 5, text: "Plátanos muy frescos y a un buen precio." },
+            { user: "Carlos E.", rating: 4, text: "Ideales para batidos, maduran rápido." }
+        ]
+    },
+    {
+        id: 4,
+        name: "Zanahoria Orgánica",
+        price: 900,
+        category: "Verduras",
+        img: "img/prod4.jpg",
+        description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.",
+        stock: 100,
+        origin: "Región de O'Higgins, Chile",
+        unit: "kg",
+        reviews: [
+            { user: "Carolina V.", rating: 5, text: "Frescas y con un sabor intenso. Mis hijos las comen con gusto." },
+            { user: "Felipe T.", rating: 5, text: "El tamaño es perfecto y el precio muy conveniente." }
+        ]
+    },
+    {
+        id: 5,
+        name: "Espinaca Fresca",
+        price: 700,
+        category: "Verduras",
+        img: "img/prod5.jpg",
+        description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.",
+        stock: 80,
+        origin: "Ñuble, Chile",
+        unit: "bolsa",
+        reviews: [
+            { user: "Roberta A.", rating: 4, text: "Buena cantidad, ideal para ensaladas." }
+        ]
+    },
+    {
+        id: 6,
+        name: "Pimiento Tricolores",
+        price: 1500,
+        category: "Orgánicos",
+        img: "img/prod6.jpg",
+        description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.",
+        stock: 120,
+        origin: "Región de Valparaíso, Chile",
+        unit: "kg",
+        reviews: [
+            { user: "Diego B.", rating: 5, text: "Perfectos para decorar mis platos. Colores vibrantes y muy frescos." }
+        ]
+    },
+    {
+        id: 7,
+        name: "Miel Orgánica",
+        price: 5000,
+        category: "Orgánicos",
+        img: "img/prod7.jpg",
+        description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.",
+        stock: 50,
+        origin: "Aysén, Chile",
+        unit: "frasco",
+        reviews: [
+            { user: "Antonia D.", rating: 5, text: "Un sabor exquisito. La mejor miel que he comprado." },
+            { user: "Gabriel H.", rating: 5, text: "Muy buena calidad. La uso todos los días en mi desayuno." }
+        ]
+    },
+    {
+        id: 8,
+        name: "Quínoa Orgánica",
+        price: 4500,
+        category: "Orgánicos",
+        img: "img/prod8.jpg",
+        description: "Quínoa orgánica de alta calidad, perfecta para ensaladas o como acompañamiento. Es un superalimento rico en proteínas y fibra, ideal para una dieta balanceada.",
+        stock: 75,
+        origin: "Cajamarca, Perú",
+        unit: "bolsa",
+        reviews: [
+            { user: "Fernanda L.", rating: 5, text: "Excelente para mis ensaladas. Se cocina muy rápido." },
+            { user: "Ignacio M.", rating: 4, text: "Buen producto, llego a tiempo y bien empaquetado." }
+        ]
+    },
+    {
+        id: 9,
+        name: "Leche Entera",
+        price: 1400,
+        category: "Lácteos",
+        img: "img/prod9.jpg",
+        description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.",
+        stock: 90,
+        origin: "Los Lagos, Chile",
+        unit: "litro",
+        reviews: [
+            { user: "Pablo Q.", rating: 5, text: "Muy buena y fresca. El sabor es superior a las del supermercado." }
+        ]
+    }
 ];
 
-// Mueve los elementos DOM al principio para que sean accesibles en todo el script.
 const productsContainer = document.getElementById('productsContainer');
 const categoryList = document.getElementById('categoryList');
 const priceRange = document.getElementById('priceRange');
@@ -19,8 +145,7 @@ const clearBtn = document.getElementById('clearFilters');
 const searchInput = document.getElementById('searchInput');
 const noResults = document.getElementById('noResults');
 const authButtons = document.getElementById('authButtons');
-const categoryDescriptionEl = document.getElementById('categoryDescription'); // Nuevo elemento
-
+const categoryDescriptionEl = document.getElementById('categoryDescription');
 
 let currentCategory = 'Todas';
 let currentMaxPrice = Number(priceRange.value);
@@ -33,8 +158,8 @@ const productDetailModal = new bootstrap.Modal(document.getElementById('productD
 const modalTitle = document.getElementById('productDetailModalLabel');
 const modalContent = document.getElementById('productDetailContent');
 
+let currentProductId = null;
 
-// Nuevo objeto con las descripciones de las categorías
 const categoryDescriptions = {
     'Todas': 'Explora nuestra amplia selección de productos frescos y de alta calidad para tu hogar.',
     'Frutas': 'Deliciosas y jugosas frutas de temporada, directamente del huerto a tu mesa.',
@@ -43,8 +168,51 @@ const categoryDescriptions = {
     'Orgánicos': 'Productos cultivados de forma natural, sin pesticidas ni químicos, para una opción más saludable.'
 };
 
+function saveProducts() {
+    localStorage.setItem('productsWithReviews', JSON.stringify(products));
+}
+
+function loadProducts() {
+    const savedProducts = JSON.parse(localStorage.getItem('productsWithReviews'));
+    if (savedProducts) {
+        savedProducts.forEach(savedProduct => {
+            const originalProduct = products.find(p => p.id === savedProduct.id);
+            if (originalProduct) {
+                originalProduct.reviews = savedProduct.reviews;
+            }
+        });
+    }
+}
+
+function getStarRating(rating) {
+    const fullStar = '⭐';
+    return fullStar.repeat(rating);
+}
+
+function renderReviews(reviews) {
+    const reviewsContainer = document.getElementById('reviews-container');
+    if (!reviewsContainer) return;
+
+    reviewsContainer.innerHTML = '';
+    if (reviews.length === 0) {
+        reviewsContainer.innerHTML = '<p class="text-muted fst-italic text-center">Este producto no tiene reseñas aún. ¡Sé el primero en dejar una!</p>';
+    } else {
+        reviews.forEach(review => {
+            const reviewDiv = document.createElement('div');
+            reviewDiv.className = 'card card-body mb-2';
+            reviewDiv.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong>${review.user}</strong>
+                    <span class="text-warning">${getStarRating(review.rating)}</span>
+                </div>
+                <p class="mb-0">${review.text}</p>
+            `;
+            reviewsContainer.appendChild(reviewDiv);
+        });
+    }
+}
+
 function renderCategories() {
-    // Obtener las categorías únicas de los productos y agregar 'Todas'
     const uniqueCategories = ['Todas', ...new Set(products.map(p => p.category))];
     const categoryList = document.getElementById('categoryList');
     categoryList.innerHTML = '';
@@ -52,7 +220,6 @@ function renderCategories() {
     uniqueCategories.forEach(cat => {
         const li = document.createElement('li');
         li.className = 'list-group-item';
-        // Agrega un data-attribute para la categoría
         li.setAttribute('data-category', cat);
         li.textContent = cat;
 
@@ -62,10 +229,9 @@ function renderCategories() {
 
         li.addEventListener('click', () => {
             currentCategory = cat;
-            renderCategories(); // Vuelve a renderizar para aplicar la clase 'active'
+            renderCategories();
             renderProducts();
 
-            // Muestra la descripción de la categoría
             categoryDescriptionEl.textContent = categoryDescriptions[cat] || '';
             categoryDescriptionEl.style.display = 'block';
         });
@@ -95,6 +261,11 @@ function renderProducts() {
     filtered.forEach(p => {
         const col = document.createElement('div');
         col.className = 'col-sm-6 col-md-4 mb-4';
+        
+        const averageRating = p.reviews.length > 0
+            ? (p.reviews.reduce((acc, r) => acc + r.rating, 0) / p.reviews.length).toFixed(1)
+            : 'Sin valorar';
+        const reviewText = p.reviews.length > 0 ? `(${p.reviews.length})` : '';
 
         col.innerHTML = `
         <div class="card product-card h-100 shadow-sm" style="cursor: pointer;" data-id="${p.id}">
@@ -102,6 +273,10 @@ function renderProducts() {
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title text-center mb-1">${p.name}</h5>
                 <p class="text-center text-muted fw-light fst-italic mb-2">${p.origin}</p>
+                <div class="text-center mb-2">
+                    <span class="small text-warning">${getStarRating(Math.round(averageRating))}</span>
+                    <span class="small text-muted">${averageRating} ${reviewText}</span>
+                </div>
                 <p class="card-text text-center product-description">${p.description.substring(0, 70)}...</p>
                 <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
                     <span class="price fw-bold">${formatPrice(p.price)}</span>
@@ -115,22 +290,25 @@ function renderProducts() {
 }
 
 function showProductDetails(productId) {
-    const product = products.find(p => p.id === parseInt(productId));
+    currentProductId = productId;
+    const product = products.find(p => p.id === parseInt(currentProductId));
     if (!product) {
         console.error("Producto no encontrado");
         return;
     }
 
     modalTitle.textContent = product.name;
-    modalContent.innerHTML = `
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    document.getElementById('productDetailContent').innerHTML = `
         <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3 w-100 rounded">
         <p><strong>Precio:</strong> ${formatPrice(product.price)} por ${product.unit}</p>
         <p><strong>Categoría:</strong> ${product.category}</p>
         <p><strong>Origen:</strong> ${product.origin}</p>
         <p><strong>Descripción:</strong> ${product.description}</p>
-        <p class="mb-3"><strong>Stock disponible:</strong> <span class="stock-display-modal">${product.stock}</span> ${product.unit}${product.stock > 1 ? 's': ''}</p>
+        <p class="mb-3"><strong>Stock disponible:</strong> <span class="stock-display-modal">${product.stock}</span> ${product.unit}${product.stock > 1 ? 's' : ''}</p>
         
-        <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-between mb-4">
             <label for="quantity-modal" class="me-2 fw-bold">Cantidad:</label>
             <input type="number" id="quantity-modal" class="form-control w-25 text-center me-3" value="1" min="1" max="${product.stock}">
             <button class="btn btn-primary add-to-cart-modal" data-id="${product.id}">
@@ -148,8 +326,69 @@ function showProductDetails(productId) {
         addToCartBtn.textContent = 'Sin Stock';
     }
 
+    const reviewFormSection = document.getElementById('review-form-section');
+    const reviewSectionMessage = document.getElementById('review-section-message');
+    if (isLoggedIn) {
+        reviewFormSection.style.display = 'block';
+        reviewSectionMessage.style.display = 'none';
+    } else {
+        reviewFormSection.style.display = 'none';
+        reviewSectionMessage.style.display = 'block';
+    }
+
+    renderReviews(product.reviews);
+
     productDetailModal.show();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+
+    const reviewForm = document.getElementById('review-form');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const reviewText = document.getElementById('review-text').value;
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (rating < 1 || rating > 5) {
+                alert('La valoración debe ser entre 1 y 5.');
+                return;
+            }
+
+            const newReview = {
+                user: currentUser.nombre,
+                rating: rating,
+                text: reviewText
+            };
+
+            const productToReview = products.find(p => p.id === parseInt(currentProductId));
+            productToReview.reviews.push(newReview);
+            
+            saveProducts();
+            
+            renderReviews(productToReview.reviews);
+            renderProducts();
+
+            document.getElementById('review-rating').value = '';
+            document.getElementById('review-text').value = '';
+        });
+    }
+
+    priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
+    renderCategories();
+    renderProducts();
+    updateCartCount();
+    renderCartDropdown();
+    updateAuthUI();
+    if (categoryDescriptionEl) {
+        categoryDescriptionEl.textContent = categoryDescriptions['Todas'];
+        categoryDescriptionEl.style.display = 'block';
+    }
+});
+
 
 productsContainer.addEventListener("click", e => {
     const card = e.target.closest('.product-card');
@@ -162,7 +401,6 @@ productsContainer.addEventListener("click", e => {
 modalContent.addEventListener("click", (e) => {
     if (e.target.classList.contains("add-to-cart-modal")) {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
-
         if (isLoggedIn !== 'true') {
             alert('Debes iniciar sesión para comprar.');
             productDetailModal.hide();
@@ -172,16 +410,14 @@ modalContent.addEventListener("click", (e) => {
         const btn = e.target;
         const productId = parseInt(btn.dataset.id);
         const quantity = parseInt(document.getElementById('quantity-modal').value);
-        
         const productToAdd = products.find(p => p.id === productId);
 
         if (quantity <= 0) {
             alert('La cantidad debe ser mayor a 0.');
             return;
         }
-
         if (quantity > productToAdd.stock) {
-            alert(`No puedes comprar ${quantity} ${productToAdd.unit}${quantity > 1 ? 's' : ''}. El stock disponible es de ${productToAdd.stock} ${productToAdd.unit}${productToAdd.stock > 1 ? 's' : ''}.`);
+            alert(`No puedes comprar ${quantity} ${productToAdd.unit}${quantity > 1 ? 's' : ''}. El stock disponible es de ${productToAdd.stock} ${productToAdd.stock > 1 ? 's' : ''}.`);
             return;
         }
 
@@ -229,9 +465,7 @@ function renderCartDropdown() {
 
 function addToCart(product, quantity) {
     const productIndex = products.findIndex(p => p.id === product.id);
-
     products[productIndex].stock -= quantity;
-    
     const existingCartItem = cart.find(item => item.id === product.id);
     if (existingCartItem) {
         existingCartItem.quantity += quantity;
@@ -241,18 +475,17 @@ function addToCart(product, quantity) {
             name: product.name,
             price: product.price,
             quantity: quantity,
-            stock: product.stock 
+            stock: product.stock
         });
     }
-
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
     renderCartDropdown();
-    renderProducts(); 
+    renderProducts();
 }
 
 cartItems.addEventListener("click", (e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     const target = e.target;
     if (target.dataset.action === "decrease" || target.dataset.action === "increase") {
         const index = parseInt(target.dataset.index);
@@ -262,15 +495,13 @@ cartItems.addEventListener("click", (e) => {
 });
 
 document.getElementById("clearCartBtn").addEventListener("click", (e) => {
-    e.stopPropagation(); 
-    
+    e.stopPropagation();
     cart.forEach(item => {
         const product = products.find(p => p.id === parseInt(item.id));
         if (product) {
             product.stock += item.quantity;
         }
     });
-
     localStorage.removeItem("cart");
     cart = [];
     updateCartCount();
@@ -281,7 +512,6 @@ document.getElementById("clearCartBtn").addEventListener("click", (e) => {
 function changeQuantity(index, amount) {
     const item = cart[index];
     const product = products.find(p => p.id === parseInt(item.id));
-
     if (!product) return;
 
     if (amount > 0) {
@@ -291,22 +521,20 @@ function changeQuantity(index, amount) {
         }
         product.stock -= amount;
         item.quantity += amount;
-    } else { 
+    } else {
         if (item.quantity <= 1) {
-            product.stock += item.quantity; 
+            product.stock += item.quantity;
             cart.splice(index, 1);
         } else {
-            product.stock -= amount; 
+            product.stock -= amount;
             item.quantity += amount;
         }
     }
-
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
     renderCartDropdown();
     renderProducts();
 }
-
 
 priceRange.addEventListener('input', (e) => {
     currentMaxPrice = Number(e.target.value);
@@ -350,14 +578,12 @@ function updateAuthUI() {
             <span class="d-flex align-items-center me-2" style="color: var(--color-text-main);">Hola, ${currentUser.nombre}</span>
             <button id="logoutBtn" class="btn btn-sm" style="background-color: var(--color-primary); color: #fff;">Cerrar sesión</button>
         `;
-
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('currentUser');
             alert('Has cerrado sesión.');
             window.location.reload();
         });
-
     } else {
         authButtons.innerHTML = `
             <a href="login.html" class="btn btn-accent btn-sm" style="background-color: var(--color-primary);">
@@ -368,17 +594,4 @@ function updateAuthUI() {
             </a>
         `;
     }
-}
-
-// Inicializar la interfaz con los datos y estados correctos
-priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
-renderCategories();
-renderProducts();
-updateCartCount();
-renderCartDropdown();
-updateAuthUI();
-// Muestra la descripción por defecto al cargar la página.
-if (categoryDescriptionEl) {
-    categoryDescriptionEl.textContent = categoryDescriptions['Todas'];
-    categoryDescriptionEl.style.display = 'block';
 }
