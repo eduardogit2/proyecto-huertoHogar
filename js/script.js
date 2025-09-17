@@ -282,7 +282,7 @@ function renderProducts() {
                 <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
                     ${
                         p.discountPrice 
-                        ? `<span class="price fw-bold text-danger">${formatPrice(p.discountPrice)}</span>
+                        ? `<span class="price fw-bold" style="color: #FFD700;">${formatPrice(p.discountPrice)}</span>
                         <small class="text-muted text-decoration-line-through ms-2">${formatPrice(p.price)}</small>`
                         : `<span class="price fw-bold">${formatPrice(p.price)}</span>`
                     }
