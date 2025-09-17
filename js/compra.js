@@ -151,6 +151,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalTotalElement = document.getElementById('final-total');
     const checkoutBtn = document.getElementById('checkout-btn');
     const noProductsMessage = document.getElementById('no-products-message');
+    const deliveryMethodSelect = document.getElementById('deliveryMethod');
+    const sucursalSection = document.getElementById('sucursalSection');
+    const addressSection = document.getElementById('addressSection');
+
+    // Inicializar los campos de dirección si el usuario ya los tiene
+    if (currentUser.direccion) {
+        document.getElementById('userAddress').value = currentUser.direccion.calle || '';
+        document.getElementById('userCity').value = currentUser.direccion.comuna || '';
+        document.getElementById('userRegion').value = currentUser.direccion.region || '';
+    }
     
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     let total = 0;
@@ -168,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cart.forEach(item => {
         const productInfo = products.find(p => p.id === item.id);
-        if (!productInfo) return; // Si no encuentra el producto, no hace nada.
+        if (!productInfo) return;
 
         total += item.price * item.quantity;
         const itemDiv = document.createElement('div');
@@ -190,37 +200,170 @@ document.addEventListener('DOMContentLoaded', () => {
 
     finalTotalElement.textContent = formatPrice(total);
 
-checkoutBtn.addEventListener('click', () => {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const cart = JSON.parse(localStorage.getItem('cart'));
-    
-    let total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    
-    const newPurchase = {
-        id: Date.now(), // Un ID único para la compra
-        date: new Date().toISOString(),
-        items: cart,
-        total: total
-    };
-    
-    // Agrega la compra al historial del usuario
-    if (!currentUser.historial) {
-        currentUser.historial = [];
-    }
-    currentUser.historial.push(newPurchase);
+    // Lógica para mostrar/ocultar secciones
+    deliveryMethodSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'sucursal') {
+            sucursalSection.style.display = 'block';
+            addressSection.style.display = 'none';
+        } else if (e.target.value === 'domicilio') {
+            sucursalSection.style.display = 'none';
+            addressSection.style.display = 'block';
+        } else {
+            sucursalSection.style.display = 'none';
+            addressSection.style.display = 'none';
+        }
+    });
 
-    // Guarda el usuario actualizado en el localStorage principal y en el de todos los usuarios
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    const allUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const userIndex = allUsers.findIndex(u => u.email === currentUser.email);
-    if (userIndex !== -1) {
-        allUsers[userIndex] = currentUser;
-        localStorage.setItem('users', JSON.stringify(allUsers));
+    // Evento de clic en Finalizar Compra
+    checkoutBtn.addEventListener('click', () => {
+        const selectedMethod = deliveryMethodSelect.value;
+        const purchaseDetails = {
+            id: Date.now(),
+            date: new Date().toISOString(),
+            items: cart,
+            total: total,
+            method: selectedMethod
+        };
+        
+        let isValid = true;
+        let alertMessage = '';
+
+        if (!selectedMethod) {
+            isValid = false;
+            alertMessage = 'Por favor, selecciona un método de entrega.';
+        } else if (selectedMethod === 'sucursal') {
+            const selectedSucursal = document.getElementById('selectSucursal').value;
+            if (!selectedSucursal) {
+                isValid = false;
+                alertMessage = 'Por favor, selecciona una sucursal para el retiro.';
+            } else {
+                purchaseDetails.sucursal = selectedSucursal;
+            }
+        }else if (selectedMethod === 'domicilio') {
+            const address = document.getElementById('userAddress').value;
+            const city = document.getElementById('userCity').value;
+            const region = document.getElementById('userRegion').value;
+
+            if (!address || !city || !region) {
+                isValid = false;
+                alertMessage = 'Por favor, completa todos los campos de la dirección.';
+            } else {
+                purchaseDetails.direccion = {
+                    calle: address,
+                    comuna: city,
+                    region: region
+                };
+                // Guarda la dirección en el perfil del usuario para futuras compras
+                currentUser.direccion = {
+                    calle: address,
+                    comuna: city,
+                    region: region
+                };
+            }
+        }
+
+        if (!isValid) {
+            alert(alertMessage);
+            return;
+        }
+
+        // Si la validación pasa, actualiza y guarda el historial de compra
+        if (!currentUser.historial) {
+            currentUser.historial = [];
+        }
+        currentUser.historial.push(purchaseDetails);
+
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        const allUsers = JSON.parse(localStorage.getItem('users')) || [];
+        const userIndex = allUsers.findIndex(u => u.email === currentUser.email);
+        if (userIndex !== -1) {
+            allUsers[userIndex] = currentUser;
+            localStorage.setItem('users', JSON.stringify(allUsers));
+        }
+        
+        localStorage.removeItem('cart');
+        alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
+        window.location.href = 'index.html';
+    });
+});
+
+// Obtener elementos del formulario
+const deliveryMethodSelect = document.getElementById('deliveryMethod');
+const sucursalSection = document.getElementById('sucursalSection');
+const addressSection = document.getElementById('addressSection');
+const savedAddressRadioContainer = document.getElementById('savedAddressRadioContainer');
+const useSavedAddressRadio = document.getElementById('useSavedAddress');
+const useNewAddressRadio = document.getElementById('useNewAddress');
+const savedAddressText = document.getElementById('savedAddressText');
+const checkoutBtn = document.getElementById('checkout-btn');
+
+// Lógica para mostrar/ocultar secciones
+deliveryMethodSelect.addEventListener('change', (event) => {
+    const selectedMethod = event.target.value;
+    if (selectedMethod === 'sucursal') {
+        sucursalSection.style.display = 'block';
+        addressSection.style.display = 'none';
+    } else if (selectedMethod === 'domicilio') {
+        sucursalSection.style.display = 'none';
+        addressSection.style.display = 'block';
+    } else {
+        sucursalSection.style.display = 'none';
+        addressSection.style.display = 'none';
+    }
+});
+
+// Lógica para el perfil de usuario y la dirección guardada
+document.addEventListener('DOMContentLoaded', () => {
+    // Simular que el usuario está logueado y obtener su perfil
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    // Si hay un usuario logueado y tiene una dirección guardada...
+    if (currentUser && currentUser.address) {
+        // Mostrar la opción de usar la dirección guardada
+        savedAddressRadioContainer.style.display = 'block';
+        savedAddressText.textContent = `${currentUser.address}, ${currentUser.city}, ${currentUser.region}`;
+    }
+});
+
+// Lógica para cambiar entre dirección guardada y nueva
+useSavedAddressRadio.addEventListener('change', () => {
+    if (useSavedAddressRadio.checked) {
+        addressSection.style.display = 'none';
+    }
+});
+
+useNewAddressRadio.addEventListener('change', () => {
+    if (useNewAddressRadio.checked) {
+        addressSection.style.display = 'block';
+    }
+});
+
+// Evento al hacer clic en "Finalizar Compra"
+checkoutBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+
+    // Obtener la dirección según la opción seleccionada
+    let finalAddress = null;
+    if (deliveryMethodSelect.value === 'domicilio') {
+        if (useSavedAddressRadio.checked) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.address) {
+                finalAddress = {
+                    address: currentUser.address,
+                    city: currentUser.city,
+                    region: currentUser.region
+                };
+            }
+        } else {
+            finalAddress = {
+                address: document.getElementById('userAddress').value,
+                city: document.getElementById('userCity').value,
+                region: document.getElementById('userRegion').value
+            };
+        }
     }
     
-    // Ahora sí, limpia el carrito y redirige
-    localStorage.removeItem('cart');
-    alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
-    window.location.href = 'index.html';
-});
+    // Aquí puedes continuar con el proceso de compra usando la dirección en la variable 'finalAddress'
+    console.log('Dirección final seleccionada:', finalAddress);
+    // ... tu código para finalizar la compra
 });

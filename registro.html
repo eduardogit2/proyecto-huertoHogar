@@ -18,7 +18,7 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
                 <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
-                <span class="fw-bold">HuertoHogar</span>
+                <span style="color: var(--color-secondary); font-family:'Playfair Display', serif; font-weight:700;">HuertoHogar</span>
             </a>
         </div>
     </nav>
@@ -34,6 +34,11 @@
                     <label for="nombre" class="form-label">Nombre completo</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Juan Pérez"
                         required>
+                </div>
+                <!-- rut -->
+                <div class="mb-3">
+                    <label for="rut" class="form-label">RUT</label>
+                    <input type="text" class="form-control" id="rut" name="rut" placeholder="Ej: 12345678-9" required>
                 </div>
 
                 <!-- Email -->
@@ -56,6 +61,20 @@
                     <input type="password" class="form-control" id="pwd2" name="pwd2" placeholder="Repite la contraseña"
                         required>
                 </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="Ej: Av. Principal 123" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="city" class="form-label">Comuna</label>
+                    <input type="text" class="form-control" id="city" name="city" placeholder="Ej: Santiago" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="region" class="form-label">Región</label>
+                    <input type="text" class="form-control" id="region" name="region" placeholder="Ej: Metropolitana" required>
+                </div>
 
                 <!-- Botón -->
                 <button type="submit" class="btn btn-primary w-100">Registrarse</button>
@@ -68,7 +87,9 @@
     </main>
 
     <footer>
-        © 2025 HuertoHogar — Productos frescos y sostenibles
+        <div class="container">
+            © 2025 HuertoHogar — Productos frescos y sostenibles
+        </div>
     </footer>
 
     <script src="js/bootstrap.bundle.min.js"></script>

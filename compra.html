@@ -13,7 +13,7 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
                 <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
-                <span style="font-family:'Playfair Display', serif; color: var(--secondary-brown); font-weight:700;">
+                <span style="font-family:'Playfair Display', serif; color: var(--color-secondary); font-weight:700;">
                     HuertoHogar
                 </span>
             </a>
@@ -36,15 +36,74 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-lg p-4">
-                    <h2 class="card-title text-center mb-4" style="color: var(--primary-green);">Resumen de tu Compra</h2>
+                    <h2 class="card-title text-center mb-4" style="color: var(--color-primary);">Finalizar Compra</h2>
                     
                     <div id="purchase-summary">
                         </div>
-
                     <div id="no-products-message" class="text-center text-muted fst-italic mt-4" style="display: none;">
                         Tu carrito está vacío. <a href="index.html">¡Vuelve a la tienda!</a>
                     </div>
+
+                    <hr class="my-4">
                     
+                    <div class="mb-4">
+                        <label for="deliveryMethod" class="form-label fw-bold">Elige cómo recibir tu pedido:</label>
+                        <select class="form-select" id="deliveryMethod">
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            <option value="sucursal">Retiro en sucursal</option>
+                            <option value="domicilio">Envío a domicilio</option>
+                        </select>
+                    </div>
+
+                    <div id="sucursalSection" style="display:none;">
+                        <label for="selectSucursal" class="form-label fw-bold">Elige tu sucursal:</label>
+                        <select class="form-select form-select-sm" id="selectSucursal">
+                            <option value="" disabled selected>Selecciona una sucursal</option>
+                            <option value="Santiago Centro">Santiago Centro</option>
+                            <option value="Santiago Oriente">Santiago Oriente</option>
+                            <option value="Santiago Poniente">Santiago Poniente</option>
+                            <option value="Concepción">Concepción</option>
+                            <option value="Viña del Mar">Viña del Mar</option>
+                            <option value="Puerto Montt">Puerto Montt</option>
+                            <option value="Villarrica">Villarrica</option>
+                            <option value="Nacimiento">Nacimiento</option>
+                            <option value="Valparaíso">Valparaíso</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4" id="deliveryAddressOptions">
+                        <div class="form-check" style="display: none;" id="savedAddressRadioContainer">
+                            <input class="form-check-input" type="radio" name="deliveryAddress" id="useSavedAddress" value="saved">
+                            <label class="form-check-label" for="useSavedAddress">
+                                Usar mi dirección guardada en el perfil (<span id="savedAddressText"></span>)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="deliveryAddress" id="useNewAddress" value="new" checked>
+                            <label class="form-check-label" for="useNewAddress">
+                                Ingresar una nueva dirección
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="addressSection">
+                        <h5 class="fw-bold">Datos de Envío</h5>
+                        <div class="mb-3">
+                            <label for="userAddress" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="userAddress" placeholder="Ingresa tu dirección">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="userCity" class="form-label">Comuna</label>
+                                <input type="text" class="form-control" id="userCity" placeholder="Ingresa tu comuna">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="userRegion" class="form-label">Región</label>
+                                <input type="text" class="form-control" id="userRegion" placeholder="Ingresa tu región">
+                            </div>
+                        </div>
+                    </div>
+
                     <hr class="my-4">
                     
                     <div class="d-flex justify-content-between align-items-center fw-bold fs-5">
