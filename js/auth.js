@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let tmp = rut.split('-');
         let digv = tmp[1];
         let rutSolo = tmp[0];
-        if (digv == 'K') digv = 'k';
+        if (digv === 'K') digv = 'k';
         let suma = 0;
         let factor = 2;
         for (let i = rutSolo.length - 1; i >= 0; i--) {
@@ -25,6 +25,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function validarEmail(email) {
         const emailRegex = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
         return emailRegex.test(email);
+    }
+
+    // --- FUNCIÓN CENTRAL DE GESTIÓN DE USUARIOS ---
+    // Esta función se encarga de obtener los usuarios y asegurar que el usuario administrador
+    // exista siempre en el localStorage.
+    function getUsersAndInitializeAdmin() {
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const adminUser = users.find(u => u.isAdmin);
+        // Si no existe un usuario administrador, lo crea y lo añade.
+        if (!adminUser) {
+            const newAdmin = {
+                id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+                nombre: 'Admin',
+                email: 'admin@huertohogar.cl',
+                pwd: 'admin', // Se utiliza 'pwd' para la consistencia
+                isAdmin: true
+            };
+            users.push(newAdmin);
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        return users;
     }
 
     // LÓGICA DE REGISTRO
@@ -56,14 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const users = getUsersAndInitializeAdmin();
             if (users.find(user => user.email === email)) {
                 alert('El correo electrónico ya está registrado.');
                 return;
             }
 
-            // Aquí se modificó el objeto de usuario para que no incluya los campos de dirección
-            users.push({ nombre, email, rut, pwd, historial: [] });
+            // Se agregó isAdmin: false por defecto para los nuevos registros
+            const newUser = { nombre, email, rut, pwd, historial: [], isAdmin: false };
+            users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
             alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
             window.location.href = 'login.html';
@@ -75,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
             const email = document.getElementById('email').value;
             const pwd = document.getElementById('pwd').value;
 
@@ -83,24 +106,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('La contraseña debe tener entre 4 y 10 caracteres.');
                 return;
             }
-            if (!validarEmail(email)) {
+
+            // 👇 Ajuste aquí: permitimos que el admin se salte la validación de dominio
+            if (email !== 'admin@huertohogar.cl' && !validarEmail(email)) {
                 alert('El correo debe ser de los dominios @duoc.cl, @profesor.duoc.cl o @gmail.com.');
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.email === email);
+            const users = getUsersAndInitializeAdmin();
+            const user = users.find(u => u.email === email && u.pwd === pwd);
 
-            if (user && user.pwd === pwd) {
+            if (user) {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 alert(`¡Bienvenido de nuevo, ${user.nombre}!`);
-                window.location.href = 'index.html';
+
+                if (user.isAdmin) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
             } else {
                 alert('Credenciales incorrectas.');
             }
         });
     }
+
 
     // LÓGICA DE LA BARRA DE NAVEGACIÓN
     function updateAuthUI() {
@@ -111,13 +142,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (authButtons) {
             authButtons.innerHTML = '';
             if (isLoggedIn && currentUser) {
+                let profileLink = `<li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>`;
+                let adminLink = '';
+
+                if (currentUser.isAdmin) {
+                    adminLink = `<li><a class="dropdown-item" href="admin.html">Panel de Admin</a></li>`;
+                }
+
                 authButtons.innerHTML = `
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--color-text-main);">
                             Hola, ${currentUser.nombre}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
+                            ${profileLink}
+                            ${adminLink}
                             <li><hr class="dropdown-divider"></li>
                             <li><button id="logoutBtn" class="dropdown-item">Cerrar sesión</button></li>
                         </ul>
@@ -142,6 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-
-    updateAuthUI();
+    
+    // Ejecuta updateAuthUI solo si no estás en el panel de administración
+    if (!window.location.pathname.includes('admin')) {
+      updateAuthUI();
+    }
 });

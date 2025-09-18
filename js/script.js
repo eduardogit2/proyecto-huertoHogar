@@ -1,6 +1,10 @@
-const products = [
+// --- script.js CORREGIDO ---
+let products = [];
+
+// Array de productos inicial, solo se usa si el localStorage está vacío
+const initialProducts = [
     {
-        id: 1,
+        id: 100,
         name: "Manzana Fuji",
         price: 1200,
         category: "Frutas",
@@ -17,7 +21,7 @@ const products = [
         ]
     },
     {
-        id: 2,
+        id: 200,
         name: "Naranjas Valencia",
         price: 1000,
         category: "Frutas",
@@ -34,7 +38,7 @@ const products = [
         ]
     },
     {
-        id: 3,
+        id: 300,
         name: "Plátano Cavendish",
         price: 800,
         category: "Frutas",
@@ -49,7 +53,7 @@ const products = [
         ]
     },
     {
-        id: 4,
+        id: 400,
         name: "Zanahoria Orgánica",
         price: 900,
         category: "Verduras",
@@ -64,7 +68,7 @@ const products = [
         ]
     },
     {
-        id: 5,
+        id: 500,
         name: "Espinaca Fresca",
         price: 700,
         category: "Verduras",
@@ -78,7 +82,7 @@ const products = [
         ]
     },
     {
-        id: 6,
+        id: 600,
         name: "Pimiento Tricolores",
         price: 1500,
         category: "Orgánicos",
@@ -92,7 +96,7 @@ const products = [
         ]
     },
     {
-        id: 7,
+        id: 700,
         name: "Miel Orgánica",
         price: 5000,
         discountPrice: 4500,
@@ -109,7 +113,7 @@ const products = [
         ]
     },
     {
-        id: 8,
+        id: 800,
         name: "Quínoa Orgánica",
         price: 4500,
         discountPrice: 4000,
@@ -126,7 +130,7 @@ const products = [
         ]
     },
     {
-        id: 9,
+        id: 900,
         name: "Leche Entera",
         price: 1400,
         discountPrice: 1250,
@@ -142,6 +146,7 @@ const products = [
         ]
     }
 ];
+
 
 const productsContainer = document.getElementById('productsContainer');
 const categoryList = document.getElementById('categoryList');
@@ -181,12 +186,10 @@ function saveProducts() {
 function loadProducts() {
     const savedProducts = JSON.parse(localStorage.getItem('productsWithReviews'));
     if (savedProducts) {
-        savedProducts.forEach(savedProduct => {
-            const originalProduct = products.find(p => p.id === savedProduct.id);
-            if (originalProduct) {
-                originalProduct.reviews = savedProduct.reviews;
-            }
-        });
+        products = savedProducts;
+    } else {
+        products = initialProducts;
+        saveProducts();
     }
 }
 
@@ -287,6 +290,9 @@ function renderProducts() {
 
         const discountPercentage = p.discountPrice ? Math.round(((p.price - p.discountPrice) / p.price) * 100) : 0;
         const discountBadge = discountPercentage > 0 ? `<span class="badge bg-success ms-2">-${discountPercentage}%</span>` : '';
+        
+        const precioFinal = p.discountPrice !== undefined ? p.discountPrice : p.price;
+        const priceDisplay = precioFinal === 0 ? 'Gratis' : formatPrice(precioFinal);
 
         col.innerHTML = `
         <div class="card product-card h-100 shadow-sm" style="cursor: pointer;" data-id="${p.id}">
@@ -301,12 +307,12 @@ function renderProducts() {
                 <p class="card-text text-center product-description">${p.description.substring(0, 70)}...</p>
                 <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
                     ${
-                        p.discountPrice
-                        ? `<span class="price fw-bold" style="color: #FFD700;">${formatPrice(p.discountPrice)}</span>
+                        p.discountPrice !== undefined
+                        ? `<span class="price fw-bold" style="color: #FFD700;">${priceDisplay}</span>
                         <small class="text-muted text-decoration-line-through ms-2">${formatPrice(p.price)}</small>${discountBadge}`
-                        : `<span class="price fw-bold">${formatPrice(p.price)}</span>`
+                        : `<span class="price fw-bold">${priceDisplay}</span>`
                     }
-                    <span class="text-success fw-bold small">Stock: <span class="stock-display ">${p.stock} ${p.unit}${p.unit === 'bolsa' || p.unit === 'litro' || p.unit === 'frasco' ? 's' : ''}</span></span>
+                    <span class="text-success fw-bold small">Stock: <span class="stock-display ">${p.stock} ${p.unit}</span></span>
                 </div>
             </div>
         </div>
@@ -315,9 +321,12 @@ function renderProducts() {
     });
 }
 
+
+// --- FUNCIÓN CORREGIDA ---
 function showProductDetails(productId) {
     currentProductId = productId;
     const product = products.find(p => p.id === parseInt(currentProductId));
+    
     if (!product) {
         console.error("Producto no encontrado");
         return;
@@ -326,20 +335,25 @@ function showProductDetails(productId) {
     modalTitle.textContent = product.name;
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-    document.getElementById('productDetailContent').innerHTML = `
+    // Lógica para mostrar 'Gratis'
+    const precioFinal = product.discountPrice !== undefined ? product.discountPrice : product.price;
+    const priceDisplay = precioFinal === 0 ? 'Gratis' : formatPrice(precioFinal);
+    const originalPriceDisplay = formatPrice(product.price);
+
+    modalContent.innerHTML = `
         <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3 w-100 rounded">
         <p><strong>Precio:</strong>
-            ${product.discountPrice
-                ? `<span style="color: #FFD700; font-weight:700;">${formatPrice(product.discountPrice)}</span>
-                <small class="text-muted text-decoration-line-through">${formatPrice(product.price)}</small>`
-                : formatPrice(product.price)
+            ${product.discountPrice !== undefined
+                ? `<span style="color: #FFD700; font-weight:700;">${priceDisplay}</span>
+                   <small class="text-muted text-decoration-line-through ms-2">${originalPriceDisplay}</small>`
+                : priceDisplay
             }
-            por ${product.unit}
+             por ${product.unit}
         </p>
         <p><strong>Categoría:</strong> ${product.category}</p>
         <p><strong>Origen:</strong> ${product.origin}</p>
         <p><strong>Descripción:</strong> ${product.description}</p>
-        <p class="mb-3"><strong>Stock disponible:</strong> <span class="stock-display-modal">${product.stock}</span> ${product.unit}${product.stock > 1 ? 's' : ''}</p>
+        <p class="mb-3"><strong>Stock disponible:</strong> <span class="stock-display-modal">${product.stock}</span> ${product.unit}${product.stock !== 1 ? 's' : ''}</p>
 
         <div class="d-flex align-items-center justify-content-between mb-4">
             <label for="quantity-modal" class="me-2 fw-bold">Cantidad:</label>
@@ -361,17 +375,63 @@ function showProductDetails(productId) {
 
     const reviewFormSection = document.getElementById('review-form-section');
     const reviewSectionMessage = document.getElementById('review-section-message');
-    if (isLoggedIn) {
-        reviewFormSection.style.display = 'block';
-        reviewSectionMessage.style.display = 'none';
-    } else {
-        reviewFormSection.style.display = 'none';
-        reviewSectionMessage.style.display = 'block';
+    if(reviewFormSection && reviewSectionMessage){
+        if (isLoggedIn) {
+            reviewFormSection.style.display = 'block';
+            reviewSectionMessage.style.display = 'none';
+        } else {
+            reviewFormSection.style.display = 'none';
+            reviewSectionMessage.style.display = 'block';
+        }
     }
 
     renderReviews(product.reviews);
     productDetailModal.show();
 }
+
+// --- FUNCIÓN AÑADIDA ---
+function updateAuthUI() {
+    const authButtons = document.getElementById('authButtons');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (authButtons) {
+        authButtons.innerHTML = '';
+        if (isLoggedIn && currentUser) {
+            let adminLink = currentUser.isAdmin ? `<li><a class="dropdown-item" href="admin.html">Panel de Admin</a></li>` : '';
+            authButtons.innerHTML = `
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--color-text-main);">
+                        Hola, ${currentUser.nombre}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
+                        ${adminLink}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button id="logoutBtn" class="dropdown-item">Cerrar sesión</button></li>
+                    </ul>
+                </div>
+            `;
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('cart');
+                alert('Has cerrado sesión.');
+                window.location.href = 'index.html';
+            });
+        } else {
+            authButtons.innerHTML = `
+                <a href="login.html" class="btn btn-sm btn-accent" style="background-color: var(--color-primary);">
+                    <span style="color:#fff;">Iniciar sesión</span>
+                </a>
+                <a href="registro.html" class="btn btn-sm btn-accent" style="background-color: var(--color-primary);">
+                    <span style="color:#fff;">Regístrate</span>
+                </a>
+            `;
+        }
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
@@ -417,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
     updateCartCount();
     renderCartDropdown();
-    updateAuthUI();
+    updateAuthUI(); // Llamada a la función
 
     if (categoryDescriptionEl) {
         categoryDescriptionEl.textContent = categoryDescriptions['Todas'];
@@ -485,7 +545,7 @@ if (modalContent) {
                 return;
             }
             if (quantity > productToAdd.stock) {
-                alert(`No puedes comprar ${quantity} ${productToAdd.unit}${quantity > 1 ? 's' : ''}. El stock disponible es de ${productToAdd.stock} ${productToAdd.stock > 1 ? 's' : ''}.`);
+                alert(`No puedes comprar ${quantity} ${productToAdd.unit}${quantity > 1 ? 's' : ''}. El stock disponible es de ${productToAdd.stock}.`);
                 return;
             }
 
@@ -540,7 +600,7 @@ function addToCart(product, quantity) {
     const productIndex = products.findIndex(p => p.id === product.id);
     products[productIndex].stock -= quantity;
 
-    const finalPrice = product.discountPrice ? product.discountPrice : product.price;
+    const finalPrice = product.discountPrice !== undefined ? product.discountPrice : product.price;
 
     const existingCartItem = cart.find(item => item.id === product.id);
     if (existingCartItem) {
@@ -551,7 +611,6 @@ function addToCart(product, quantity) {
             name: product.name,
             price: finalPrice,
             quantity: quantity,
-            stock: product.stock
         });
     }
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -605,11 +664,11 @@ function changeQuantity(index, amount) {
         item.quantity += amount;
     } else {
         if (item.quantity <= 1) {
-            product.stock += item.quantity;
+            product.stock += 1; // Devuelve 1 al stock cuando se elimina
             cart.splice(index, 1);
         } else {
-            product.stock -= amount;
-            item.quantity += amount;
+            product.stock += 1;
+            item.quantity -= 1;
         }
     }
     localStorage.setItem("cart", JSON.stringify(cart));

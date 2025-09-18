@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - HuertoHogar</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+    <div class="d-flex" id="admin-wrapper">
+        <nav class="p-3 bg-white border-end shadow-sm" style="min-height: 100vh; width: 250px;">
+            <div class="sidebar-header text-center mb-4">
+                <a class="d-flex align-items-center gap-2 text-decoration-none" href="index.html">
+                    <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
+                    <h5 class="mb-0 text-secondary">HuertoHogar</h5>
+                </a>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="admin.html">
+                        <i class="bi bi-grid-fill me-2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin_productos.html">
+                        <i class="bi bi-box-seam-fill me-2"></i>
+                        <span>Productos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="admin_usuarios.html">
+                        <i class="bi bi-people-fill me-2"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logoutBtn">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="flex-grow-1 p-4" style="background-color: var(--color-beige-soft);">
+            <header class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
+                <h1 class="h2 text-secondary">Gestión de Usuarios</h1>
+                <a href="formulario_usuario.html" class="btn btn-primary">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    Nuevo Usuario
+                </a>
+            </header>
+
+            <div class="table-responsive">
+                <table class="table table-hover shadow-sm">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>RUN</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usuarios-table-body">
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-users-message" class="text-center mt-4" style="display: none;">
+                <p class="text-muted">No hay usuarios registrados.</p>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-labelledby="editarUsuarioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarUsuarioModalLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formularioEditarUsuario">
+                        <input type="hidden" id="usuarioEmailEditar">
+                        <div class="mb-3">
+                            <label for="runUsuarioEditar" class="form-label">RUN</label>
+                            <input type="text" class="form-control" id="runUsuarioEditar" required pattern="^[0-9]+[-|‐]{1}[0-9kK]{1}$">
+                            <div class="text-danger error-message" id="error-run-editar"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreUsuarioEditar" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreUsuarioEditar" required maxlength="50">
+                            <div class="text-danger error-message" id="error-nombre-editar"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidosUsuarioEditar" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="apellidosUsuarioEditar" required maxlength="100">
+                            <div class="text-danger error-message" id="error-apellidos-editar"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correoUsuarioEditar" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correoUsuarioEditar" required readonly>
+                            <div class="text-danger error-message" id="error-correo-editar"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipoUsuarioEditar" class="form-label">Tipo de Usuario</label>
+                            <select class="form-select" id="tipoUsuarioEditar" required>
+                                <option value="cliente">Cliente</option>
+                                <option value="vendedor">Vendedor</option>
+                                <option value="administrador">Administrador</option>
+                            </select>
+                            <div class="text-danger error-message" id="error-tipo-usuario-editar"></div>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin.js"></script>
+</html>
