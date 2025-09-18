@@ -7,7 +7,9 @@
     <title>Blog - HuertoHogar</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
@@ -26,13 +28,17 @@
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
                     <form class="d-flex" role="search" id="searchForm">
-                        <input id="searchInput" class="form-control form-control-sm me-2" type="search" placeholder="Buscar productos">
+                        <input id="searchInput" class="form-control form-control-sm me-2" type="search"
+                            placeholder="Buscar productos">
                         <button class="btn btn-sm btn-accent" type="button" id="searchBtn">
                             <span style="color:#fffdfd;">Buscar</span>
                         </button>
@@ -44,23 +50,25 @@
     </nav>
     <main class="container my-5">
         <h1 class="text-center">Blog de HuertoHogar</h1>
-        <p class="lead text-center mb-5">Conoce nuestras últimas noticias, recetas y compromisos con el medio ambiente.</p>
-        
+        <p class="lead text-center mb-5">Conoce nuestras últimas noticias, recetas y compromisos con el medio ambiente.
+        </p>
+
         <div class="row">
             <aside class="col-lg-3 mb-4">
                 <div class="card shadow-sm sticky-sidebar">
                     <div class="card-body">
                         <h5 class="card-title">Categorías</h5>
                         <ul id="categoryList" class="list-group list-group-flush">
-                            </ul>
+                        </ul>
                     </div>
                 </div>
             </aside>
-            
+
             <section class="col-lg-9">
-                <div id="category-description" class="alert alert-info category-description" style="display:none;"></div>
+                <div id="category-description" class="alert alert-info category-description" style="display:none;">
+                </div>
                 <div id="blog-container" class="row">
-                    </div>
+                </div>
             </section>
         </div>
     </main>
@@ -81,12 +89,12 @@
                     <img id="modalPostImage" src="" class="img-fluid mb-3" alt="">
                     <p id="modalPostDate" class="text-muted small"></p>
                     <div id="modalPostContent"></div>
-                    
+
                     <hr>
 
                     <h5>Comentarios</h5>
                     <div id="comments-container"></div>
-                    
+
                     <div id="comment-section-message" class="text-muted text-center my-3" style="display: none;">
                         <p>Para dejar un comentario, <a href="login.html">inicia sesión aquí</a>.</p>
                     </div>
@@ -95,7 +103,8 @@
                         <h6 class="mt-4">Agrega un comentario</h6>
                         <form id="comment-form">
                             <div class="mb-3">
-                                <textarea id="comment-text" class="form-control" rows="3" placeholder="Escribe tu comentario..." required></textarea>
+                                <textarea id="comment-text" class="form-control" rows="3"
+                                    placeholder="Escribe tu comentario..." required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Publicar</button>
                         </form>
@@ -112,4 +121,5 @@
     <script src="js/auth.js"></script>
     <script src="js/blog.js"></script>
 </body>
+
 </html>

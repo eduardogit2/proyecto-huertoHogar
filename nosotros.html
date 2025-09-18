@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - HuertoHogar</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
+                <span style="font-family:'Playfair Display', serif; color: var(--color-secondary); font-weight:700;">
+                    HuertoHogar
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    <form class="d-flex" role="search" id="searchForm">
+                        <input id="searchInput" class="form-control form-control-sm me-2" type="search"
+                            placeholder="Buscar productos">
+                        <button class="btn btn-sm btn-accent" type="button" id="searchBtn">
+                            <span style="color:#fffdfd;">Buscar</span>
+                        </button>
+                    </form>
+                    <div id="authButtons" class="d-flex gap-2"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h1 class="text-center mb-4">Nuestra Historia</h1>
+                <p class="lead text-center text-secondary">
+                    En HuertoHogar, creemos en el poder de la naturaleza para nutrir a las familias y comunidades.
+                    Nuestro viaje comenzó con una simple idea: llevar la frescura de los huertos directamente a tu
+                    hogar.
+                </p>
+
+                <hr class="my-5">
+
+                <div class="row align-items-center mb-5">
+                    <div class="col-md-6 order-md-2">
+                        <img src="https://via.placeholder.com/600x400.png?text=Equipo" alt="Equipo de HuertoHogar"
+                            class="img-fluid rounded shadow-sm mb-3 mb-md-0">
+                    </div>
+                    <div class="col-md-6 order-md-1">
+                        <h2>Nuestra Misión</h2>
+                        <p>
+                            Nos dedicamos a ofrecer productos orgánicos y sostenibles de la más alta calidad, cultivados
+                            con amor y respeto por la tierra. Buscamos promover un estilo de vida saludable y
+                            consciente, apoyando a los pequeños agricultores locales y minimizando nuestra huella
+                            ecológica.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row align-items-center mb-5">
+                    <div class="col-md-6">
+                        <img src="https://via.placeholder.com/600x400.png?text=Valores" alt="Valores de la empresa"
+                            class="img-fluid rounded shadow-sm mb-3 mb-md-0">
+                    </div>
+                    <div class="col-md-6">
+                        <h2>Nuestros Valores</h2>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><strong>Sostenibilidad:</strong> Cuidamos el planeta en cada paso, desde la
+                                siembra hasta el empaque.</li>
+                            <li class="mb-2"><strong>Calidad:</strong> Solo ofrecemos lo mejor, con productos frescos y
+                                nutritivos.</li>
+                            <li class="mb-2"><strong>Comunidad:</strong> Fomentamos la conexión entre productores y
+                                consumidores.</li>
+                            <li class="mb-2"><strong>Transparencia:</strong> Te contamos de dónde vienen tus alimentos y
+                                cómo los cultivamos.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <h2 class="mb-3">¡Únete a la familia HuertoHogar!</h2>
+                    <p>Descubre la frescura y el sabor de la naturaleza en nuestra tienda o inspírate con nuestro blog.
+                    </p>
+                    <a href="blog.html" class="btn btn-primary me-2">Ir al Blog</a>
+                    <a href="productos.html" class="btn btn-accent">Ver Productos</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-5">
+        © 2025 HuertoHogar — Productos frescos y sostenibles
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

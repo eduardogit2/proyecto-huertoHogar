@@ -216,3 +216,15 @@ footer {
     height: 300px;
     width: 100%;
 }
+
+.btn-secondary {
+  background: var(--color-primary);
+  border: none;
+  color: #fff;
+}
+
+.btn-outline-primary{
+  background: var(--color-primary);
+  border: none;
+  color: #fff;
+}
