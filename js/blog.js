@@ -1,114 +1,141 @@
-// La estructura de datos 'blogPosts' con comentarios iniciales
-// Los comentarios se manejarán en localStorage, pero esta estructura sirve como base inicial.
-let blogPosts = [
-    {
-        id: 1,
-        title: "5 Prácticas Sostenibles para tu Huerto",
-        img: "img/blog-sostenibilidad.jpg",
-        date: "2025-06-20",
-        category: "Sostenibilidad",
-        content: `
-            <p>Implementar prácticas sostenibles en nuestro huerto ayuda a cuidar el medio ambiente...</p>
-            <ul>
-                <li>Uso de compost casero.</li>
-                <li>Recolección de agua de lluvia.</li>
-                <li>Cultivo de especies nativas.</li>
-                <li>Control de plagas de forma natural.</li>
-                <li>Rotación de cultivos.</li>
-            </ul>
-            <p>Estas acciones no solo benefician a la naturaleza, sino que también mejoran la calidad de tus productos.</p>
+// --- Lógica para cargar los posts desde localStorage ---
+// Función para obtener los posts. Si no existen en localStorage, usa los datos iniciales y los guarda.
+function getBlogPostsFromStorage() {
+    let posts = JSON.parse(localStorage.getItem('blogPosts'));
+
+    // Si no hay nada en localStorage, se usa la data inicial como fallback y se guarda.
+    if (!posts || posts.length === 0) {
+        // --- CORRECCIÓN: Datos Iniciales COMPLETOS ---
+        const initialBlogPosts = [
+            {
+                id: 1,
+                title: "5 Prácticas Sostenibles para tu Huerto",
+                img: "img/blog-sostenibilidad.jpg",
+                date: "2025-06-20",
+                category: "Sostenibilidad",
+                content: `
+            <p>Implementar prácticas sostenibles en nuestro huerto no solo ayuda a cuidar el medio ambiente, sino que también fortalece la salud de nuestras plantas y la calidad de los alimentos que cosechamos. Aquí te detallamos cinco prácticas clave que puedes empezar a aplicar hoy mismo.</p>
+            <h4>1. Uso de compost casero</h4>
+            <p>El compostaje es una forma fantástica de reciclar desechos orgánicos de tu cocina y jardín. Transforma restos de frutas, verduras y hojas secas en un abono rico en nutrientes que mejora la estructura del suelo y reduce la necesidad de fertilizantes químicos.</p>
+            <h4>2. Recolección de agua de lluvia</h4>
+            <p>Instalar un sistema de recolección de agua de lluvia es una manera eficiente de conservar agua potable. Esta agua es naturalmente suave, libre de cloro y perfecta para regar tus plantas, que la prefieren por sobre el agua del grifo.</p>
+            <h4>3. Cultivo de especies nativas</h4>
+            <p>Las plantas nativas están adaptadas al clima y suelo de tu región. Esto significa que requieren menos agua, son más resistentes a plagas locales y promueven la biodiversidad atrayendo a polinizadores como abejas y mariposas.</p>
+            <h4>4. Control de plagas de forma natural</h4>
+            <p>En lugar de pesticidas, puedes introducir insectos beneficiosos como las chinitas (mariquitas) para controlar pulgones, o usar barreras físicas y trampas. Plantar hierbas aromáticas como la albahaca o la menta también ayuda a repeler insectos no deseados.</p>
+            <h4>5. Rotación de cultivos</h4>
+            <p>No plantes la misma especie en el mismo lugar año tras año. La rotación de cultivos previene el agotamiento de nutrientes específicos del suelo y ayuda a interrumpir los ciclos de vida de plagas y enfermedades.</p>
+            <p>Estas acciones no solo benefician a la naturaleza, sino que también mejoran la calidad y el sabor de tus productos. ¡Un huerto sostenible es un huerto feliz!</p>
         `
-    },
-    {
-        id: 2,
-        title: "Receta: Ensalada de Quínoa y Pimientos",
-        img: "img/blog-recetas.jpg",
-        date: "2025-06-18",
-        category: "Recetas",
-        content: `
-            <p>Una receta fresca y nutritiva para cualquier momento del día...</p>
+            },
+            {
+                id: 2,
+                title: "Receta: Ensalada de Quínoa y Pimientos",
+                img: "img/blog-recetas.jpg",
+                date: "2025-06-18",
+                category: "Recetas",
+                content: `
+            <p>Una receta fresca, colorida y nutritiva para cualquier momento del día. Esta ensalada es rica en proteínas, vitaminas y es perfecta como plato principal o como acompañamiento.</p>
             <h3>Ingredientes:</h3>
             <ul>
                 <li>1 taza de quínoa orgánica.</li>
-                <li>Pimientos tricolores de HuertoHogar.</li>
-                <li>Cebolla morada, pepino y tomate.</li>
-                <li>Aderezo de limón y aceite de oliva.</li>
+                <li>1 pimiento rojo, 1 amarillo y 1 verde de <strong>HuertoHogar</strong>.</li>
+                <li>1/2 cebolla morada picada finamente.</li>
+                <li>1 pepino mediano, sin semillas y en cubos.</li>
+                <li>1 taza de tomates cherry, cortados por la mitad.</li>
+                <li>Un puñado de perejil fresco picado.</li>
+                <li><strong>Para el aderezo:</strong> 1/4 taza de aceite de oliva virgen extra, el jugo de 1 limón, sal y pimienta al gusto.</li>
             </ul>
             <h3>Preparación:</h3>
             <ol>
-                <li>Cocina la quínoa según las instrucciones.</li>
-                <li>Corta las verduras en cubos pequeños.</li>
-                <li>Mezcla todo en un bol y añade el aderezo.</li>
+                <li>Cocina la quínoa según las instrucciones del paquete. Una vez lista, déjala enfriar a temperatura ambiente.</li>
+                <li>Mientras la quínoa se enfría, corta los pimientos, la cebolla, el pepino y los tomates.</li>
+                <li>En un bol grande, mezcla la quínoa ya fría con todas las verduras picadas y el perejil.</li>
+                <li>En un frasco pequeño, mezcla los ingredientes del aderezo y agita bien.</li>
+                <li>Vierte el aderezo sobre la ensalada y revuelve suavemente para combinar todo.</li>
             </ol>
-            <p>¡Disfruta de una comida deliciosa y llena de vitaminas!</p>
+            <p>¡Sirve inmediatamente y disfruta de una comida deliciosa y llena de vitaminas!</p>
         `
-    },
-    {
-        id: 3,
-        title: "Nuestra Huella de Carbono: El Camino Hacia la Sostenibilidad",
-        img: "img/blog-huella.jpg",
-        date: "2025-06-15",
-        category: "Sostenibilidad",
-        content: `
-            <p>En HuertoHogar, estamos comprometidos con la reducción de nuestra huella de carbono. Te contamos cómo lo hacemos...</p>
+            },
+            {
+                id: 3,
+                title: "Nuestra Huella de Carbono: El Camino Hacia la Sostenibilidad",
+                img: "img/blog-huella.jpg",
+                date: "2025-06-15",
+                category: "Sostenibilidad",
+                content: `
+            <p>En <strong>HuertoHogar</strong>, estamos profundamente comprometidos con la reducción de nuestra huella de carbono. Creemos que cada pequeña acción cuenta para construir un futuro más verde. Te contamos cómo lo hacemos:</p>
+            <h4>Proveedores locales para reducir el transporte</h4>
+            <p>Al trabajar principalmente con agricultores de nuestra región, disminuimos drásticamente las distancias que nuestros productos deben recorrer. Menos transporte significa menos emisiones de CO2 y alimentos más frescos para ti.</p>
+            <h4>Empaques biodegradables y compostables</h4>
+            <p>Hemos eliminado el plástico de un solo uso en nuestros empaques. Utilizamos materiales reciclados, biodegradables y compostables que puedes agregar a tu propia compostera, cerrando así el ciclo de la materia orgánica.</p>
+            <h4>Sistemas de reparto eficientes</h4>
+            <p>Optimizamos nuestras rutas de entrega para que nuestros vehículos recorran la menor distancia posible. Además, estamos en proceso de incorporar bicicletas de carga para las entregas en zonas céntricas, apostando por una logística de cero emisiones.</p>
+            <p>Cada vez que compras con nosotros, no solo eliges productos de calidad, sino que también te sumas a un movimiento que contribuye activamente a un futuro más verde y limpio para todos.</p>
+        `
+            },
+            {
+                id: 4,
+                title: "Contribuciones a la Comunidad: Apoyando a Productores Locales",
+                img: "img/blog-comunidad.jpg",
+                date: "2025-06-10",
+                category: "Comunidad",
+                content: `
+            <p>Creemos firmemente en el poder de la comunidad y en la importancia de fortalecer la economía local. Por eso, más del 80% de nuestros productos provienen de pequeños y medianos agricultores de la región del Biobío.</p>
+            <p>Trabajamos de la mano con ellos para asegurar precios justos y una cadena de suministro transparente. Esto no solo garantiza que recibas productos frescos y de temporada, sino que también apoya directamente a las familias que con dedicación y esfuerzo cultivan nuestros alimentos.</p>
+            <p>Al elegir <strong>HuertoHogar</strong>, te conviertes en un eslabón vital de esta cadena de valor. Tu compra tiene un impacto real: ayuda a preservar las tradiciones agrícolas locales, fomenta un comercio más ético y contribuye al desarrollo sostenible de nuestra comunidad.</p>
+        `
+            },
+            {
+                id: 5,
+                title: "Cómo Cultivar un Huerto Urbano exitoso",
+                img: "img/blog-huerto-urbano.jpg",
+                date: "2025-06-05",
+                category: "Sostenibilidad",
+                content: `
+            <p>¡No necesitas un gran jardín para empezar a cultivar! Un huerto urbano en tu balcón, terraza o incluso en una ventana soleada es la solución perfecta para disfrutar de tus propios alimentos en espacios pequeños.</p>
+            <p>Aquí tienes algunos consejos clave para el éxito:</p>
             <ul>
-                <li>Proveedores locales para reducir el transporte.</li>
-                <li>Empaques biodegradables.</li>
-                <li>Sistemas de reparto eficientes.</li>
+                <li><strong>Elige el lugar adecuado:</strong> Busca un espacio que reciba al menos 5-6 horas de luz solar directa al día. La orientación norte es ideal.</li>
+                <li><strong>Macetas y drenaje:</strong> Usa macetas con buen drenaje para evitar que las raíces se pudran. Asegúrate de que tengan agujeros en la base.</li>
+                <li><strong>Sustrato de calidad:</strong> Invierte en un buen sustrato. Una mezcla de compost, fibra de coco y perlita proporcionará los nutrientes y la aireación que tus plantas necesitan.</li>
+                <li><strong>Empieza con plantas fáciles:</strong> Si eres principiante, comienza con cultivos sencillos y de rápido crecimiento como hierbas aromáticas (albahaca, ciboulette), lechugas, espinacas o rabanitos.</li>
+                <li><strong>Riego y abono:</strong> Riega con regularidad, pero sin encharcar. Toca la tierra para sentir la humedad. Abona cada 2-3 semanas durante la temporada de crecimiento con un fertilizante orgánico.</li>
             </ul>
-            <p>Cada vez que compras con nosotros, contribuyes a un futuro más verde y limpio.</p>
+            <p>Cultivar tus alimentos es una experiencia increíblemente gratificante. ¡Disfruta del proceso y del sabor incomparable de tus propios productos frescos!</p>
         `
-    },
-    {
-        id: 4,
-        title: "Contribuciones a la Comunidad: Apoyando a Productores Locales",
-        img: "img/blog-comunidad.jpg",
-        date: "2025-06-10",
-        category: "Comunidad",
-        content: `
-            <p>Creemos en el poder de la comunidad. Por eso, el 80% de nuestros productos provienen de pequeños agricultores...</p>
-            <p>Trabajamos de la mano con ellos para asegurar precios justos y una cadena de suministro transparente. Tu compra no solo te alimenta a ti, sino que también apoya a las familias que cultivan nuestros alimentos.</p>
-        `
-    },
-    {
-        id: 5,
-        title: "Cómo Cultivar un Huerto Urbano",
-        img: "img/blog-huerto-urbano.jpg",
-        date: "2025-06-05",
-        category: "Sostenibilidad",
-        content: `
-            <p>No necesitas un gran jardín para empezar a cultivar. Un huerto urbano es la solución perfecta para espacios pequeños.</p>
-            <p>Aquí tienes algunos consejos:</p>
-            <ul>
-                <li>Elige un lugar soleado en tu balcón o terraza.</li>
-                <li>Usa macetas con buen drenaje y sustrato de calidad.</li>
-                <li>Empieza con plantas fáciles como hierbas aromáticas, lechugas o rabanitos.</li>
-                <li>Riega con regularidad y abona cada 2-3 semanas.</li>
-            </ul>
-            <p>¡Disfruta de tus propios productos frescos!</p>
-        `
-    },
-    {
-        id: 6,
-        title: "Batido Verde Desintoxicante",
-        img: "img/blog-batido-verde.jpg",
-        date: "2025-05-30",
-        category: "Recetas",
-        content: `
-            <p>Un batido lleno de nutrientes para empezar el día con energía.</p>
+            },
+            {
+                id: 6,
+                title: "Batido Verde Desintoxicante y Energético",
+                img: "img/blog-batido-verde.jpg",
+                date: "2025-05-30",
+                category: "Recetas",
+                content: `
+            <p>Un batido lleno de nutrientes para empezar el día con energía o para recuperarte después de hacer ejercicio. Es delicioso, fácil de preparar y está cargado de vitaminas y minerales.</p>
             <h3>Ingredientes:</h3>
             <ul>
                 <li>1 taza de espinacas frescas.</li>
-                <li>1 plátano maduro.</li>
-                <li>1/2 taza de yogur natural.</li>
-                <li>1/4 de taza de leche de almendras.</li>
-                <li>Un puñado de semillas de chía.</li>
+                <li>1 plátano maduro congelado (para una textura más cremosa).</li>
+                <li>1/2 manzana verde.</li>
+                <li>1/2 taza de yogur natural sin azúcar.</li>
+                <li>1/4 de taza de leche de almendras (o la que prefieras).</li>
+                <li>1 cucharada de semillas de chía.</li>
+                <li>Opcional: una cucharadita de miel o sirope de arce si lo prefieres más dulce.</li>
             </ul>
             <h3>Preparación:</h3>
-            <p>Simplemente mezcla todos los ingredientes en una licuadora hasta obtener una consistencia suave. ¡Listo para servir!</p>
+            <p>Simplemente mezcla todos los ingredientes en una licuadora de alta velocidad hasta obtener una consistencia suave y homogénea. Si queda muy espeso, puedes añadir un poco más de leche. ¡Listo para servir y disfrutar al instante!</p>
         `
+            }
+        ];
+        localStorage.setItem('blogPosts', JSON.stringify(initialBlogPosts));
+        return initialBlogPosts;
     }
-];
+    return posts;
+}
+
+// Carga los posts desde la función que maneja el localStorage
+let blogPosts = getBlogPostsFromStorage();
 
 // Descripción para cada categoría
 const categoryDescriptions = {
@@ -153,7 +180,7 @@ let allComments = loadComments();
 
 // --- Lógica principal para controlar la página ---
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // Referencias a elementos del DOM
     const blogContainer = document.getElementById('blog-container');
     const categoryList = document.getElementById('categoryList');
@@ -169,17 +196,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCategories() {
         const uniqueCategories = ['Todos', ...new Set(blogPosts.map(p => p.category))];
         categoryList.innerHTML = '';
-    
+
         uniqueCategories.forEach(cat => {
             const li = document.createElement('li');
             li.className = 'list-group-item list-group-item-action';
             li.setAttribute('data-category', cat);
             li.textContent = cat;
-    
+
             if (cat === currentCategory) {
                 li.classList.add('active');
             }
-    
+
             li.addEventListener('click', () => {
                 currentCategory = cat;
                 renderCategories();
@@ -191,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderBlogPosts() {
         blogContainer.innerHTML = '';
-        
+
         let postsToShow = blogPosts;
         if (currentCategory !== "Todos") {
             postsToShow = blogPosts.filter(post => post.category === currentCategory);
@@ -225,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addReadMoreListeners();
     }
-    
+
     // --- Lógica de la Modal ---
     function showPostInModal(postId) {
         currentPostId = postId;
@@ -237,11 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modalPostImage').alt = post.title;
             document.getElementById('modalPostDate').textContent = `${post.date} | Categoría: ${post.category}`;
             document.getElementById('modalPostContent').innerHTML = post.content;
-            
+
             // Renderiza los comentarios de ese post específico
             const postComments = allComments[postId] || [];
             renderComments(postComments);
-            
+
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
             if (isLoggedIn) {
@@ -251,11 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 commentFormSection.style.display = 'none';
                 commentSectionMessage.style.display = 'block';
             }
-            
+
             postModal.show();
         }
     }
-    
+
     // Función para añadir los event listeners a los botones "Leer más"
     function addReadMoreListeners() {
         const readMoreButtons = document.querySelectorAll('.read-more');
@@ -287,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     commentForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        
+
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         if (!isLoggedIn) {
             alert('Debes iniciar sesión para agregar un comentario.');
@@ -309,10 +336,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Agrega el nuevo comentario
         const newComment = { user: currentUser.nombre, text: commentText };
         allComments[currentPostId].push(newComment);
-        
+
         // Guarda los comentarios actualizados en el localStorage
         saveComments(allComments);
-        
+
         // Vuelve a renderizar los comentarios para que el nuevo aparezca
         renderComments(allComments[currentPostId]);
         document.getElementById('comment-text').value = '';
