@@ -1,363 +1,211 @@
-const products = [
-    {
-        id: 1,
-        name: "Manzana Fuji",
-        price: 1200,
-        category: "Frutas",
-        img: "img/prod1.jpg",
-        badge: "Fresco",
-        description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.",
-        stock: 150,
-        origin: "Valle del Maule, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "Ana M.", rating: 5, text: "Excelente calidad, muy crujientes y dulces." },
-            { user: "Pedro V.", rating: 4, text: "Muy buenas, pero me gustaría que tuvieran un sabor más intenso." },
-            { user: "Luis R.", rating: 5, text: "Las mejores manzanas que he probado. ¡Repetiré!" }
-        ]
-    },
-    {
-        id: 2,
-        name: "Naranjas Valencia",
-        price: 1000,
-        category: "Frutas",
-        img: "img/prod2.jpg",
-        badge: "Fresco",
-        description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.",
-        stock: 200,
-        origin: "Región de Coquimbo, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "María P.", rating: 5, text: "Muy jugosas y perfectas para el jugo de la mañana." },
-            { user: "Juan F.", rating: 4, text: "Sabor muy bueno, aunque algunas venían un poco pequeñas." },
-            { user: "Sofía C.", rating: 5, text: "Me encantaron. Dulces y sin semillas. Las recomiendo." }
-        ]
-    },
-    {
-        id: 3,
-        name: "Plátano Cavendish",
-        price: 800,
-        category: "Frutas",
-        img: "img/prod3.jpg",
-        description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.",
-        stock: 250,
-        origin: "Guayas, Ecuador",
-        unit: "kg",
-        reviews: [
-            { user: "Sofía G.", rating: 5, text: "Plátanos muy frescos y a un buen precio." },
-            { user: "Carlos E.", rating: 4, text: "Ideales para batidos, maduran rápido." }
-        ]
-    },
-    {
-        id: 4,
-        name: "Zanahoria Orgánica",
-        price: 900,
-        category: "Verduras",
-        img: "img/prod4.jpg",
-        description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.",
-        stock: 100,
-        origin: "Región de O'Higgins, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "Carolina V.", rating: 5, text: "Frescas y con un sabor intenso. Mis hijos las comen con gusto." },
-            { user: "Felipe T.", rating: 5, text: "El tamaño es perfecto y el precio muy conveniente." }
-        ]
-    },
-    {
-        id: 5,
-        name: "Espinaca Fresca",
-        price: 700,
-        category: "Verduras",
-        img: "img/prod5.jpg",
-        description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.",
-        stock: 80,
-        origin: "Ñuble, Chile",
-        unit: "bolsa",
-        reviews: [
-            { user: "Roberta A.", rating: 4, text: "Buena cantidad, ideal para ensaladas." }
-        ]
-    },
-    {
-        id: 6,
-        name: "Pimiento Tricolores",
-        price: 1500,
-        category: "Orgánicos",
-        img: "img/prod6.jpg",
-        description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.",
-        stock: 120,
-        origin: "Región de Valparaíso, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "Diego B.", rating: 5, text: "Perfectos para decorar mis platos. Colores vibrantes y muy frescos." }
-        ]
-    },
-    {
-        id: 7,
-        name: "Miel Orgánica",
-        price: 5000,
-        category: "Orgánicos",
-        img: "img/prod7.jpg",
-        description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.",
-        stock: 50,
-        origin: "Aysén, Chile",
-        unit: "frasco",
-        reviews: [
-            { user: "Antonia D.", rating: 5, text: "Un sabor exquisito. La mejor miel que he comprado." },
-            { user: "Gabriel H.", rating: 5, text: "Muy buena calidad. La uso todos los días en mi desayuno." }
-        ]
-    },
-    {
-        id: 8,
-        name: "Quínoa Orgánica",
-        price: 4500,
-        category: "Orgánicos",
-        img: "img/prod8.jpg",
-        description: "Quínoa orgánica de alta calidad, perfecta para ensaladas o como acompañamiento. Es un superalimento rico en proteínas y fibra, ideal para una dieta balanceada.",
-        stock: 75,
-        origin: "Cajamarca, Perú",
-        unit: "bolsa",
-        reviews: [
-            { user: "Fernanda L.", rating: 5, text: "Excelente para mis ensaladas. Se cocina muy rápido." },
-            { user: "Ignacio M.", rating: 4, text: "Buen producto, llego a tiempo y bien empaquetado." }
-        ]
-    },
-    {
-        id: 9,
-        name: "Leche Entera",
-        price: 1400,
-        category: "Lácteos",
-        img: "img/prod9.jpg",
-        description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.",
-        stock: 90,
-        origin: "Los Lagos, Chile",
-        unit: "litro",
-        reviews: [
-            { user: "Pablo Q.", rating: 5, text: "Muy buena y fresca. El sabor es superior a las del supermercado." }
-        ]
-    }
-];
-
 document.addEventListener('DOMContentLoaded', () => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const sesionIniciada = localStorage.getItem('sesionIniciada');
+    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
 
-    if (isLoggedIn !== 'true' || !currentUser) {
+    if (sesionIniciada !== 'true' || !usuarioActual) {
         alert('Debes iniciar sesión para acceder a esta página.');
-        window.location.href = 'login.html';
+        window.location.href = 'ingreso.html';
         return;
     }
 
-    const purchaseSummary = document.getElementById('purchase-summary');
-    const finalTotalElement = document.getElementById('final-total');
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const noProductsMessage = document.getElementById('no-products-message');
-    const deliveryMethodSelect = document.getElementById('deliveryMethod');
-    const sucursalSection = document.getElementById('sucursalSection');
-    const addressSection = document.getElementById('addressSection');
-    const addressSelect = document.getElementById('addressSelect');
-    const newAddressInputs = document.getElementById('newAddressInputs');
-    const saveAddressCheckbox = document.getElementById('saveAddressCheckbox');
-    
-    // CAMPOS DE DIRECCIÓN PARA EL AUTOCOMPLETADO
-    const addressCalleInput = document.getElementById('addressCalle');
-    const addressCiudadInput = document.getElementById('addressCiudad');
-    const addressRegionInput = document.getElementById('addressRegion');
+    const resumenCompra = document.getElementById('resumen-compra');
+    const elementoTotalFinal = document.getElementById('total-final');
+    const botonFinalizar = document.getElementById('boton-finalizar');
+    const mensajeSinProductos = document.getElementById('mensaje-sin-productos');
+    const selectorMetodoEntrega = document.getElementById('metodoEntrega');
+    const seccionSucursal = document.getElementById('seccionSucursal');
+    const seccionDireccion = document.getElementById('seccionDireccion');
+    const selectorDireccion = document.getElementById('selectorDireccion');
+    const camposNuevaDireccion = document.getElementById('camposNuevaDireccion');
+    const checkboxGuardarDireccion = document.getElementById('checkboxGuardarDireccion');
 
-    if (!currentUser.addresses) {
-        currentUser.addresses = [];
+    const inputCalle = document.getElementById('calleDireccion');
+    const inputCiudad = document.getElementById('ciudadDireccion');
+    const inputRegion = document.getElementById('regionDireccion');
+
+    if (!usuarioActual.direcciones) {
+        usuarioActual.direcciones = [];
     }
 
-    function formatPrice(n) {
-        return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+    function formatearPrecio(numero) {
+        return numero.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
     }
 
-    function renderAddressOptions() {
-        addressSelect.innerHTML = '<option value="new" selected>Usar una nueva dirección</option>';
-        if (currentUser.addresses.length > 0) {
-            currentUser.addresses.forEach((addr, index) => {
-                const option = document.createElement('option');
-                option.value = `savedAddress${index}`;
-                option.textContent = `${addr.calle}, ${addr.ciudad}, ${addr.region}`;
-                addressSelect.appendChild(option);
+    function renderizarOpcionesDireccion() {
+        selectorDireccion.innerHTML = '<option value="nueva" selected>Usar una nueva dirección</option>';
+        if (usuarioActual.direcciones.length > 0) {
+            usuarioActual.direcciones.forEach((dir, indice) => {
+                const opcion = document.createElement('option');
+                opcion.value = `guardada${indice}`;
+                opcion.textContent = `${dir.calle}, ${dir.ciudad}, ${dir.region}`;
+                selectorDireccion.appendChild(opcion);
             });
         }
     }
 
-    addressSelect.addEventListener('change', (e) => {
-        if (e.target.value === 'new') {
-            newAddressInputs.style.display = 'block';
+    selectorDireccion.addEventListener('change', (e) => {
+        if (e.target.value === 'nueva') {
+            camposNuevaDireccion.style.display = 'block';
         } else {
-            newAddressInputs.style.display = 'none';
+            camposNuevaDireccion.style.display = 'none';
         }
     });
 
-    // Lógica para autocompletado de dirección
     if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-        const autocomplete = new google.maps.places.Autocomplete(addressCalleInput, {
+        const autocompletar = new google.maps.places.Autocomplete(inputCalle, {
             types: ['address'],
             componentRestrictions: { 'country': 'cl' }
         });
+        autocompletar.addListener('place_changed', () => {
+            const lugar = autocompletar.getPlace();
+            if (!lugar.geometry) return;
 
-        autocomplete.addListener('place_changed', () => {
-            const place = autocomplete.getPlace();
-            if (!place.geometry) {
-                return;
-            }
+            inputCalle.value = '';
+            inputCiudad.value = '';
+            inputRegion.value = '';
 
-            addressCalleInput.value = '';
-            addressCiudadInput.value = '';
-            addressRegionInput.value = '';
-
-            for (const component of place.address_components) {
-                const componentType = component.types[0];
-                switch (componentType) {
-                    case 'street_number': {
-                        addressCalleInput.value = `${component.long_name} `;
+            for (const componente of lugar.address_components) {
+                const tipoComponente = componente.types[0];
+                switch (tipoComponente) {
+                    case 'street_number':
+                        inputCalle.value = `${componente.long_name} `;
                         break;
-                    }
-                    case 'route': {
-                        addressCalleInput.value += component.long_name;
+                    case 'route':
+                        inputCalle.value += componente.long_name;
                         break;
-                    }
-                    case 'locality': {
-                        addressCiudadInput.value = component.long_name;
+                    case 'locality':
+                        inputCiudad.value = componente.long_name;
                         break;
-                    }
-                    case 'administrative_area_level_1': {
-                        addressRegionInput.value = component.long_name;
+                    case 'administrative_area_level_1':
+                        inputRegion.value = componente.long_name;
                         break;
-                    }
                 }
             }
         });
     } else {
-        console.error("Google Maps Places API no se ha cargado correctamente.");
+        console.error("API de Google Maps Places no se ha cargado correctamente.");
     }
-    
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let total = 0;
 
-    if (cart.length === 0) {
-        noProductsMessage.style.display = 'block';
-        checkoutBtn.style.display = 'none';
-        finalTotalElement.textContent = formatPrice(0);
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    let total = 0;
+    if (carrito.length === 0) {
+        mensajeSinProductos.style.display = 'block';
+        botonFinalizar.style.display = 'none';
+        elementoTotalFinal.textContent = formatearPrecio(0);
         return;
     }
 
-    cart.forEach(item => {
-        const productInfo = products.find(p => p.id === item.id);
-        if (!productInfo) return;
+    carrito.forEach(item => {
+        total += item.precio * item.cantidad;
+        const divItem = document.createElement('div');
+        divItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
 
-        total += item.price * item.quantity;
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
+        const unidadPlural = item.cantidad > 1 && ['bolsa', 'litro', 'frasco', 'kg'].includes(item.unidad)
+            ? item.unidad + 's'
+            : item.unidad;
 
-        const unitDisplay = item.quantity > 1 && (productInfo.unit === 'bolsa' || productInfo.unit === 'litro' || productInfo.unit === 'frasco' || productInfo.unit === 'kg')
-            ? productInfo.unit + 's'
-            : productInfo.unit;
-
-        itemDiv.innerHTML = `
+        divItem.innerHTML = `
             <div>
-                <strong>${item.name}</strong>
-                <p class="mb-0 text-muted small">${formatPrice(item.price)} x ${item.quantity} ${unitDisplay}</p>
+                <strong>${item.nombre}</strong>
+                <p class="mb-0 text-muted small">${formatearPrecio(item.precio)} x ${item.cantidad} ${unidadPlural}</p>
             </div>
-            <span>${formatPrice(item.price * item.quantity)}</span>
+            <span>${formatearPrecio(item.precio * item.cantidad)}</span>
         `;
-        purchaseSummary.appendChild(itemDiv);
+        resumenCompra.appendChild(divItem);
     });
 
-    finalTotalElement.textContent = formatPrice(total);
+    elementoTotalFinal.textContent = formatearPrecio(total);
 
-    deliveryMethodSelect.addEventListener('change', (e) => {
+    selectorMetodoEntrega.addEventListener('change', (e) => {
         if (e.target.value === 'sucursal') {
-            sucursalSection.style.display = 'block';
-            addressSection.style.display = 'none';
+            seccionSucursal.style.display = 'block';
+            seccionDireccion.style.display = 'none';
         } else if (e.target.value === 'domicilio') {
-            sucursalSection.style.display = 'none';
-            addressSection.style.display = 'block';
-            renderAddressOptions();
+            seccionSucursal.style.display = 'none';
+            seccionDireccion.style.display = 'block';
+            renderizarOpcionesDireccion();
         } else {
-            sucursalSection.style.display = 'none';
-            addressSection.style.display = 'none';
+            seccionSucursal.style.display = 'none';
+            seccionDireccion.style.display = 'none';
         }
     });
 
-    checkoutBtn.addEventListener('click', () => {
-        const selectedMethod = deliveryMethodSelect.value;
-        let purchaseDetails = {
+    botonFinalizar.addEventListener('click', () => {
+        const metodoSeleccionado = selectorMetodoEntrega.value;
+        let detallesCompra = {
             id: Date.now(),
-            date: new Date().toISOString(),
-            items: cart,
+            fecha: new Date().toISOString(),
+            items: carrito,
             total: total
         };
 
-        let isValid = true;
-        let alertMessage = '';
+        let esValido = true;
+        let mensajeAlerta = '';
 
-        if (!selectedMethod) {
-            isValid = false;
-            alertMessage = 'Por favor, selecciona un método de entrega.';
-        } else if (selectedMethod === 'sucursal') {
-            const selectedSucursal = document.getElementById('selectSucursal').value;
-            if (!selectedSucursal) {
-                isValid = false;
-                alertMessage = 'Por favor, selecciona una sucursal para el retiro.';
+        if (!metodoSeleccionado) {
+            esValido = false;
+            mensajeAlerta = 'Por favor, selecciona un método de entrega.';
+        } else if (metodoSeleccionado === 'sucursal') {
+            const sucursalSeleccionada = document.getElementById('selectorSucursal').value;
+            if (!sucursalSeleccionada) {
+                esValido = false;
+                mensajeAlerta = 'Por favor, selecciona una sucursal para el retiro.';
             } else {
-                purchaseDetails.tipoEntrega = 'retiro en sucursal';
-                purchaseDetails.sucursal = selectedSucursal;
+                detallesCompra.tipoEntrega = 'retiro en sucursal';
+                detallesCompra.sucursal = sucursalSeleccionada;
             }
-        } else if (selectedMethod === 'domicilio') {
-            const selectedOption = addressSelect.value;
-            let selectedAddress = null;
-            if (selectedOption === 'new') {
-                const newCalle = document.getElementById('addressCalle').value.trim();
-                const newCiudad = document.getElementById('addressCiudad').value.trim();
-                const newRegion = document.getElementById('addressRegion').value.trim();
-                if (!newCalle || !newCiudad || !newRegion) {
-                    isValid = false;
-                    alertMessage = 'Por favor, completa todos los campos de la nueva dirección.';
+        } else if (metodoSeleccionado === 'domicilio') {
+            const opcionSeleccionada = selectorDireccion.value;
+            let direccionSeleccionada = null;
+            if (opcionSeleccionada === 'nueva') {
+                const nuevaCalle = document.getElementById('calleDireccion').value.trim();
+                const nuevaCiudad = document.getElementById('ciudadDireccion').value.trim();
+                const nuevaRegion = document.getElementById('regionDireccion').value.trim();
+                if (!nuevaCalle || !nuevaCiudad || !nuevaRegion) {
+                    esValido = false;
+                    mensajeAlerta = 'Por favor, completa todos los campos de la nueva dirección.';
                 } else {
-                    selectedAddress = `${newCalle}, ${newCiudad}, ${newRegion}`;
-                    if (saveAddressCheckbox.checked) {
-                        const isDuplicate = currentUser.addresses.some(addr =>
-                            `${addr.calle}, ${addr.ciudad}, ${addr.region}` === selectedAddress
+                    direccionSeleccionada = `${nuevaCalle}, ${nuevaCiudad}, ${nuevaRegion}`;
+                    if (checkboxGuardarDireccion.checked) {
+                        const esDuplicado = usuarioActual.direcciones.some(dir =>
+                            `${dir.calle}, ${dir.ciudad}, ${dir.region}` === direccionSeleccionada
                         );
-                        if (!isDuplicate) {
-                            currentUser.addresses.push({ calle: newCalle, ciudad: newCiudad, region: newRegion });
+                        if (!esDuplicado) {
+                            usuarioActual.direcciones.push({ calle: nuevaCalle, ciudad: nuevaCiudad, region: nuevaRegion });
                         }
                     }
                 }
             } else {
-                const index = selectedOption.replace('savedAddress', '');
-                const addr = currentUser.addresses[index];
-                selectedAddress = `${addr.calle}, ${addr.ciudad}, ${addr.region}`;
+                const indice = opcionSeleccionada.replace('guardada', '');
+                const dir = usuarioActual.direcciones[indice];
+                direccionSeleccionada = `${dir.calle}, ${dir.ciudad}, ${dir.region}`;
             }
 
-            if (isValid) {
-                purchaseDetails.tipoEntrega = 'domicilio';
-                purchaseDetails.direccion = selectedAddress;
+            if (esValido) {
+                detallesCompra.tipoEntrega = 'domicilio';
+                detallesCompra.direccion = direccionSeleccionada;
             }
         }
 
-        if (!isValid) {
-            alert(alertMessage);
+        if (!esValido) {
+            alert(mensajeAlerta);
             return;
         }
 
-        if (!currentUser.historial) {
-            currentUser.historial = [];
+        if (!usuarioActual.historial) {
+            usuarioActual.historial = [];
         }
-        currentUser.historial.push(purchaseDetails);
+        usuarioActual.historial.push(detallesCompra);
 
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        const allUsers = JSON.parse(localStorage.getItem('users')) || [];
-        const userIndex = allUsers.findIndex(u => u.email === currentUser.email);
-        if (userIndex !== -1) {
-            allUsers[userIndex] = currentUser;
-            localStorage.setItem('users', JSON.stringify(allUsers));
+        localStorage.setItem('usuarioActual', JSON.stringify(usuarioActual));
+        const todosLosUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        const indiceUsuario = todosLosUsuarios.findIndex(u => u.correo === usuarioActual.correo);
+        if (indiceUsuario !== -1) {
+            todosLosUsuarios[indiceUsuario] = usuarioActual;
+            localStorage.setItem('usuarios', JSON.stringify(todosLosUsuarios));
         }
 
-        localStorage.removeItem('cart');
+        localStorage.removeItem('carrito');
         alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
         window.location.href = 'index.html';
     });

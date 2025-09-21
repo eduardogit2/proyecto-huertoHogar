@@ -1,26 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Redirección si no hay sesión
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
+    const sesionIniciada = localStorage.getItem('sesionIniciada') === 'true';
+    if (!sesionIniciada) {
         alert('Debes iniciar sesión para ver tu perfil.');
-        window.location.href = 'login.html';
+        window.location.href = 'ingreso.html';
         return;
     }
 
-    // VARIABLES
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const profileForm = document.getElementById('profileForm');
-    const profileNombreInput = document.getElementById('profileNombre');
-    const profileEmailInput = document.getElementById('profileEmail');
-    const profilePasswordInput = document.getElementById('profilePassword');
-    const profileRutInput = document.getElementById('profileRut');
-    const addressForm = document.getElementById('addressForm');
-    const addressesContainer = document.getElementById('addressesContainer');
-    const purchaseHistoryContainer = document.getElementById('purchase-history');
-    const noHistoryMessage = document.getElementById('no-history-message');
+    let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+    const formularioPerfil = document.getElementById('formularioPerfil');
+    const inputNombrePerfil = document.getElementById('nombrePerfil');
+    const inputCorreoPerfil = document.getElementById('correoPerfil');
+    const inputContrasenaPerfil = document.getElementById('contrasenaPerfil');
+    const inputRutPerfil = document.getElementById('rutPerfil');
+    const formularioDireccion = document.getElementById('formularioDireccion');
+    const contenedorDirecciones = document.getElementById('contenedorDirecciones');
+    const contenedorHistorialCompras = document.getElementById('historial-compras');
+    const mensajeSinHistorial = document.getElementById('mensaje-sin-historial');
 
-    // DATOS DE SUCURSALES (CORREGIDOS para coincidir con el historial de compras)
     const sucursales = {
         'Santiago Centro': { lat: -33.447487, lng: -70.665365, direccion: 'Av. Libertador 123, Santiago' },
         'Santiago Oriente': { lat: -33.414983, lng: -70.569426, direccion: 'Av. Apoquindo 456, Las Condes' },
@@ -32,395 +28,317 @@ document.addEventListener('DOMContentLoaded', () => {
         'Nacimiento': { lat: -37.5085, lng: -72.6369, direccion: 'Calle El Roble 10, Nacimiento' },
         'Valparaíso': { lat: -33.0458, lng: -71.6197, direccion: 'Calle Condell 500, Valparaíso' }
     };
-    
-    // Función para encontrar la sucursal más cercana basándose en la región de la dirección del usuario
-    function findNearestSucursal(userAddress) {
-        if (!userAddress) return 'Desconocida';
-        const region = userAddress.split(',').pop().trim().toLowerCase();
 
+    function encontrarSucursalMasCercana(direccionUsuario) {
+        if (!direccionUsuario) return 'Desconocida';
+        const region = direccionUsuario.split(',').pop().trim().toLowerCase();
         if (region.includes('metropolitana')) return 'Santiago Centro';
         if (region.includes('valparaíso')) return 'Valparaíso';
         if (region.includes('biobío')) return 'Concepción';
         if (region.includes('los lagos')) return 'Puerto Montt';
         if (region.includes('la araucanía')) return 'Villarrica';
-        if (region.includes('coquimbo')) return 'Coquimbo';
-        if (region.includes('o\'higgins')) return 'Santiago Poniente'; // Suponemos una sucursal cercana
-        return 'Santiago Centro'; // Sucursal por defecto
+        return 'Santiago Centro';
     }
-    
-    // Función de validación de RUT
+
     function validarRut(rut) {
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) {
-            return false;
-        }
-        let tmp = rut.split('-');
-        let digv = tmp[1];
-        let rutSolo = tmp[0];
-        if (digv == 'K') digv = 'k';
+        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
+        let partes = rut.split('-');
+        let digitoVerificador = partes[1];
+        let rutSinDigito = partes[0];
+        if (digitoVerificador == 'K') digitoVerificador = 'k';
         let suma = 0;
         let factor = 2;
-        for (let i = rutSolo.length - 1; i >= 0; i--) {
-            suma += parseInt(rutSolo.charAt(i)) * factor;
+        for (let i = rutSinDigito.length - 1; i >= 0; i--) {
+            suma += parseInt(rutSinDigito.charAt(i)) * factor;
             factor = (factor === 7) ? 2 : factor + 1;
         }
         let dvCalculado = 11 - (suma % 11);
         if (dvCalculado === 11) dvCalculado = '0';
         if (dvCalculado === 10) dvCalculado = 'k';
-        return dvCalculado.toString() === digv;
+        return dvCalculado.toString() === digitoVerificador;
     }
 
-    // Función para guardar los datos en localStorage
-    function saveCurrentUser(updatedUser) {
-        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-        const allUsers = JSON.parse(localStorage.getItem('users')) || [];
-        const userIndex = allUsers.findIndex(u => u.email === updatedUser.email);
-        if (userIndex !== -1) {
-            allUsers[userIndex] = updatedUser;
-            localStorage.setItem('users', JSON.stringify(allUsers));
+    function guardarUsuarioActual(usuarioActualizado) {
+        localStorage.setItem('usuarioActual', JSON.stringify(usuarioActualizado));
+        const todosLosUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        const indiceUsuario = todosLosUsuarios.findIndex(u => u.correo === usuarioActualizado.correo);
+        if (indiceUsuario !== -1) {
+            todosLosUsuarios[indiceUsuario] = usuarioActualizado;
+            localStorage.setItem('usuarios', JSON.stringify(todosLosUsuarios));
         }
     }
 
-    // Cargar datos del usuario al iniciar la página
-    function loadUserData() {
-        profileNombreInput.value = currentUser.nombre || '';
-        profileEmailInput.value = currentUser.email || '';
-        profileRutInput.value = currentUser.rut || '';
+    function cargarDatosUsuario() {
+        inputNombrePerfil.value = usuarioActual.nombre || '';
+        inputCorreoPerfil.value = usuarioActual.correo || '';
+        inputRutPerfil.value = usuarioActual.rut || '';
     }
 
-    // Renderizar direcciones
-    function renderAddresses() {
-        addressesContainer.innerHTML = '';
-        if (!currentUser.addresses) {
-            currentUser.addresses = [];
-            saveCurrentUser(currentUser);
+    function renderizarDirecciones() {
+        contenedorDirecciones.innerHTML = '';
+        if (!usuarioActual.direcciones) {
+            usuarioActual.direcciones = [];
+            guardarUsuarioActual(usuarioActual);
         }
-        
-        if (currentUser.addresses.length === 0) {
-            addressesContainer.innerHTML = '<p class="text-muted">No tienes direcciones guardadas.</p>';
+        if (usuarioActual.direcciones.length === 0) {
+            contenedorDirecciones.innerHTML = '<p class="text-muted">No tienes direcciones guardadas.</p>';
         } else {
-            currentUser.addresses.forEach((addr, index) => {
-                const addressCard = document.createElement('div');
-                addressCard.className = 'card mb-2 shadow-sm p-3';
-                addressCard.innerHTML = `
-                    <p class="mb-1 fw-bold">Dirección #${index + 1}</p>
-                    <p class="mb-1">${addr.calle}, ${addr.ciudad}, ${addr.region}</p>
+            usuarioActual.direcciones.forEach((dir, indice) => {
+                const tarjetaDireccion = document.createElement('div');
+                tarjetaDireccion.className = 'card mb-2 shadow-sm p-3';
+                tarjetaDireccion.innerHTML = `
+                    <p class="mb-1 fw-bold">Dirección #${indice + 1}</p>
+                    <p class="mb-1">${dir.calle}, ${dir.ciudad}, ${dir.region}</p>
                     <div class="mt-2">
-                        <button type="button" class="btn btn-sm btn-info edit-address-btn" data-index="${index}">Editar</button>
-                        <button type="button" class="btn btn-sm btn-danger delete-address-btn" data-index="${index}">Eliminar</button>
+                        <button type="button" class="btn btn-sm btn-info boton-editar-direccion" data-indice="${indice}">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger boton-eliminar-direccion" data-indice="${indice}">Eliminar</button>
                     </div>
                 `;
-                addressesContainer.appendChild(addressCard);
+                contenedorDirecciones.appendChild(tarjetaDireccion);
             });
         }
     }
 
-    // Cargar y renderizar el historial de compras
-    function renderPurchaseHistory() {
-        const history = currentUser.historial || [];
-        purchaseHistoryContainer.innerHTML = '';
-        if (history.length === 0) {
-            noHistoryMessage.style.display = 'block';
+    function renderizarHistorialCompras() {
+        const historial = usuarioActual.historial || [];
+        contenedorHistorialCompras.innerHTML = '';
+        if (historial.length === 0) {
+            mensajeSinHistorial.style.display = 'block';
             return;
         }
-        noHistoryMessage.style.display = 'none';
-
-        history.forEach(purchase => {
-            const purchaseItem = document.createElement('div');
-            purchaseItem.className = 'list-group-item list-group-item-action mb-2';
-
-            const tipoEntrega = purchase.tipoEntrega || 'Retiro en Sucursal';
-            
-            let entregaInfoText = '';
-            let dataInfoValue = '';
-            let buttonText = 'Ver más';
-            let buttonClass = '';
+        mensajeSinHistorial.style.display = 'none';
+        historial.forEach(compra => {
+            const itemCompra = document.createElement('div');
+            itemCompra.className = 'list-group-item list-group-item-action mb-2';
+            const tipoEntrega = compra.tipoEntrega || 'Retiro en Sucursal';
+            let textoInfoEntrega = '';
+            let valorDataInfo = '';
+            let textoBoton = 'Ver más';
+            let claseBoton = '';
 
             if (tipoEntrega.toLowerCase() === 'domicilio') {
-                const nearestSucursal = findNearestSucursal(purchase.direccion);
-                entregaInfoText = `Dirección: ${purchase.direccion || 'Sin dirección'}`;
-                dataInfoValue = purchase.direccion || 'Sin dirección';
-                buttonText = 'Ver Seguimiento';
-                buttonClass = 'btn-success'; // CAMBIO A COLOR VERDE
+                const sucursalCercana = encontrarSucursalMasCercana(compra.direccion);
+                textoInfoEntrega = `Dirección: ${compra.direccion || 'Sin dirección'}`;
+                valorDataInfo = compra.direccion || 'Sin dirección';
+                textoBoton = 'Ver Seguimiento';
+                claseBoton = 'btn-success';
 
-                purchaseItem.innerHTML = `
+                itemCompra.innerHTML = `
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Pedido #${purchase.id}</h5>
-                        <small>${new Date(purchase.date).toLocaleDateString()}</small>
+                        <h5 class="mb-1">Pedido #${compra.id}</h5>
+                        <small>${new Date(compra.fecha).toLocaleDateString()}</small>
                     </div>
                     <p class="mb-1">Tipo de Entrega: <strong class="text-capitalize">${tipoEntrega}</strong></p>
-                    <p class="mb-1">${entregaInfoText}</p>
+                    <p class="mb-1">${textoInfoEntrega}</p>
                     <p class="mb-1">Estado: <span class="badge bg-success">En Reparto</span></p>
-                    <p class="mb-1 text-muted small">Despachado desde sucursal: ${nearestSucursal}</p>
-                    <small>Productos: ${purchase.items.map(item => `${item.name} (${item.quantity})`).join(', ')}</small>
+                    <p class="mb-1 text-muted small">Despachado desde sucursal: ${sucursalCercana}</p>
+                    <small>Productos: ${compra.items.map(item => `${item.nombre} (${item.cantidad})`).join(', ')}</small>
                     <div class="mt-2">
-                        <button type="button" class="btn btn-sm ${buttonClass} track-btn" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#trackingModal"
-                            data-tipo-entrega="${tipoEntrega}" 
-                            data-info="${dataInfoValue}"
-                            data-sucursal-origen="${nearestSucursal}">
-                            ${buttonText}
+                        <button type="button" class="btn btn-sm ${claseBoton} boton-seguimiento"
+                            data-bs-toggle="modal" data-bs-target="#modalSeguimiento"
+                            data-tipo-entrega="${tipoEntrega}" data-info="${valorDataInfo}" data-sucursal-origen="${sucursalCercana}">
+                            ${textoBoton}
                         </button>
                     </div>
                 `;
             } else {
-                entregaInfoText = `Sucursal: ${purchase.sucursal || 'Sin sucursal'}`;
-                dataInfoValue = purchase.sucursal || 'Sin sucursal';
-                buttonText = 'Ver Ubicación';
-                buttonClass = 'btn-success';
+                textoInfoEntrega = `Sucursal: ${compra.sucursal || 'Sin sucursal'}`;
+                valorDataInfo = compra.sucursal || 'Sin sucursal';
+                textoBoton = 'Ver Ubicación';
+                claseBoton = 'btn-success';
 
-                purchaseItem.innerHTML = `
+                itemCompra.innerHTML = `
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Pedido #${purchase.id}</h5>
-                        <small>${new Date(purchase.date).toLocaleDateString()}</small>
+                        <h5 class="mb-1">Pedido #${compra.id}</h5>
+                        <small>${new Date(compra.fecha).toLocaleDateString()}</small>
                     </div>
                     <p class="mb-1">Tipo de Entrega: <strong class="text-capitalize">${tipoEntrega}</strong></p>
-                    <p class="mb-1">${entregaInfoText}</p>
+                    <p class="mb-1">${textoInfoEntrega}</p>
                     <p class="mb-1">Estado: <span class="badge bg-primary">Listo para Retirar</span></p>
-                    <small>Productos: ${purchase.items.map(item => `${item.name} (${item.quantity})`).join(', ')}</small>
+                    <small>Productos: ${compra.items.map(item => `${item.nombre} (${item.cantidad})`).join(', ')}</small>
                     <div class="mt-2">
-                        <button type="button" class="btn btn-sm ${buttonClass} track-btn" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#trackingModal"
-                            data-tipo-entrega="${tipoEntrega}" 
-                            data-info="${dataInfoValue}">
-                            ${buttonText}
+                        <button type="button" class="btn btn-sm ${claseBoton} boton-seguimiento"
+                            data-bs-toggle="modal" data-bs-target="#modalSeguimiento"
+                            data-tipo-entrega="${tipoEntrega}" data-info="${valorDataInfo}">
+                            ${textoBoton}
                         </button>
                     </div>
                 `;
             }
-
-            purchaseHistoryContainer.appendChild(purchaseItem);
+            contenedorHistorialCompras.appendChild(itemCompra);
         });
     }
 
-    // Lógica para mostrar la información del pedido en el modal
-    const trackingModal = document.getElementById('trackingModal');
-    trackingModal.addEventListener('shown.bs.modal', event => {
-        const button = event.relatedTarget;
-        const tipoEntrega = button.getAttribute('data-tipo-entrega');
-        const info = button.getAttribute('data-info');
-        const modalTitle = document.getElementById('trackingModalTitle');
-        const modalBody = document.getElementById('trackingModalBody');
+    const modalSeguimiento = document.getElementById('modalSeguimiento');
+    modalSeguimiento.addEventListener('shown.bs.modal', evento => {
+        const boton = evento.relatedTarget;
+        const tipoEntrega = boton.getAttribute('data-tipo-entrega');
+        const info = boton.getAttribute('data-info');
+        const tituloModal = document.getElementById('tituloModalSeguimiento');
+        const cuerpoModal = document.getElementById('cuerpoModalSeguimiento');
+        let contenido = '';
 
-        let content = '';
         if (tipoEntrega.toLowerCase() === 'retiro en sucursal') {
-            const sucursalData = sucursales[info];
-            modalTitle.textContent = 'Detalles de la Sucursal';
-            if (sucursalData) {
-                content = `
-                    <p><strong>Sucursal:</strong> ${info}</p>
-                    <p><strong>Dirección:</strong> ${sucursalData.direccion}</p>
-                    <p><strong>Estado:</strong> <span class="badge bg-primary">Listo para Retirar</span></p>
-                    <div id="sucursal-map" style="height: 300px; width: 100%;"></div>
-                `;
+            const datosSucursal = sucursales[info];
+            tituloModal.textContent = 'Detalles de la Sucursal';
+            if (datosSucursal) {
+                contenido = `<p><strong>Sucursal:</strong> ${info}</p><p><strong>Dirección:</strong> ${datosSucursal.direccion}</p><p><strong>Estado:</strong> <span class="badge bg-primary">Listo para Retirar</span></p><div id="mapa-sucursal" style="height: 300px; width: 100%;"></div>`;
             } else {
-                content = `<p><strong>Sucursal:</strong> ${info}</p>
-                           <p>Dirección no disponible. Contacte a soporte.</p>`;
+                contenido = `<p><strong>Sucursal:</strong> ${info}</p><p>Dirección no disponible. Contacte a soporte.</p>`;
             }
         } else if (tipoEntrega.toLowerCase() === 'domicilio') {
-            const sucursalOrigen = button.getAttribute('data-sucursal-origen');
-            modalTitle.textContent = 'Seguimiento del Pedido';
-            content = `<p>Tu pedido será enviado a la dirección: <strong>${info}</strong>.</p>
-                       <p><strong>Estado:</strong> <span class="badge bg-success">En Reparto</span></p>
-                       <p><strong>Origen:</strong> Sucursal ${sucursalOrigen}</p>
-                       <p><strong>Tiempo estimado de llegada:</strong> 1-2 días hábiles</p>
-                       <div id="tracking-map" style="height: 300px; width: 100%; margin-top: 1rem;"></div>`; // AÑADIDO: Elemento para el mapa de seguimiento
+            const sucursalOrigen = boton.getAttribute('data-sucursal-origen');
+            tituloModal.textContent = 'Seguimiento del Pedido';
+            contenido = `<p>Tu pedido será enviado a la dirección: <strong>${info}</strong>.</p><p><strong>Estado:</strong> <span class="badge bg-success">En Reparto</span></p><p><strong>Origen:</strong> Sucursal ${sucursalOrigen}</p><p><strong>Tiempo estimado de llegada:</strong> 1-2 días hábiles</p><div id="mapa-seguimiento" style="height: 300px; width: 100%; margin-top: 1rem;"></div>`;
         } else {
-            modalTitle.textContent = 'Información del Pedido';
-            content = `<p>No se encontró información detallada para este pedido.</p>`;
+            tituloModal.textContent = 'Información del Pedido';
+            contenido = `<p>No se encontró información detallada para este pedido.</p>`;
         }
-        
-        modalBody.innerHTML = content;
+
+        cuerpoModal.innerHTML = contenido;
 
         if (tipoEntrega.toLowerCase() === 'retiro en sucursal' && sucursales[info]) {
-            const sucursalData = sucursales[info];
-            const mapOptions = {
-                center: { lat: sucursalData.lat, lng: sucursalData.lng },
-                zoom: 15
-            };
-            const map = new google.maps.Map(document.getElementById('sucursal-map'), mapOptions);
-            
-            new google.maps.marker.AdvancedMarkerElement({
-                position: { lat: sucursalData.lat, lng: sucursalData.lng },
-                map: map,
-                title: info
-            });
+            const datosSucursal = sucursales[info];
+            const opcionesMapa = { center: { lat: datosSucursal.lat, lng: datosSucursal.lng }, zoom: 15 };
+            const mapa = new google.maps.Map(document.getElementById('mapa-sucursal'), opcionesMapa);
+            new google.maps.marker.AdvancedMarkerElement({ position: { lat: datosSucursal.lat, lng: datosSucursal.lng }, map: mapa, title: info });
         }
-        // AÑADIDO: Lógica para mostrar el mapa de seguimiento a domicilio
         if (tipoEntrega.toLowerCase() === 'domicilio') {
-            const geocoder = new google.maps.Geocoder();
-            const sucursalOrigen = button.getAttribute('data-sucursal-origen');
-            const sucursalCoords = sucursales[sucursalOrigen];
-
-            if (sucursalCoords) {
-                geocoder.geocode({ 'address': info + ', Chile' }, (results, status) => {
-                    if (status === 'OK') {
-                        const userLocation = results[0].geometry.location;
-                        const mapOptions = {
-                            center: userLocation,
-                            zoom: 12
-                        };
-                        const map = new google.maps.Map(document.getElementById('tracking-map'), mapOptions);
-
-                        // Marcador para la dirección del usuario
-                        new google.maps.marker.AdvancedMarkerElement({
-                            position: userLocation,
-                            map: map,
-                            title: 'Tu Dirección'
-                        });
-
-                        // Marcador para la sucursal de origen
-                        new google.maps.marker.AdvancedMarkerElement({
-                            position: sucursalCoords,
-                            map: map,
-                            title: 'Sucursal de Origen'
-                        });
+            const geocodificador = new google.maps.Geocoder();
+            const sucursalOrigen = boton.getAttribute('data-sucursal-origen');
+            const coordsSucursal = sucursales[sucursalOrigen];
+            if (coordsSucursal) {
+                geocodificador.geocode({ 'address': info + ', Chile' }, (resultados, estado) => {
+                    if (estado === 'OK') {
+                        const ubicacionUsuario = resultados[0].geometry.location;
+                        const opcionesMapa = { center: ubicacionUsuario, zoom: 12 };
+                        const mapa = new google.maps.Map(document.getElementById('mapa-seguimiento'), opcionesMapa);
+                        new google.maps.marker.AdvancedMarkerElement({ position: ubicacionUsuario, map: mapa, title: 'Tu Dirección' });
+                        new google.maps.marker.AdvancedMarkerElement({ position: coordsSucursal, map: mapa, title: 'Sucursal de Origen' });
                     } else {
-                        console.error('Geocode was not successful for the following reason: ' + status);
+                        console.error('La geocodificación no tuvo éxito por el siguiente motivo: ' + estado);
                     }
                 });
             }
         }
     });
 
-    // Manejar el envío del formulario de perfil
-    profileForm.addEventListener('submit', (e) => {
+    formularioPerfil.addEventListener('submit', (e) => {
         e.preventDefault();
-        const newNombre = profileNombreInput.value;
-        const newPassword = profilePasswordInput.value;
-        const newRut = profileRutInput.value;
+        const nuevoNombre = inputNombrePerfil.value;
+        const nuevaContrasena = inputContrasenaPerfil.value;
+        const nuevoRut = inputRutPerfil.value;
 
-        if (!validarRut(newRut)) {
+        if (!validarRut(nuevoRut)) {
             alert('El RUT ingresado no es válido.');
             return;
         }
-        if (newPassword && (newPassword.length < 4 || newPassword.length > 10)) {
+        if (nuevaContrasena && (nuevaContrasena.length < 4 || nuevaContrasena.length > 10)) {
             alert('La contraseña debe tener entre 4 y 10 caracteres.');
             return;
         }
 
-        currentUser.nombre = newNombre;
-        currentUser.rut = newRut;
-        if (newPassword) {
-            currentUser.pwd = newPassword;
+        usuarioActual.nombre = nuevoNombre;
+        usuarioActual.rut = nuevoRut;
+        if (nuevaContrasena) {
+            usuarioActual.contrasena = nuevaContrasena;
         }
-        
-        saveCurrentUser(currentUser);
+        guardarUsuarioActual(usuarioActual);
         alert('Datos personales actualizados con éxito.');
     });
 
-    // Manejar el envío del formulario de dirección (agregar/editar)
-    addressForm.addEventListener('submit', (e) => {
+    formularioDireccion.addEventListener('submit', (e) => {
         e.preventDefault();
-        const calle = document.getElementById('addressCalle').value.trim();
-        const ciudad = document.getElementById('addressCiudad').value.trim();
-        const region = document.getElementById('addressRegion').value.trim();
+        const calle = document.getElementById('calleDireccion').value.trim();
+        const ciudad = document.getElementById('ciudadDireccion').value.trim();
+        const region = document.getElementById('regionDireccion').value.trim();
 
-        const isDuplicate = currentUser.addresses.some(addr => 
-            addr.calle === calle && addr.ciudad === ciudad && addr.region === region
+        const esDuplicado = usuarioActual.direcciones.some(dir =>
+            dir.calle === calle && dir.ciudad === ciudad && dir.region === region
         );
+        const estaEditando = formularioDireccion.dataset.editando === 'true';
 
-        const isEditing = addressForm.dataset.editing === 'true';
-
-        if (!isEditing && isDuplicate) {
+        if (!estaEditando && esDuplicado) {
             alert('Esta dirección ya existe en tu lista.');
             return;
         }
-        
-        if (isEditing) {
-            const index = parseInt(addressForm.dataset.index);
-            currentUser.addresses[index] = { calle, ciudad, region };
+        if (estaEditando) {
+            const indice = parseInt(formularioDireccion.dataset.indice);
+            usuarioActual.direcciones[indice] = { calle, ciudad, region };
         } else {
-            currentUser.addresses.push({ calle, ciudad, region });
+            usuarioActual.direcciones.push({ calle, ciudad, region });
         }
 
-        saveCurrentUser(currentUser);
-        renderAddresses();
-        addressForm.reset();
-        delete addressForm.dataset.editing;
-        delete addressForm.dataset.index;
-        document.querySelector('#addressForm button[type="submit"]').textContent = 'Guardar Dirección';
+        guardarUsuarioActual(usuarioActual);
+        renderizarDirecciones();
+        formularioDireccion.reset();
+        delete formularioDireccion.dataset.editando;
+        delete formularioDireccion.dataset.indice;
+        document.querySelector('#formularioDireccion button[type="submit"]').textContent = 'Guardar Dirección';
         alert('Dirección guardada con éxito.');
     });
 
-    // Delegación de eventos para botones de edición y eliminación
-    addressesContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('edit-address-btn')) {
-            const index = e.target.dataset.index;
-            const addressToEdit = currentUser.addresses[index];
-            document.getElementById('addressCalle').value = addressToEdit.calle;
-            document.getElementById('addressCiudad').value = addressToEdit.ciudad;
-            document.getElementById('addressRegion').value = addressToEdit.region;
-            addressForm.dataset.editing = 'true';
-            addressForm.dataset.index = index;
-            document.querySelector('#addressForm button[type="submit"]').textContent = 'Actualizar Dirección';
-            document.getElementById('address-tab').click();
+    contenedorDirecciones.addEventListener('click', (e) => {
+        if (e.target.classList.contains('boton-editar-direccion')) {
+            const indice = e.target.dataset.indice;
+            const direccionAEditar = usuarioActual.direcciones[indice];
+            document.getElementById('calleDireccion').value = direccionAEditar.calle;
+            document.getElementById('ciudadDireccion').value = direccionAEditar.ciudad;
+            document.getElementById('regionDireccion').value = direccionAEditar.region;
+            formularioDireccion.dataset.editando = 'true';
+            formularioDireccion.dataset.indice = indice;
+            document.querySelector('#formularioDireccion button[type="submit"]').textContent = 'Actualizar Dirección';
+            document.getElementById('pestana-direccion').click();
         }
-        if (e.target.classList.contains('delete-address-btn')) {
-            const index = e.target.dataset.index;
+        if (e.target.classList.contains('boton-eliminar-direccion')) {
+            const indice = e.target.dataset.indice;
             if (confirm('¿Estás seguro de que quieres eliminar esta dirección?')) {
-                currentUser.addresses.splice(index, 1);
-                saveCurrentUser(currentUser);
-                renderAddresses();
+                usuarioActual.direcciones.splice(indice, 1);
+                guardarUsuarioActual(usuarioActual);
+                renderizarDirecciones();
                 alert('Dirección eliminada.');
             }
         }
     });
 
-    // Lógica para autocompletar la dirección con Google Maps Places API
-    const addressInput = document.getElementById('addressCalle');
-    const cityInput = document.getElementById('addressCiudad');
-    const regionInput = document.getElementById('addressRegion');
+    const inputDireccion = document.getElementById('calleDireccion');
+    const inputCiudad = document.getElementById('ciudadDireccion');
+    const inputRegion = document.getElementById('regionDireccion');
 
     if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+        const autocompletar = new google.maps.places.Autocomplete(inputDireccion, {
             types: ['address'],
-            componentRestrictions: { 'country': 'cl' } // Restringe los resultados a Chile
+            componentRestrictions: { 'country': 'cl' }
         });
-
-        autocomplete.addListener('place_changed', () => {
-            const place = autocomplete.getPlace();
-
-            if (!place.geometry) {
-                return;
-            }
-
-            // Limpiar campos
-            addressInput.value = '';
-            cityInput.value = '';
-            regionInput.value = '';
-
-            // Obtener componentes de la dirección y rellenar los campos
-            for (const component of place.address_components) {
-                const componentType = component.types[0];
-
-                switch (componentType) {
-                    case 'street_number': {
-                        addressInput.value = `${component.long_name} `;
+        autocompletar.addListener('place_changed', () => {
+            const lugar = autocompletar.getPlace();
+            if (!lugar.geometry) return;
+            inputDireccion.value = '';
+            inputCiudad.value = '';
+            inputRegion.value = '';
+            for (const componente of lugar.address_components) {
+                const tipoComponente = componente.types[0];
+                switch (tipoComponente) {
+                    case 'street_number':
+                        inputDireccion.value = `${componente.long_name} `;
                         break;
-                    }
-                    case 'route': {
-                        addressInput.value += component.long_name;
+                    case 'route':
+                        inputDireccion.value += componente.long_name;
                         break;
-                    }
-                    case 'locality': { // Ciudad
-                        cityInput.value = component.long_name;
+                    case 'locality':
+                        inputCiudad.value = componente.long_name;
                         break;
-                    }
-                    case 'administrative_area_level_1': { // Región
-                        regionInput.value = component.long_name;
+                    case 'administrative_area_level_1':
+                        inputRegion.value = componente.long_name;
                         break;
-                    }
                 }
             }
         });
     } else {
-        console.error("Google Maps Places API no se ha cargado correctamente.");
+        console.error("API de Google Maps Places no se ha cargado correctamente.");
     }
 
-    // Llama a las funciones iniciales para cargar los datos
-    loadUserData();
-    renderAddresses();
-    renderPurchaseHistory();
+    cargarDatosUsuario();
+    renderizarDirecciones();
+    renderizarHistorialCompras();
 });

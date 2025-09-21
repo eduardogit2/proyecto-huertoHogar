@@ -1,71 +1,29 @@
-// Este objeto contiene las coordenadas y nombres de las sucursales
 const sucursales = [
-    {
-        id: 'map-santiago-centro',
-        name: 'Sucursal Santiago Centro',
-        position: { lat: -33.447487, lng: -70.665365 }
-    },
-    {
-        id: 'map-santiago-oriente',
-        name: 'Sucursal Santiago Oriente',
-        position: { lat: -33.414983, lng: -70.569426 }
-    },
-    {
-        id: 'map-santiago-poniente',
-        name: 'Sucursal Santiago Poniente',
-        position: { lat: -33.473531, lng: -70.766735 }
-    },
-    {
-        id: 'map-concepcion',
-        name: 'Sucursal Concepción',
-        position: { lat: -36.82766, lng: -73.05036 }
-    },
-    {
-        id: 'map-vina-del-mar',
-        name: 'Sucursal Viña del Mar',
-        position: { lat: -33.023215, lng: -71.551398 }
-    },
-    {
-        id: 'map-puerto-montt',
-        name: 'Sucursal Puerto Montt',
-        position: { lat: -41.47294, lng: -72.93722 }
-    },
-    {
-        id: 'map-villarrica',
-        name: 'Sucursal Villarrica',
-        position: { lat: -39.2842, lng: -72.2285 }
-    },
-    {
-        id: 'map-nacimiento',
-        name: 'Sucursal Nacimiento',
-        position: { lat: -37.5085, lng: -72.6369 }
-    },
-    {
-        id: 'map-valparaiso',
-        name: 'Sucursal Valparaíso',
-        position: { lat: -33.0458, lng: -71.6197 }
-    }
+    { id: 'mapa-santiago-centro', nombre: 'Sucursal Santiago Centro', posicion: { lat: -33.447487, lng: -70.665365 } },
+    { id: 'mapa-santiago-oriente', nombre: 'Sucursal Santiago Oriente', posicion: { lat: -33.414983, lng: -70.569426 } },
+    { id: 'mapa-santiago-poniente', nombre: 'Sucursal Santiago Poniente', posicion: { lat: -33.473531, lng: -70.766735 } },
+    { id: 'mapa-concepcion', nombre: 'Sucursal Concepción', posicion: { lat: -36.82766, lng: -73.05036 } },
+    { id: 'mapa-vina-del-mar', nombre: 'Sucursal Viña del Mar', posicion: { lat: -33.023215, lng: -71.551398 } },
+    { id: 'mapa-puerto-montt', nombre: 'Sucursal Puerto Montt', posicion: { lat: -41.47294, lng: -72.93722 } },
+    { id: 'mapa-villarrica', nombre: 'Sucursal Villarrica', posicion: { lat: -39.2842, lng: -72.2285 } },
+    { id: 'mapa-nacimiento', nombre: 'Sucursal Nacimiento', posicion: { lat: -37.5085, lng: -72.6369 } },
+    { id: 'mapa-valparaiso', nombre: 'Sucursal Valparaíso', posicion: { lat: -33.0458, lng: -71.6197 } }
 ];
 
-// Esta función se ejecuta cuando la API de Google Maps se ha cargado
-function initMaps() {
+function iniciarMapas() {
     sucursales.forEach(sucursal => {
-        const mapOptions = {
-            center: sucursal.position,
+        const opcionesMapa = {
+            center: sucursal.posicion,
             zoom: 15,
-            mapId: 'DEMO_MAP_ID' // Puedes usar un ID de mapa personalizado aquí
+            mapId: 'DEMO_MAP_ID'
         };
-
-        const mapElement = document.getElementById(sucursal.id);
-        
-        // Verifica que el elemento del mapa exista antes de inicializarlo
-        if (mapElement) {
-            const map = new google.maps.Map(mapElement, mapOptions);
-
+        const elementoMapa = document.getElementById(sucursal.id);
+        if (elementoMapa) {
+            const mapa = new google.maps.Map(elementoMapa, opcionesMapa);
             new google.maps.marker.AdvancedMarkerElement({
-                map: map,
-                position: sucursal.position,
-                title: sucursal.name
+                map: mapa,
+                position: sucursal.posicion,
+                title: sucursal.nombre
             });
         }
     });

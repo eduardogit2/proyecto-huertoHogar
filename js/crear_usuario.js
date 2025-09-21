@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- Lógica para Regiones y Comunas ---
     const regionesYComunas = {
         "Región de Arica y Parinacota": ["Arica", "Camarones", "Putre", "General Lagos"],
         "Región de Tarapacá": ["Iquique", "Alto Hospicio", "Pozo Almonte", "Camiña", "Colchane", "Huara", "Pica"],
@@ -20,57 +18,54 @@ document.addEventListener('DOMContentLoaded', () => {
         "Región de Magallanes y de la Antártica Chilena": ["Punta Arenas", "Laguna Blanca", "Río Verde", "San Gregorio", "Cabo de Hornos (Ex Navarino)", "Antártica", "Porvenir", "Primavera", "Timaukel", "Torres del Paine"]
     };
 
-    const regionSelect = document.getElementById('region');
-    const comunaSelect = document.getElementById('comuna');
+    const selectorRegion = document.getElementById('region');
+    const selectorComuna = document.getElementById('comuna');
 
     function cargarRegiones() {
-        if(regionSelect){
+        if (selectorRegion) {
             Object.keys(regionesYComunas).forEach(region => {
-                const option = document.createElement('option');
-                option.value = region;
-                option.textContent = region;
-                regionSelect.appendChild(option);
+                const opcion = document.createElement('option');
+                opcion.value = region;
+                opcion.textContent = region;
+                selectorRegion.appendChild(opcion);
             });
         }
     }
 
-    if(regionSelect && comunaSelect) {
-        regionSelect.addEventListener('change', (e) => {
+    if (selectorRegion && selectorComuna) {
+        selectorRegion.addEventListener('change', (e) => {
             const regionSeleccionada = e.target.value;
             const comunas = regionesYComunas[regionSeleccionada] || [];
-            
-            comunaSelect.innerHTML = '<option value="" selected disabled>Selecciona una comuna</option>';
-            
+            selectorComuna.innerHTML = '<option value="" selected disabled>Selecciona una comuna</option>';
             if (comunas.length > 0) {
-                comunaSelect.disabled = false;
+                selectorComuna.disabled = false;
                 comunas.forEach(comuna => {
-                    const option = document.createElement('option');
-                    option.value = comuna;
-                    option.textContent = comuna;
-                    comunaSelect.appendChild(option);
+                    const opcion = document.createElement('option');
+                    opcion.value = comuna;
+                    opcion.textContent = comuna;
+                    selectorComuna.appendChild(opcion);
                 });
             } else {
-                comunaSelect.disabled = true;
+                selectorComuna.disabled = true;
             }
         });
     }
 
     cargarRegiones();
 
-    const form = document.getElementById('formularioCrearUsuario');
-
-    if (form) {
-        form.addEventListener('submit', (evento) => {
+    const formulario = document.getElementById('formularioCrearUsuario');
+    if (formulario) {
+        formulario.addEventListener('submit', (evento) => {
             evento.preventDefault();
             if (validarFormularioUsuario()) {
                 guardarUsuario();
             }
         });
     }
-    
+
     function validarFormularioUsuario() {
         let esValido = true;
-        document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        document.querySelectorAll('.mensaje-error').forEach(el => el.textContent = '');
 
         const run = document.getElementById('runUsuario').value.trim();
         if (!validarRut(run)) {
@@ -89,71 +84,77 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('error-apellidos').textContent = 'Los apellidos son requeridos (máximo 100 caracteres).';
             esValido = false;
         }
-        
+
         const correo = document.getElementById('correoUsuario').value.trim();
-        if (!validarEmail(correo)) {
+        if (!validarCorreo(correo)) {
             document.getElementById('error-correo').textContent = 'Correo inválido. Solo se permiten dominios @duoc.cl, @profesor.duoc.cl y @gmail.com.';
             esValido = false;
         }
-        
+
         const direccion = document.getElementById('direccionUsuario').value.trim();
         if (direccion.length === 0 || direccion.length > 300) {
             document.getElementById('error-direccion').textContent = 'La dirección es requerida (máximo 300 caracteres).';
             esValido = false;
         }
 
-        if (document.getElementById('tipoUsuario').value === '') { esValido = false; document.getElementById('error-tipo-usuario').textContent = 'Debes seleccionar un tipo de usuario.'; }
-        if (regionSelect.value === '') { esValido = false; document.getElementById('error-region').textContent = 'Debes seleccionar una región.'; }
-        if (comunaSelect.value === '') { esValido = false; document.getElementById('error-comuna').textContent = 'Debes seleccionar una comuna.'; }
+        if (document.getElementById('tipoUsuario').value === '') {
+            document.getElementById('error-tipo-usuario').textContent = 'Debes seleccionar un tipo de usuario.';
+            esValido = false;
+        }
+        if (selectorRegion.value === '') {
+            document.getElementById('error-region').textContent = 'Debes seleccionar una región.';
+            esValido = false;
+        }
+        if (selectorComuna.value === '') {
+            document.getElementById('error-comuna').textContent = 'Debes seleccionar una comuna.';
+            esValido = false;
+        }
 
         return esValido;
     }
 
     function guardarUsuario() {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-
+        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
         const nuevoUsuario = {
             rut: document.getElementById('runUsuario').value.trim(),
             nombre: document.getElementById('nombreUsuario').value.trim(),
             apellidos: document.getElementById('apellidosUsuario').value.trim(),
-            email: document.getElementById('correoUsuario').value.trim(),
+            correo: document.getElementById('correoUsuario').value.trim(),
             fechaNacimiento: document.getElementById('fechaNacimientoUsuario').value,
             tipo: document.getElementById('tipoUsuario').value,
             region: document.getElementById('region').value,
             comuna: document.getElementById('comuna').value,
             direccion: document.getElementById('direccionUsuario').value.trim(),
-            isAdmin: document.getElementById('tipoUsuario').value === 'Administrador',
-            isVendedor: document.getElementById('tipoUsuario').value === 'Vendedor',
-            pwd: 'tempPassword123'
+            esAdmin: document.getElementById('tipoUsuario').value === 'Administrador',
+            esVendedor: document.getElementById('tipoUsuario').value === 'Vendedor',
+            contrasena: 'claveTemporal123'
         };
-
-        users.push(nuevoUsuario);
-        localStorage.setItem('users', JSON.stringify(users));
-
-        alert('✅ ¡Usuario creado con éxito!');
+        usuarios.push(nuevoUsuario);
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        alert('¡Usuario creado con éxito!');
         window.location.href = 'admin_usuarios.html';
     }
 
     function validarRut(rut) {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-        let tmp = rut.split('-');
-        let digv = tmp[1];
-        let rutSolo = tmp[0];
-        if (digv === 'K') digv = 'k';
+        let partes = rut.split('-');
+        let digitoVerificador = partes[1];
+        let rutSinDigito = partes[0];
+        if (digitoVerificador === 'K') digitoVerificador = 'k';
         let suma = 0;
         let factor = 2;
-        for (let i = rutSolo.length - 1; i >= 0; i--) {
-            suma += parseInt(rutSolo.charAt(i)) * factor;
+        for (let i = rutSinDigito.length - 1; i >= 0; i--) {
+            suma += parseInt(rutSinDigito.charAt(i)) * factor;
             factor = (factor === 7) ? 2 : factor + 1;
         }
         let dvCalculado = 11 - (suma % 11);
         if (dvCalculado === 11) dvCalculado = '0';
         if (dvCalculado === 10) dvCalculado = 'k';
-        return dvCalculado.toString() === digv;
+        return dvCalculado.toString() === digitoVerificador;
     }
 
-    function validarEmail(email) {
-        const emailRegex = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
-        return emailRegex.test(email);
+    function validarCorreo(correo) {
+        const expresionRegular = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
+        return expresionRegular.test(correo);
     }
 });

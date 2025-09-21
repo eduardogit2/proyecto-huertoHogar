@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Blog - HuertoHogar</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body>
 
-    <div class="d-flex" id="admin-wrapper">
+<body>
+    <div class="d-flex" id="contenedor-admin">
         <nav class="p-3 bg-white border-end shadow-sm" style="min-height: 100vh; width: 250px;">
-            <div class="sidebar-header text-center mb-4">
+            <div class="text-center mb-4">
                 <a class="d-flex align-items-center gap-2 text-decoration-none" href="index.html">
-                    <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
-                    <h5 class="mb-0 text-secondary">HuertoHogar</h5>
+                    <img src="img/logo.jpg" alt="HuertoHogar" class="imagen-logo">
+                    <h5 class="mb-0 texto-secundario">HuertoHogar</h5>
                 </a>
             </div>
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="admin.html"><i class="bi bi-grid-fill me-2"></i><span>Dashboard</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="admin_productos.html"><i class="bi bi-box-seam-fill me-2"></i><span>Productos</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="admin_usuarios.html"><i class="bi bi-people-fill me-2"></i><span>Usuarios</span></a></li>
-                <li class="nav-item"><a class="nav-link active" href="admin_blog.html"><i class="bi bi-pencil-square me-2"></i><span>Blog</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i><span>Cerrar Sesión</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="admin.html"><i
+                            class="bi bi-grid-fill me-2"></i><span>Principal</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="admin_productos.html"><i
+                            class="bi bi-box-seam-fill me-2"></i><span>Productos</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="admin_usuarios.html"><i
+                            class="bi bi-people-fill me-2"></i><span>Usuarios</span></a></li>
+                <li class="nav-item"><a class="nav-link active" href="admin_blog.html"><i
+                            class="bi bi-pencil-square me-2"></i><span>Blog</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="botonCerrarSesion"><i
+                            class="bi bi-box-arrow-right me-2"></i><span>Cerrar Sesión</span></a></li>
             </ul>
         </nav>
-
-        <main class="flex-grow-1 p-4" style="background-color: var(--color-beige-soft);">
+        <main class="flex-grow-1 p-4" style="background-color: var(--color-beige-suave);">
             <header class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
-                <h1 class="h2 text-secondary">Gestión de Blog</h1>
-                <button id="crearPostBtn" class="btn btn-primary"><i class="bi bi-plus-circle-fill me-2"></i>Crear Nueva Publicación</button>
+                <h1 class="h2 texto-secundario">Gestión de Blog</h1>
+                <button id="botonCrearPublicacion" class="btn btn-primario"><i
+                        class="bi bi-plus-circle-fill me-2"></i>Crear Nueva Publicación</button>
             </header>
-            
             <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -47,54 +54,59 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="blog-table-body">
-                                </tbody>
+                            <tbody id="cuerpoTablaBlog">
+                            </tbody>
                         </table>
                     </div>
-                    <p id="no-posts-message" class="text-center text-muted" style="display: none;">No hay publicaciones para mostrar. ¡Crea una!</p>
+                    <p id="mensajeSinPublicaciones" class="text-center text-muted" style="display: none;">No hay
+                        publicaciones para mostrar. ¡Crea una!</p>
                 </div>
             </div>
         </main>
     </div>
-
-    <div class="modal fade" id="blogPostModal" tabindex="-1" aria-labelledby="blogPostModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalPublicacionBlog" tabindex="-1" aria-labelledby="tituloModalPublicacion"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="blogPostModalLabel">Nueva Publicación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="tituloModalPublicacion">Nueva Publicación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formularioBlogPost">
-                        <input type="hidden" id="postIdEditar">
+                    <form id="formularioPublicacionBlog">
+                        <input type="hidden" id="idPublicacionEditar">
                         <div class="mb-3">
-                            <label for="postTitulo" class="form-label">Título</label>
-                            <input type="text" class="form-control" id="postTitulo" required>
+                            <label for="tituloPublicacion" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="tituloPublicacion" required>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="postCategoria" class="form-label">Categoría</label>
-                                <input type="text" class="form-control" id="postCategoria" placeholder="Ej: Sostenibilidad, Recetas..." required>
+                                <label for="categoriaPublicacion" class="form-label">Categoría</label>
+                                <input type="text" class="form-control" id="categoriaPublicacion"
+                                    placeholder="Ej: Sostenibilidad, Recetas..." required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="postImagen" class="form-label">URL de la Imagen</label>
-                                <input type="text" class="form-control" id="postImagen" placeholder="Ej: img/nombre-imagen.jpg" required>
+                                <label for="imagenPublicacion" class="form-label">URL de la Imagen</label>
+                                <input type="text" class="form-control" id="imagenPublicacion"
+                                    placeholder="Ej: img/nombre-imagen.jpg" required>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="postContenido" class="form-label">Contenido (HTML permitido)</label>
-                            <textarea class="form-control" id="postContenido" rows="10" placeholder="Usa etiquetas como <p>, <ul>, <li>, <h3>, etc. para dar formato."></textarea>
+                            <label for="contenidoPublicacion" class="form-label">Contenido (HTML permitido)</label>
+                            <textarea class="form-control" id="contenidoPublicacion" rows="10"
+                                placeholder="Usa etiquetas como <p>, <ul>, <li>, <h3>, etc. para dar formato."></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar Publicación</button>
+                            <button type="button" class="btn btn-secundario" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primario">Guardar Publicación</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/admin_blog.js"></script> <script src="js/admin.js"></script> </body>
+    <script src="js/admin.js"></script>
+</body>
+
 </html>

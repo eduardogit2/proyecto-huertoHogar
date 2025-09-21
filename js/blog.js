@@ -1,359 +1,310 @@
-// --- Lógica para cargar los posts desde localStorage ---
-// Función para obtener los posts. Si no existen en localStorage, usa los datos iniciales y los guarda.
-function getBlogPostsFromStorage() {
-    let posts = JSON.parse(localStorage.getItem('blogPosts'));
-
-    // Si no hay nada en localStorage, se usa la data inicial como fallback y se guarda.
-    if (!posts || posts.length === 0) {
-        // --- CORRECCIÓN: Datos Iniciales COMPLETOS ---
-        const initialBlogPosts = [
+// Las funciones de inicio y manejo de datos se mantienen igual, ya que no necesitan cambios.
+function obtenerPublicacionesDeAlmacenamiento() {
+    let publicaciones = JSON.parse(localStorage.getItem('publicacionesBlog'));
+    if (!publicaciones || publicaciones.length === 0) {
+        const publicacionesIniciales = [
             {
                 id: 1,
-                title: "5 Prácticas Sostenibles para tu Huerto",
-                img: "img/blog-sostenibilidad.jpg",
-                date: "2025-06-20",
-                category: "Sostenibilidad",
-                content: `
-            <p>Implementar prácticas sostenibles en nuestro huerto no solo ayuda a cuidar el medio ambiente, sino que también fortalece la salud de nuestras plantas y la calidad de los alimentos que cosechamos. Aquí te detallamos cinco prácticas clave que puedes empezar a aplicar hoy mismo.</p>
-            <h4>1. Uso de compost casero</h4>
-            <p>El compostaje es una forma fantástica de reciclar desechos orgánicos de tu cocina y jardín. Transforma restos de frutas, verduras y hojas secas en un abono rico en nutrientes que mejora la estructura del suelo y reduce la necesidad de fertilizantes químicos.</p>
-            <h4>2. Recolección de agua de lluvia</h4>
-            <p>Instalar un sistema de recolección de agua de lluvia es una manera eficiente de conservar agua potable. Esta agua es naturalmente suave, libre de cloro y perfecta para regar tus plantas, que la prefieren por sobre el agua del grifo.</p>
-            <h4>3. Cultivo de especies nativas</h4>
-            <p>Las plantas nativas están adaptadas al clima y suelo de tu región. Esto significa que requieren menos agua, son más resistentes a plagas locales y promueven la biodiversidad atrayendo a polinizadores como abejas y mariposas.</p>
-            <h4>4. Control de plagas de forma natural</h4>
-            <p>En lugar de pesticidas, puedes introducir insectos beneficiosos como las chinitas (mariquitas) para controlar pulgones, o usar barreras físicas y trampas. Plantar hierbas aromáticas como la albahaca o la menta también ayuda a repeler insectos no deseados.</p>
-            <h4>5. Rotación de cultivos</h4>
-            <p>No plantes la misma especie en el mismo lugar año tras año. La rotación de cultivos previene el agotamiento de nutrientes específicos del suelo y ayuda a interrumpir los ciclos de vida de plagas y enfermedades.</p>
-            <p>Estas acciones no solo benefician a la naturaleza, sino que también mejoran la calidad y el sabor de tus productos. ¡Un huerto sostenible es un huerto feliz!</p>
-        `
+                titulo: "5 Prácticas Sostenibles para tu Huerto",
+                imagen: "img/blog-sostenibilidad.jpg",
+                fecha: "2025-06-20",
+                categoria: "Sostenibilidad",
+                contenido: `<p>Crear un huerto es un acto de conexión con la naturaleza, y hacerlo de manera sostenible no solo beneficia al planeta, sino que también enriquece la calidad de tus cultivos. Aquí te compartimos cinco prácticas clave que puedes implementar fácilmente en casa para tener un huerto más amigable con el medio ambiente.</p>
+<h4>1. Haz tu propio compost</h4>
+<p>El compostaje es una forma fantástica de reducir tus residuos orgánicos y, a la vez, de crear un abono natural increíblemente nutritivo para tus plantas. Es un ciclo perfecto donde los restos de tu cocina y jardín se transforman en vida para tu huerto.</p>
+<h4>2. Recoge agua de lluvia</h4>
+<p>Instalar un sistema sencillo para recolectar agua de lluvia no solo te ayuda a ahorrar en la cuenta del agua, sino que también le da a tus plantas el mejor líquido posible: agua pura y sin químicos. Tus cultivos te lo agradecerán.</p>
+<h4>3. Cultiva especies nativas</h4>
+<p>Las plantas nativas de tu zona están perfectamente adaptadas al clima y al suelo. Esto las hace más resistentes a plagas y enfermedades, reduciendo la necesidad de intervenciones. Además, atraen a polinizadores locales, ayudando a mantener el ecosistema en equilibrio.</p>
+<h4>4. Controla las plagas de forma natural</h4>
+<p>Olvídate de los pesticidas agresivos. Puedes proteger tus plantas usando soluciones naturales, como agua con jabón potásico o aceites esenciales, o fomentando la presencia de insectos beneficiosos como mariquitas.</p>
+<h4>5. Rota tus cultivos</h4>
+<p>No plantes la misma especie en el mismo lugar año tras año. Al rotar los cultivos, ayudas a mantener la salud del suelo, previenes el agotamiento de nutrientes específicos y reduces la proliferación de plagas y enfermedades que se especializan en ciertos tipos de plantas.</p>
+<p>¡Un huerto sostenible es un huerto feliz y productivo!</p>`
             },
             {
                 id: 2,
-                title: "Receta: Ensalada de Quínoa y Pimientos",
-                img: "img/blog-recetas.jpg",
-                date: "2025-06-18",
-                category: "Recetas",
-                content: `
-            <p>Una receta fresca, colorida y nutritiva para cualquier momento del día. Esta ensalada es rica en proteínas, vitaminas y es perfecta como plato principal o como acompañamiento.</p>
-            <h3>Ingredientes:</h3>
-            <ul>
-                <li>1 taza de quínoa orgánica.</li>
-                <li>1 pimiento rojo, 1 amarillo y 1 verde de <strong>HuertoHogar</strong>.</li>
-                <li>1/2 cebolla morada picada finamente.</li>
-                <li>1 pepino mediano, sin semillas y en cubos.</li>
-                <li>1 taza de tomates cherry, cortados por la mitad.</li>
-                <li>Un puñado de perejil fresco picado.</li>
-                <li><strong>Para el aderezo:</strong> 1/4 taza de aceite de oliva virgen extra, el jugo de 1 limón, sal y pimienta al gusto.</li>
-            </ul>
-            <h3>Preparación:</h3>
-            <ol>
-                <li>Cocina la quínoa según las instrucciones del paquete. Una vez lista, déjala enfriar a temperatura ambiente.</li>
-                <li>Mientras la quínoa se enfría, corta los pimientos, la cebolla, el pepino y los tomates.</li>
-                <li>En un bol grande, mezcla la quínoa ya fría con todas las verduras picadas y el perejil.</li>
-                <li>En un frasco pequeño, mezcla los ingredientes del aderezo y agita bien.</li>
-                <li>Vierte el aderezo sobre la ensalada y revuelve suavemente para combinar todo.</li>
-            </ol>
-            <p>¡Sirve inmediatamente y disfruta de una comida deliciosa y llena de vitaminas!</p>
-        `
+                titulo: "Receta: Ensalada de Quínoa y Pimientos",
+                imagen: "img/blog-recetas.jpg",
+                fecha: "2025-06-18",
+                categoria: "Recetas",
+                contenido: `<p>¿Buscas una comida fresca, nutritiva y llena de sabor? Esta ensalada de quínoa y pimientos es la respuesta. Es perfecta para un almuerzo ligero o como guarnición, y lo mejor es que combina los sabores de nuestros productos más frescos. ¡Anímate a probarla!</p>
+<h3>Ingredientes:</h3>
+<ul>
+<li>1 taza de quínoa</li>
+<li>2 tazas de agua o caldo de verduras</li>
+<li>1 pimiento tricolor (rojo, amarillo, verde) de HuertoHogar, picado</li>
+<li>½ cebolla morada picada finamente</li>
+<li>½ taza de pepino picado</li>
+<li>¼ taza de perejil fresco picado</li>
+<li>Jugo de 1 limón</li>
+<li>2 cucharadas de aceite de oliva</li>
+<li>Sal y pimienta al gusto</li>
+</ul>
+<h3>Preparación:</h3>
+<ol>
+<li>Enjuaga bien la quínoa y cocínala en agua o caldo hasta que esté tierna. Deja enfriar.</li>
+<li>En un tazón grande, mezcla la quínoa enfriada con los pimientos, la cebolla, el pepino y el perejil.</li>
+<li>En un recipiente pequeño, bate el jugo de limón con el aceite de oliva, sal y pimienta.</li>
+<li>Vierte el aderezo sobre la ensalada y mezcla todo muy bien.</li>
+</ol>
+<p>¡Disfruta de una comida deliciosa y saludable!</p>`
             },
             {
                 id: 3,
-                title: "Nuestra Huella de Carbono: El Camino Hacia la Sostenibilidad",
-                img: "img/blog-huella.jpg",
-                date: "2025-06-15",
-                category: "Sostenibilidad",
-                content: `
-            <p>En <strong>HuertoHogar</strong>, estamos profundamente comprometidos con la reducción de nuestra huella de carbono. Creemos que cada pequeña acción cuenta para construir un futuro más verde. Te contamos cómo lo hacemos:</p>
-            <h4>Proveedores locales para reducir el transporte</h4>
-            <p>Al trabajar principalmente con agricultores de nuestra región, disminuimos drásticamente las distancias que nuestros productos deben recorrer. Menos transporte significa menos emisiones de CO2 y alimentos más frescos para ti.</p>
-            <h4>Empaques biodegradables y compostables</h4>
-            <p>Hemos eliminado el plástico de un solo uso en nuestros empaques. Utilizamos materiales reciclados, biodegradables y compostables que puedes agregar a tu propia compostera, cerrando así el ciclo de la materia orgánica.</p>
-            <h4>Sistemas de reparto eficientes</h4>
-            <p>Optimizamos nuestras rutas de entrega para que nuestros vehículos recorran la menor distancia posible. Además, estamos en proceso de incorporar bicicletas de carga para las entregas en zonas céntricas, apostando por una logística de cero emisiones.</p>
-            <p>Cada vez que compras con nosotros, no solo eliges productos de calidad, sino que también te sumas a un movimiento que contribuye activamente a un futuro más verde y limpio para todos.</p>
-        `
+                titulo: "Nuestra Huella de Carbono",
+                imagen: "img/blog-huella.jpg",
+                fecha: "2025-06-15",
+                categoria: "Sostenibilidad",
+                contenido: `<p>En <strong>HuertoHogar</strong>, estamos comprometidos con el medio ambiente y con hacer nuestra parte para un futuro más verde. Por eso, nos esforzamos por reducir al máximo nuestra huella de carbono a través de decisiones conscientes en cada etapa de nuestro proceso.</p>
+<h4>Apoyamos a proveedores locales</h4>
+<p>Al trabajar con agricultores locales, reducimos la distancia que recorren nuestros productos. Esto no solo garantiza que recibas frutas y verduras más frescas, sino que también minimiza las emisiones de carbono del transporte a larga distancia.</p>
+<h4>Usamos empaques biodegradables</h4>
+<p>Hemos eliminado por completo el uso de plásticos innecesarios en nuestros empaques. En su lugar, optamos por materiales biodegradables y compostables. ¡Incluso nuestras etiquetas son eco-amigables!</p>
+<h4>Optimizamos los sistemas de reparto</h4>
+<p>Nuestro equipo de logística optimiza continuamente las rutas de entrega para ser más eficientes. Con menos viajes, consumimos menos combustible y generamos menos contaminación. Estamos orgullosos de ser parte de la solución, no del problema.</p>`
             },
             {
                 id: 4,
-                title: "Contribuciones a la Comunidad: Apoyando a Productores Locales",
-                img: "img/blog-comunidad.jpg",
-                date: "2025-06-10",
-                category: "Comunidad",
-                content: `
-            <p>Creemos firmemente en el poder de la comunidad y en la importancia de fortalecer la economía local. Por eso, más del 80% de nuestros productos provienen de pequeños y medianos agricultores de la región del Biobío.</p>
-            <p>Trabajamos de la mano con ellos para asegurar precios justos y una cadena de suministro transparente. Esto no solo garantiza que recibas productos frescos y de temporada, sino que también apoya directamente a las familias que con dedicación y esfuerzo cultivan nuestros alimentos.</p>
-            <p>Al elegir <strong>HuertoHogar</strong>, te conviertes en un eslabón vital de esta cadena de valor. Tu compra tiene un impacto real: ayuda a preservar las tradiciones agrícolas locales, fomenta un comercio más ético y contribuye al desarrollo sostenible de nuestra comunidad.</p>
-        `
+                titulo: "Apoyando a Productores Locales",
+                imagen: "img/blog-comunidad.jpg",
+                fecha: "2025-06-10",
+                categoria: "Comunidad",
+                contenido: `<p>En <strong>HuertoHogar</strong>, creemos en el poder de la comunidad y en la importancia de fortalecer la economía local. Por eso, nuestra misión va más allá de vender productos de alta calidad: buscamos crear un puente entre tu hogar y las manos que cultivan los alimentos que consumes.</p>
+<p>Trabajamos de la mano con agricultores y pequeños productores, ofreciéndoles una plataforma justa para que puedan compartir sus cosechas. Al comprar en HuertoHogar, estás apoyando directamente sus familias y su arduo trabajo.</p>
+<p>Cada compra que haces tiene un impacto real, ayudando a preservar las tradiciones agrícolas y a asegurar que la calidad y frescura de los productos locales sigan llegando a tu mesa. Es un círculo virtuoso que beneficia a todos.</p>`
             },
             {
                 id: 5,
-                title: "Cómo Cultivar un Huerto Urbano exitoso",
-                img: "img/blog-huerto-urbano.jpg",
-                date: "2025-06-05",
-                category: "Sostenibilidad",
-                content: `
-            <p>¡No necesitas un gran jardín para empezar a cultivar! Un huerto urbano en tu balcón, terraza o incluso en una ventana soleada es la solución perfecta para disfrutar de tus propios alimentos en espacios pequeños.</p>
-            <p>Aquí tienes algunos consejos clave para el éxito:</p>
-            <ul>
-                <li><strong>Elige el lugar adecuado:</strong> Busca un espacio que reciba al menos 5-6 horas de luz solar directa al día. La orientación norte es ideal.</li>
-                <li><strong>Macetas y drenaje:</strong> Usa macetas con buen drenaje para evitar que las raíces se pudran. Asegúrate de que tengan agujeros en la base.</li>
-                <li><strong>Sustrato de calidad:</strong> Invierte en un buen sustrato. Una mezcla de compost, fibra de coco y perlita proporcionará los nutrientes y la aireación que tus plantas necesitan.</li>
-                <li><strong>Empieza con plantas fáciles:</strong> Si eres principiante, comienza con cultivos sencillos y de rápido crecimiento como hierbas aromáticas (albahaca, ciboulette), lechugas, espinacas o rabanitos.</li>
-                <li><strong>Riego y abono:</strong> Riega con regularidad, pero sin encharcar. Toca la tierra para sentir la humedad. Abona cada 2-3 semanas durante la temporada de crecimiento con un fertilizante orgánico.</li>
-            </ul>
-            <p>Cultivar tus alimentos es una experiencia increíblemente gratificante. ¡Disfruta del proceso y del sabor incomparable de tus propios productos frescos!</p>
-        `
+                titulo: "Cómo Cultivar un Huerto Urbano",
+                imagen: "img/blog-huerto-urbano.jpg",
+                fecha: "2025-06-05",
+                categoria: "Sostenibilidad",
+                contenido: `<p>¿Sueñas con cultivar tus propias verduras y hierbas, pero no tienes un jardín grande? ¡No te preocupes! Un huerto urbano es la solución perfecta para cualquier balcón, terraza o ventana soleada. Con un poco de planificación y estos consejos, podrás disfrutar de tus propias cosechas en la ciudad.</p>
+<h4>Consejos clave:</h4>
+<ul>
+<li><strong>Elige el lugar adecuado:</strong> La mayoría de las hortalizas necesitan al menos 6 horas de sol directo. Busca el rincón más soleado de tu casa.</li>
+<li><strong>Macetas y drenaje:</strong> Usa macetas con agujeros en la base para un buen drenaje. El exceso de agua puede pudrir las raíces.</li><li><strong>Sustrato de calidad:</strong> Un buen sustrato es la base de un huerto sano. Invierte en uno enriquecido con compost.</li>
+<li><strong>Empieza con plantas fáciles:</strong> Si eres principiante, comienza con hierbas como la menta o el orégano, o verduras como la lechuga y el rabanito. Son resistentes y crecen rápido.</li>
+<li><strong>Riego y abono:</strong> Riega de forma regular, idealmente en la mañana o al atardecer. Y no olvides abonar tus plantas cada 2-4 semanas para mantenerlas fuertes y productivas.</li>
+</ul>
+<p>El proceso es una recompensa en sí misma. ¡Disfruta del placer de ver crecer tus propios alimentos!</p>`
             },
             {
                 id: 6,
-                title: "Batido Verde Desintoxicante y Energético",
-                img: "img/blog-batido-verde.jpg",
-                date: "2025-05-30",
-                category: "Recetas",
-                content: `
-            <p>Un batido lleno de nutrientes para empezar el día con energía o para recuperarte después de hacer ejercicio. Es delicioso, fácil de preparar y está cargado de vitaminas y minerales.</p>
-            <h3>Ingredientes:</h3>
-            <ul>
-                <li>1 taza de espinacas frescas.</li>
-                <li>1 plátano maduro congelado (para una textura más cremosa).</li>
-                <li>1/2 manzana verde.</li>
-                <li>1/2 taza de yogur natural sin azúcar.</li>
-                <li>1/4 de taza de leche de almendras (o la que prefieras).</li>
-                <li>1 cucharada de semillas de chía.</li>
-                <li>Opcional: una cucharadita de miel o sirope de arce si lo prefieres más dulce.</li>
-            </ul>
-            <h3>Preparación:</h3>
-            <p>Simplemente mezcla todos los ingredientes en una licuadora de alta velocidad hasta obtener una consistencia suave y homogénea. Si queda muy espeso, puedes añadir un poco más de leche. ¡Listo para servir y disfrutar al instante!</p>
-        `
+                titulo: "Batido Verde Desintoxicante",
+                imagen: "img/blog-batido-verde.jpg",
+                fecha: "2025-05-30",
+                categoria: "Recetas",
+                contenido: `<p>¿Te sientes con poca energía? Un batido verde es una forma deliciosa y rápida de recargar tu cuerpo con vitaminas y minerales esenciales. Es la bebida perfecta para un desayuno rápido o para refrescarte en la tarde, lleno de bondades de la naturaleza.</p>
+<h3>Ingredientes:</h3>
+<ul>
+<li>1 taza de espinacas frescas de HuertoHogar</li>
+<li>½ plátano Cavendish, congelado para una textura más cremosa</li>
+<li>½ manzana Fuji, sin corazón</li>
+<li>1 cucharada de semillas de chía o linaza</li>
+<li>1 taza de agua o leche vegetal</li>
+<li>Miel orgánica de HuertoHogar al gusto</li>
+</ul>
+<h3>Preparación:</h3>
+<p>Simplemente coloca todos los ingredientes en una licuadora. Comienza con las espinacas y el líquido para que sea más fácil mezclarlos, y luego añade las frutas y semillas. Bate a alta velocidad hasta obtener una consistencia suave y homogénea.</p>
+<p>¡Sirve de inmediato y a disfrutar de un shot de pura energía y bienestar!</p>`
             }
         ];
-        localStorage.setItem('blogPosts', JSON.stringify(initialBlogPosts));
-        return initialBlogPosts;
+        localStorage.setItem('publicacionesBlog', JSON.stringify(publicacionesIniciales));
+        return publicacionesIniciales;
     }
-    return posts;
+    return publicaciones;
 }
 
-// Carga los posts desde la función que maneja el localStorage
-let blogPosts = getBlogPostsFromStorage();
-
-// Descripción para cada categoría
-const categoryDescriptions = {
-    "Todos": "Explora todos los artículos de nuestro blog, desde recetas saludables hasta consejos de sostenibilidad.",
-    "Sostenibilidad": "Artículos sobre prácticas ecológicas, cuidado del medio ambiente y cómo reducir tu huella de carbono.",
-    "Recetas": "Inspiración culinaria con recetas frescas y nutritivas que puedes preparar con nuestros productos.",
-    "Comunidad": "Conoce cómo trabajamos con productores locales y las iniciativas que apoyamos."
+// Variables globales se mantienen igual
+let publicacionesBlog = obtenerPublicacionesDeAlmacenamiento();
+const descripcionesCategorias = {
+    "Todos": "Explora todos los artículos de nuestro blog, desde recetas saludables hasta consejos de sostenibilidad, pensados para ti y para el planeta.",
+    "Sostenibilidad": "Artículos sobre prácticas ecológicas, cuidado del medio ambiente y cómo puedes reducir tu huella de carbono, un pequeño paso a la vez.",
+    "Recetas": "Inspírate con recetas frescas y nutritivas que puedes preparar con nuestros productos. ¡Comidas deliciosas que te harán sentir bien!",
+    "Comunidad": "Conoce de cerca cómo trabajamos con pequeños productores locales y las iniciativas que apoyamos para fortalecer nuestra comunidad."
 };
 
-let currentCategory = 'Todos';
+let categoriaActual = 'Todos';
 
-// --- Lógica para cargar y guardar los comentarios ---
-
-// Comentarios iniciales "falsos"
-const initialComments = {
-    '1': [
-        { user: "Ana", text: "¡Muy buenos consejos! Empezaré a hacer mi propio compost." },
-        { user: "Carlos", text: "La rotación de cultivos es clave, lo he notado en mi huerto. ¡Gracias!" }
-    ],
-    '4': [
-        { user: "Pedro", text: "Es genial saber que apoyan a los pequeños productores." },
-        { user: "María", text: "Me encanta este tipo de iniciativas, ¡sigan así!" }
-    ],
-    '5': [
-        { user: "Javier", text: "Excelente guía, justo lo que necesitaba para mi balcón." }
-    ]
+const comentariosIniciales = {
+    '1': [{ usuario: "Ana", texto: "¡Muy buenos consejos! Empezaré a hacer mi propio compost." }, { usuario: "Carlos", texto: "La rotación de cultivos es clave, ¡gracias!" }],
+    '4': [{ usuario: "Pedro", texto: "Es genial saber que apoyan a los pequeños productores." }, { usuario: "María", texto: "Me encanta este tipo de iniciativas." }],
+    '5': [{ usuario: "Javier", texto: "Excelente guía, justo lo que necesitaba para mi balcón." }]
 };
 
-function loadComments() {
-    // Intenta cargar los comentarios del localStorage. Si no hay, usa los comentarios iniciales.
-    const savedComments = JSON.parse(localStorage.getItem('blogComments'));
-    return savedComments || initialComments;
+function cargarComentarios() {
+    const comentariosGuardados = JSON.parse(localStorage.getItem('comentariosBlog'));
+    return comentariosGuardados || comentariosIniciales;
 }
 
-function saveComments(comments) {
-    // Guarda el objeto de comentarios en el localStorage
-    localStorage.setItem('blogComments', JSON.stringify(comments));
+function guardarComentarios(comentarios) {
+    localStorage.setItem('comentariosBlog', JSON.stringify(comentarios));
 }
 
-// Carga los comentarios guardados al iniciar el script
-let allComments = loadComments();
+let todosLosComentarios = cargarComentarios();
 
-// --- Lógica principal para controlar la página ---
 document.addEventListener('DOMContentLoaded', () => {
+    const contenedorBlog = document.getElementById('contenedorBlog');
+    const listaCategorias = document.getElementById('listaCategorias');
+    const modalPublicacion = new bootstrap.Modal(document.getElementById('modalPublicacion'));
+    const elementoDescripcionCategoria = document.getElementById('descripcionCategoria');
+    const seccionFormularioComentario = document.getElementById('seccionFormularioComentario');
+    const formularioComentario = document.getElementById('formularioComentario');
+    const contenedorComentarios = document.getElementById('contenedorComentarios');
+    const mensajeSeccionComentario = document.getElementById('mensajeSeccionComentario');
+    let idPublicacionActual = null;
 
-    // Referencias a elementos del DOM
-    const blogContainer = document.getElementById('blog-container');
-    const categoryList = document.getElementById('categoryList');
-    const postModal = new bootstrap.Modal(document.getElementById('postModal'));
-    const categoryDescriptionEl = document.getElementById('category-description');
-    const commentFormSection = document.getElementById('comment-form-section');
-    const commentForm = document.getElementById('comment-form');
-    const commentsContainer = document.getElementById('comments-container');
-    const commentSectionMessage = document.getElementById('comment-section-message');
-    let currentPostId = null;
-
-    // --- Lógica de Filtros y Descripción ---
-    function renderCategories() {
-        const uniqueCategories = ['Todos', ...new Set(blogPosts.map(p => p.category))];
-        categoryList.innerHTML = '';
-
-        uniqueCategories.forEach(cat => {
+    function renderizarCategorias() {
+        if (!listaCategorias) return;
+        const categoriasUnicas = ['Todos', ...new Set(publicacionesBlog.map(p => p.categoria))];
+        listaCategorias.innerHTML = '';
+        categoriasUnicas.forEach(cat => {
             const li = document.createElement('li');
             li.className = 'list-group-item list-group-item-action';
-            li.setAttribute('data-category', cat);
+            li.setAttribute('data-categoria', cat);
             li.textContent = cat;
 
-            if (cat === currentCategory) {
+            if (cat === categoriaActual) {
                 li.classList.add('active');
             }
 
             li.addEventListener('click', () => {
-                currentCategory = cat;
-                renderCategories();
-                renderBlogPosts();
+                categoriaActual = cat;
+                renderizarCategorias();
+                renderizarPublicacionesBlog();
             });
-            categoryList.appendChild(li);
+            listaCategorias.appendChild(li);
         });
     }
 
-    function renderBlogPosts() {
-        blogContainer.innerHTML = '';
+    function renderizarPublicacionesBlog() {
+        if (!contenedorBlog) return;
 
-        let postsToShow = blogPosts;
-        if (currentCategory !== "Todos") {
-            postsToShow = blogPosts.filter(post => post.category === currentCategory);
+        contenedorBlog.innerHTML = '';
+        let publicacionesAMostrar = publicacionesBlog;
+        if (categoriaActual !== "Todos") {
+            publicacionesAMostrar = publicacionesBlog.filter(pub => pub.categoria === categoriaActual);
         }
 
-        categoryDescriptionEl.textContent = categoryDescriptions[currentCategory] || '';
-        categoryDescriptionEl.style.display = 'block';
+        if (elementoDescripcionCategoria) {
+            elementoDescripcionCategoria.textContent = descripcionesCategorias[categoriaActual] || '';
+            elementoDescripcionCategoria.style.display = 'block';
+        }
 
-        postsToShow.forEach(post => {
-            const col = document.createElement('div');
-            col.className = 'col-md-6 mb-4 d-flex'; // <<-- Agregado: 'd-flex' para que las columnas se comporten como contenedores flex
+        publicacionesAMostrar.forEach(pub => {
+            const columna = document.createElement('div');
+            columna.className = 'col-md-6 mb-4 d-flex';
 
-            // Crea un resumen de texto plano para evitar cortar HTML
-            const summaryText = new DOMParser().parseFromString(post.content, 'text/html').body.textContent;
-            const shortSummary = summaryText.substring(0, 150).trim() + '...';
+            const textoResumen = new DOMParser().parseFromString(pub.contenido, 'text/html').body.textContent;
+            const resumenCorto = textoResumen.substring(0, 150).trim() + '...';
 
-            col.innerHTML = `
-                <div class="card h-100 shadow-sm blog-card">
-                    <img src="${post.img}" class="card-img-top blog-img" alt="${post.title}">
-                    <div class="card-body">
-                        <div class="card-text-container">
-                            <h5 class="card-title">${post.title}</h5>
-                            <p class="card-text text-muted small">${post.date} | Categoría: ${post.category}</p>
-                            <p class="blog-content-summary">${shortSummary}</p> </div>
-                        <button class="btn btn-primary mt-3 read-more" data-post-id="${post.id}">Leer más</button>
+            columna.innerHTML = `
+                <div class="card h-100 shadow-sm tarjeta-blog">
+                    <img src="${pub.imagen}" class="tarjeta-imagen-superior imagen-blog" alt="${pub.titulo}">
+                    <div class="card-body tarjeta-cuerpo">
+                        <div class="contenedor-texto-tarjeta">
+                            <h5 class="card-title">${pub.titulo}</h5>
+                            <p class="card-text text-muted small">${pub.fecha} | Categoría: ${pub.categoria}</p>
+                            <p class="resumen-contenido-blog">${resumenCorto}</p>
+                        </div>
+                        <button class="btn btn-primario mt-3 leer-mas" data-id-publicacion="${pub.id}">Leer más</button>
                     </div>
                 </div>
             `;
-            blogContainer.appendChild(col);
+            contenedorBlog.appendChild(columna);
         });
-
-        addReadMoreListeners();
+        agregarListenersLeerMas();
     }
 
-    // --- Lógica de la Modal ---
-    function showPostInModal(postId) {
-        currentPostId = postId;
-        const post = blogPosts.find(p => p.id === postId);
+    function mostrarPublicacionEnModal(idPublicacion) {
+        idPublicacionActual = idPublicacion;
+        const publicacion = publicacionesBlog.find(p => p.id === idPublicacion);
 
-        if (post) {
-            document.getElementById('postModalLabel').textContent = post.title;
-            document.getElementById('modalPostImage').src = post.img;
-            document.getElementById('modalPostImage').alt = post.title;
-            document.getElementById('modalPostDate').textContent = `${post.date} | Categoría: ${post.category}`;
-            document.getElementById('modalPostContent').innerHTML = post.content;
+        if (publicacion) {
+            document.getElementById('tituloModalPublicacion').textContent = publicacion.titulo;
+            document.getElementById('imagenModalPublicacion').src = publicacion.imagen;
+            document.getElementById('imagenModalPublicacion').alt = publicacion.titulo;
+            document.getElementById('fechaModalPublicacion').textContent = `${publicacion.fecha} | Categoría: ${publicacion.categoria}`;
+            document.getElementById('contenidoModalPublicacion').innerHTML = publicacion.contenido;
+            const comentariosPublicacion = todosLosComentarios[idPublicacion] || [];
+            renderizarComentarios(comentariosPublicacion);
+            const sesionIniciada = localStorage.getItem('sesionIniciada') === 'true';
 
-            // Renderiza los comentarios de ese post específico
-            const postComments = allComments[postId] || [];
-            renderComments(postComments);
-
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-            if (isLoggedIn) {
-                commentFormSection.style.display = 'block';
-                commentSectionMessage.style.display = 'none';
+            if (sesionIniciada) {
+                seccionFormularioComentario.style.display = 'block';
+                mensajeSeccionComentario.style.display = 'none';
             } else {
-                commentFormSection.style.display = 'none';
-                commentSectionMessage.style.display = 'block';
+                seccionFormularioComentario.style.display = 'none';
+                mensajeSeccionComentario.style.display = 'block';
+            }
+            modalPublicacion.show();
+        }
+    }
+
+    function agregarListenersLeerMas() {
+        const botonesLeerMas = document.querySelectorAll('.leer-mas');
+        botonesLeerMas.forEach(boton => {
+            boton.addEventListener('click', (evento) => {
+                const idPublicacion = parseInt(evento.target.dataset.idPublicacion);
+                mostrarPublicacionEnModal(idPublicacion);
+            });
+        });
+    }
+
+    function renderizarComentarios(comentarios) {
+        if (!contenedorComentarios) return;
+        contenedorComentarios.innerHTML = '';
+        if (comentarios.length === 0) {
+            contenedorComentarios.innerHTML = '<p class="text-muted fst-italic text-center">Sé el primero en comentar.</p>';
+        } else {
+            comentarios.forEach(comentario => {
+                const divComentario = document.createElement('div');
+                divComentario.className = 'card tarjeta-cuerpo mb-2';
+                divComentario.innerHTML = `
+                    <strong>${comentario.usuario}</strong>
+                    <p class="mb-0">${comentario.texto}</p>
+                `;
+                contenedorComentarios.appendChild(divComentario);
+            });
+        }
+    }
+
+    if (formularioComentario) {
+        formularioComentario.addEventListener('submit', (evento) => {
+            evento.preventDefault();
+            const sesionIniciada = localStorage.getItem('sesionIniciada') === 'true';
+            if (!sesionIniciada) {
+                alert('Debes iniciar sesión para agregar un comentario.');
+                return;
             }
 
-            postModal.show();
-        }
-    }
+            const textoComentario = document.getElementById('texto-comentario').value;
+            if (textoComentario.trim() === '') {
+                return;
+            }
 
-    // Función para añadir los event listeners a los botones "Leer más"
-    function addReadMoreListeners() {
-        const readMoreButtons = document.querySelectorAll('.read-more');
-        readMoreButtons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                const postId = parseInt(event.target.dataset.postId);
-                showPostInModal(postId);
-            });
+            const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+            if (!todosLosComentarios[idPublicacionActual]) {
+                todosLosComentarios[idPublicacionActual] = [];
+            }
+
+            const nuevoComentario = { usuario: usuarioActual.nombre, texto: textoComentario };
+            todosLosComentarios[idPublicacionActual].push(nuevoComentario);
+            guardarComentarios(todosLosComentarios);
+            renderizarComentarios(todosLosComentarios[idPublicacionActual]);
+            document.getElementById('texto-comentario').value = '';
         });
     }
 
-    // --- Lógica de Comentarios ---
-    function renderComments(comments) {
-        commentsContainer.innerHTML = '';
-        if (comments.length === 0) {
-            commentsContainer.innerHTML = '<p class="text-muted fst-italic text-center">Sé el primero en comentar.</p>';
-        } else {
-            comments.forEach(comment => {
-                const commentDiv = document.createElement('div');
-                commentDiv.className = 'card card-body mb-2';
-                commentDiv.innerHTML = `
-                    <strong>${comment.user}</strong>
-                    <p class="mb-0">${comment.text}</p>
-                `;
-                commentsContainer.appendChild(commentDiv);
-            });
-        }
+    if (typeof actualizarInterfazAutenticacion === 'function') {
+        actualizarInterfazAutenticacion();
+    }
+    if (typeof actualizarContadorCarrito === 'function') {
+        actualizarContadorCarrito();
     }
 
-    commentForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        if (!isLoggedIn) {
-            alert('Debes iniciar sesión para agregar un comentario.');
-            return;
-        }
-
-        const commentText = document.getElementById('comment-text').value;
-        if (commentText.trim() === '') {
-            return;
-        }
-
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-        // Crea un array para los comentarios si aún no existe para este post
-        if (!allComments[currentPostId]) {
-            allComments[currentPostId] = [];
-        }
-
-        // Agrega el nuevo comentario
-        const newComment = { user: currentUser.nombre, text: commentText };
-        allComments[currentPostId].push(newComment);
-
-        // Guarda los comentarios actualizados en el localStorage
-        saveComments(allComments);
-
-        // Vuelve a renderizar los comentarios para que el nuevo aparezca
-        renderComments(allComments[currentPostId]);
-        document.getElementById('comment-text').value = '';
-    });
-
-    // Llama a las funciones de renderizado de la barra de navegación y el carrito
-    if (typeof updateAuthUI === 'function') {
-        updateAuthUI();
-    }
-    if (typeof updateCartCount === 'function') {
-        updateCartCount();
-    }
-
-    // --- Carga inicial ---
-    renderCategories();
-    renderBlogPosts();
+    renderizarCategorias();
+    renderizarPublicacionesBlog();
 });

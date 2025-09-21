@@ -6,54 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - HuertoHogar</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
 
 <body>
-
-    <nav class="navbar navbar-expand-lg shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow-sm barra-navegacion">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-                <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
-                <span style="color: var(--color-secondary); font-family:'Playfair Display', serif; font-weight:700;">HuertoHogar</span>
+                <img src="img/logo.jpg" alt="HuertoHogar" class="imagen-logo">
+                <span
+                    style="color: var(--color-secundario); font-family:'Playfair Display', serif; font-weight:700;">HuertoHogar</span>
             </a>
         </div>
     </nav>
-
     <main class="d-flex align-items-center justify-content-center" style="min-height: 90vh;">
         <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
             <h2 class="text-center mb-4">Iniciar sesión</h2>
-            
-            <div id="alertContainer" class="mb-3"></div>
-
-            <form id="loginForm" autocomplete="off">
+            <form id="formularioIngreso" autocomplete="off">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo electrónico</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                    <label for="correo" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" placeholder="ejemplo@correo.com"
+                        required>
                 </div>
-
                 <div class="mb-3">
-                    <label for="pwd" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Ingresa tu contraseña" required>
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="contrasena" name="contrasena"
+                        placeholder="Ingresa tu contraseña" required>
                 </div>
-
-                <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                <button type="submit" class="btn btn-primario w-100">Iniciar sesión</button>
             </form>
-
             <p class="text-center mt-3">
                 ¿No tienes cuenta? <a href="registro.html">Regístrate</a>
             </p>
         </div>
     </main>
-
     <footer>
         <div class="container">
             © 2025 HuertoHogar — Productos frescos y sostenibles
         </div>
     </footer>
-    
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/auth.js"></script> 
+    <script src="js/autenticacion.js"></script>
 </body>
 
 </html>

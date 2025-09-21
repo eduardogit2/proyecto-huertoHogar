@@ -1,731 +1,497 @@
-// --- script.js CORREGIDO ---
-let products = [];
-
-// Array de productos inicial, solo se usa si el localStorage está vacío
-const initialProducts = [
-    {
-        id: 100,
-        name: "Manzana Fuji",
-        price: 1200,
-        category: "Frutas",
-        img: "img/prod1.jpg",
-        badge: "Fresco",
-        description: "Manzanas Fuji crujientes y dulces, cultivadas en el Valle del Maule. Perfectas para meriendas saludables o como ingrediente en postres. Estas manzanas son conocidas por su textura firme y su sabor equilibrado entre dulce y ácido.",
-        stock: 150,
-        origin: "Valle del Maule, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "Ana M.", rating: 5, text: "Excelente calidad, muy crujientes y dulces." },
-            { user: "Pedro V.", rating: 4, text: "Muy buenas, pero me gustaría que tuvieran un sabor más intenso." },
-            { user: "Luis R.", rating: 5, text: "Las mejores manzanas que he probado. ¡Repetiré!" }
-        ]
-    },
-    {
-        id: 200,
-        name: "Naranjas Valencia",
-        price: 1000,
-        category: "Frutas",
-        img: "img/prod2.jpg",
-        badge: "Fresco",
-        description: "Jugosas y ricas en vitamina C, estas naranjas Valencia son ideales para zumos frescos y refrescantes. Cultivadas en condiciones climáticas óptimas que aseguran su dulzura y jugosidad.",
-        stock: 200,
-        origin: "Región de Coquimbo, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "María P.", rating: 5, text: "Muy jugosas y perfectas para el jugo de la mañana." },
-            { user: "Juan F.", rating: 4, text: "Sabor muy bueno, aunque algunas venían un poco pequeñas." },
-            { user: "Sofía C.", rating: 5, text: "Me encantaron. Dulces y sin semillas. Las recomiendo." }
-        ]
-    },
-    {
-        id: 300,
-        name: "Plátano Cavendish",
-        price: 800,
-        category: "Frutas",
-        img: "img/prod3.jpg",
-        description: "Plátanos maduros y dulces, perfectos para el desayuno o como snack energético. Estos plátanos son ricos en potasio y vitaminas, ideales para mantener una dieta equilibrada.",
-        stock: 250,
-        origin: "Guayas, Ecuador",
-        unit: "kg",
-        reviews: [
-            { user: "Sofía G.", rating: 5, text: "Plátanos muy frescos y a un buen precio." },
-            { user: "Carlos E.", rating: 4, text: "Ideales para batidos, maduran rápido." }
-        ]
-    },
-    {
-        id: 400,
-        name: "Zanahoria Orgánica",
-        price: 900,
-        category: "Verduras",
-        img: "img/prod4.jpg",
-        description: "Zanahorias crujientes cultivadas sin pesticidas en la Región de O'Higgins. Excelente fuente de vitamina A y fibra, ideales para ensaladas, jugos o como snack saludable.",
-        stock: 100,
-        origin: "Región de O'Higgins, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "Carolina V.", rating: 5, text: "Frescas y con un sabor intenso. Mis hijos las comen con gusto." },
-            { user: "Felipe T.", rating: 5, text: "El tamaño es perfecto y el precio muy conveniente." }
-        ]
-    },
-    {
-        id: 500,
-        name: "Espinaca Fresca",
-        price: 700,
-        category: "Verduras",
-        img: "img/prod5.jpg",
-        description: "Espinacas frescas y nutritivas, perfectas para ensaladas y batidos verdes. Estas espinacas son cultivadas bajo prácticas orgánicas que garantizan su calidad y valor nutricional.",
-        stock: 80,
-        origin: "Ñuble, Chile",
-        unit: "bolsa",
-        reviews: [
-            { user: "Roberta A.", rating: 4, text: "Buena cantidad, ideal para ensaladas." }
-        ]
-    },
-    {
-        id: 600,
-        name: "Pimiento Tricolores",
-        price: 1500,
-        category: "Orgánicos",
-        img: "img/prod6.jpg",
-        description: "Pimientos rojos, amarillos y verdes, ideales para salteados y platos coloridos. Ricos en antioxidantes y vitaminas, estos pimientos añaden un toque vibrante y saludable a cualquier receta.",
-        stock: 120,
-        origin: "Región de Valparaíso, Chile",
-        unit: "kg",
-        reviews: [
-            { user: "Diego B.", rating: 5, text: "Perfectos para decorar mis platos. Colores vibrantes y muy frescos." }
-        ]
-    },
-    {
-        id: 700,
-        name: "Miel Orgánica",
-        price: 5000,
-        discountPrice: 4500,
-        category: "Orgánicos",
-        img: "img/prod7.jpg",
-        badge: "Oferta",
-        description: "Miel pura y orgánica producida por apicultores locales. Rica en antioxidantes y con un sabor inigualable, perfecta para endulzar de manera natural tus comidas y bebidas.",
-        stock: 50,
-        origin: "Aysén, Chile",
-        unit: "frasco",
-        reviews: [
-            { user: "Antonia D.", rating: 5, text: "Un sabor exquisito. La mejor miel que he comprado." },
-            { user: "Gabriel H.", rating: 5, text: "Muy buena calidad. La uso todos los días en mi desayuno." }
-        ]
-    },
-    {
-        id: 800,
-        name: "Quínoa Orgánica",
-        price: 4500,
-        discountPrice: 4000,
-        category: "Orgánicos",
-        img: "img/prod8.jpg",
-        badge: "Oferta",
-        description: "Quínoa orgánica de alta calidad, perfecta para ensaladas o como acompañamiento. Es un superalimento rico en proteínas y fibra, ideal para una dieta balanceada.",
-        stock: 75,
-        origin: "Cajamarca, Perú",
-        unit: "bolsa",
-        reviews: [
-            { user: "Fernanda L.", rating: 5, text: "Excelente para mis ensaladas. Se cocina muy rápido." },
-            { user: "Ignacio M.", rating: 4, text: "Buen producto, llego a tiempo y bien empaquetado." }
-        ]
-    },
-    {
-        id: 900,
-        name: "Leche Entera",
-        price: 1400,
-        discountPrice: 1250,
-        category: "Lácteos",
-        img: "img/prod9.jpg",
-        badge: "Oferta",
-        description: "Leche fresca y cremosa, rica en calcio y vitaminas. Perfecta para el desayuno o para preparar tus recetas favoritas. Proviene de granjas locales con prácticas de producción responsable.",
-        stock: 90,
-        origin: "Los Lagos, Chile",
-        unit: "litro",
-        reviews: [
-            { user: "Pablo Q.", rating: 5, text: "Muy buena y fresca. El sabor es superior a las del supermercado." }
-        ]
-    }
+let productos = [];
+const productosIniciales = [
+    { id: 100, nombre: "Manzana Fuji", precio: 1200, categoria: "Frutas", imagen: "img/prod1.jpg", etiqueta: "Fresco", descripcion: "Manzanas Fuji crujientes y dulces, cultivadas en el fértil Valle del Maule. Son perfectas para consumir como un snack saludable, o para usar en postres horneados y jugos naturales. Su textura firme y su sabor equilibrado entre dulce y ácido las hacen irresistibles.", stock: 150, origen: "Valle del Maule, Chile", unidad: "kg", resenas: [{ usuario: "Ana M.", calificacion: 5, texto: "Excelente calidad." }, { usuario: "Pedro V.", calificacion: 4, texto: "Muy buenas." }] },
+    { id: 200, nombre: "Naranjas Valencia", precio: 1000, categoria: "Frutas", imagen: "img/prod2.jpg", etiqueta: "Fresco", descripcion: "Naranjas Valencia excepcionalmente jugosas y ricas en vitamina C. Provenientes de la soleada Región de Coquimbo, estas naranjas son ideales para zumos frescos y revitalizantes. Su sabor dulce y cítrico las hace perfectas para cualquier momento del día.", stock: 200, origen: "Región de Coquimbo, Chile", unidad: "kg", resenas: [{ usuario: "María P.", calificacion: 5, texto: "Muy jugosas." }, { usuario: "Juan F.", calificacion: 4, texto: "Sabor muy bueno." }] },
+    { id: 300, nombre: "Plátano Cavendish", precio: 800, categoria: "Frutas", imagen: "img/prod3.jpg", descripcion: "Plátanos Cavendish maduros y naturalmente dulces, cultivados en la región de Guayas, Ecuador. Son el snack energético ideal para el desayuno o después de entrenar. Ricos en potasio y vitaminas esenciales, te ayudarán a mantener tu energía a lo largo del día.", stock: 250, origen: "Guayas, Ecuador", unidad: "kg", resenas: [{ usuario: "Sofía G.", calificacion: 5, texto: "Muy frescos." }] },
+    { id: 400, nombre: "Zanahoria Orgánica", precio: 900, categoria: "Verduras", imagen: "img/prod4.jpg", descripcion: "Zanahorias orgánicas y crujientes, cultivadas sin pesticidas en la Región de O'Higgins. Son una excelente fuente de vitamina A y fibra. Ideales para ensaladas, sopas o para disfrutar como un snack saludable. Su sabor natural y dulce es incomparable.", stock: 100, origen: "Región de O'Higgins, Chile", unidad: "kg", resenas: [{ usuario: "Carolina V.", calificacion: 5, texto: "Frescas y con un sabor intenso." }] },
+    { id: 500, nombre: "Espinaca Fresca", precio: 700, categoria: "Verduras", imagen: "img/prod5.jpg", descripcion: "Espinacas frescas y nutritivas, cultivadas con prácticas orgánicas en la región de Ñuble, Chile. Son perfectas para ensaladas, batidos verdes y salteados. Su textura tierna y su alto valor nutricional las convierten en un ingrediente esencial para una dieta sana.", stock: 80, origen: "Ñuble, Chile", unidad: "bolsa", resenas: [{ usuario: "Roberta A.", calificacion: 4, texto: "Buena cantidad." }] },
+    { id: 600, nombre: "Pimiento Tricolores", precio: 1500, categoria: "Orgánicos", imagen: "img/prod6.jpg", descripcion: "Pimientos rojos, amarillos y verdes, seleccionados por su calidad y frescura. Cultivados en la Región de Valparaíso, son ideales para salteados, ensaladas y guisos. Añaden un toque vibrante de color, sabor y antioxidantes a cualquier receta.", stock: 120, origen: "Región de Valparaíso, Chile", unidad: "kg", resenas: [{ usuario: "Diego B.", calificacion: 5, texto: "Colores vibrantes y muy frescos." }] },
+    { id: 700, nombre: "Miel Orgánica", precio: 5000, precioConDescuento: 4500, categoria: "Orgánicos", imagen: "img/prod7.jpg", etiqueta: "Oferta", descripcion: "Miel pura y 100% orgánica, producida por apicultores locales de la Región de Aysén, Chile. Con un sabor y aroma inigualables, es un endulzante natural perfecto para tés, yogures y postres. Es rica en antioxidantes y propiedades saludables.", stock: 50, origen: "Aysén, Chile", unidad: "frasco", resenas: [{ usuario: "Antonia D.", calificacion: 5, texto: "Un sabor exquisito." }] },
+    { id: 800, nombre: "Quínoa Orgánica", precio: 4500, precioConDescuento: 4000, categoria: "Orgánicos", imagen: "img/prod8.jpg", etiqueta: "Oferta", descripcion: "Quínoa orgánica de alta calidad, proveniente de Cajamarca, Perú. Un superalimento versátil y libre de gluten, ideal para ensaladas, guisos o como sustituto de arroz. Es una fuente completa de proteínas y fibra que te ayudará a mantener una dieta equilibrada y nutritiva.", stock: 75, origen: "Cajamarca, Perú", unidad: "bolsa", resenas: [{ usuario: "Fernanda L.", calificacion: 5, texto: "Excelente para mis ensaladas." }] },
+    { id: 900, nombre: "Leche Entera", precio: 1400, precioConDescuento: 1250, categoria: "Lácteos", imagen: "img/prod9.jpg", etiqueta: "Oferta", descripcion: "Leche entera fresca y cremosa, producida en la Región de Los Lagos, Chile. Con un sabor auténtico y completa en nutrientes esenciales como calcio y proteínas, es ideal para el desayuno o para preparar tus recetas favoritas.", stock: 90, origen: "Los Lagos, Chile", unidad: "litro", resenas: [{ usuario: "Pablo Q.", calificacion: 5, texto: "Muy buena y fresca." }] }
 ];
 
+const contenedorProductos = document.getElementById('contenedorProductos');
+const listaCategorias = document.getElementById('listaCategorias');
+const rangoPrecio = document.getElementById('rangoPrecio');
+const valorPrecio = document.getElementById('valorPrecio');
+const botonLimpiarFiltros = document.getElementById('limpiarFiltros');
+const campoBusqueda = document.getElementById('campoBusqueda');
+const mensajeSinResultados = document.getElementById('sinResultados');
+const elementoDescripcionCategoria = document.getElementById('descripcionCategoria');
+const contadorCarrito = document.getElementById("contadorCarrito");
+const itemsCarrito = document.getElementById("itemsCarrito");
+const totalCarrito = document.getElementById("totalCarrito");
+const modalDetalleProducto = new bootstrap.Modal(document.getElementById('modalDetalleProducto'));
+const tituloModal = document.getElementById('tituloModalDetalleProducto');
+const contenidoModal = document.getElementById('contenidoModalDetalleProducto');
+const botonCompartir = document.getElementById('botonCompartirProducto');
+const botonLimpiarCarrito = document.getElementById("botonLimpiarCarrito");
+const botonIrAPagar = document.getElementById('botonIrAPagar');
+const formularioResena = document.getElementById('formulario-resena');
 
-const productsContainer = document.getElementById('productsContainer');
-const categoryList = document.getElementById('categoryList');
-const priceRange = document.getElementById('priceRange');
-const priceValue = document.getElementById('priceValue');
-const clearBtn = document.getElementById('clearFilters');
-const searchInput = document.getElementById('searchInput');
-const noResults = document.getElementById('noResults');
-const authButtons = document.getElementById('authButtons');
-const categoryDescriptionEl = document.getElementById('categoryDescription');
+let categoriaActual = 'Todas';
+let precioMaximoActual = rangoPrecio ? Number(rangoPrecio.value) : 10000;
+let consultaActual = '';
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let idProductoActual = null;
 
-let currentCategory = 'Todas';
-let currentMaxPrice = priceRange ? Number(priceRange.value) : 10000;
-let currentQuery = '';
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-const cartCount = document.getElementById("cartCount");
-const cartItems = document.getElementById("cartItems");
-const cartTotal = document.getElementById("cartTotal");
-const productDetailModal = new bootstrap.Modal(document.getElementById('productDetailModal'));
-const modalTitle = document.getElementById('productDetailModalLabel');
-const modalContent = document.getElementById('productDetailContent');
-
-let currentProductId = null;
-
-const categoryDescriptions = {
-    'Todas': 'Explora nuestra amplia selección de productos frescos y de alta calidad para tu hogar.',
-    'Frutas': 'Deliciosas y jugosas frutas de temporada, directamente del huerto a tu mesa.',
-    'Verduras': 'Las verduras más frescas y nutritivas para una alimentación sana y equilibrada.',
-    'Lácteos': 'Productos lácteos cremosos y frescos, perfectos para tu desayuno y recetas.',
-    'Orgánicos': 'Productos cultivados de forma natural, sin pesticidas ni químicos, para una opción más saludable.'
+const descripcionesCategorias = {
+    'Todas': 'Explora nuestra amplia selección de productos frescos y de alta calidad para tu hogar. HuertoHogar te ofrece una experiencia de compra única, con productos directamente del campo y de proveedores locales, garantizando sabor, frescura y la mejor calidad en cada compra.',
+    'Frutas': 'Deliciosas y jugosas frutas de temporada, directamente del huerto a tu mesa. Nuestra selección de frutas se cultiva y cosecha en el punto óptimo de madurez para asegurar su sabor, frescura y máximo valor nutricional. Ideales para disfrutar solas, en ensaladas o como ingrediente en postres y jugos.',
+    'Verduras': 'Las verduras más frescas y nutritivas para una alimentación sana y equilibrada. Desde hortalizas de hoja hasta raíces crujientes, cada verdura es seleccionada por su calidad y frescura, ofreciendo una excelente fuente de vitaminas, minerales y fibra. Perfectas para ensaladas, guisos y cualquier plato saludable.',
+    'Lácteos': 'Productos lácteos cremosos y frescos, perfectos para tu desayuno y recetas. HuertoHogar te ofrece una gama de leches, yogures y quesos que provienen de granjas locales, lo que garantiza su frescura y un sabor auténtico. Ricos en calcio y nutrientes, son el complemento ideal para una dieta equilibrada.',
+    'Orgánicos': 'Productos cultivados de forma natural, para una opción más saludable y sostenible. Nuestra selección de productos orgánicos está libre de pesticidas y químicos, lo que garantiza un sabor auténtico y el máximo de beneficios saludables. Son la elección perfecta para quienes buscan opciones alimenticias que promuevan el bienestar y respeten el medio ambiente.'
 };
 
-function saveProducts() {
-    localStorage.setItem('productsWithReviews', JSON.stringify(products));
+function guardarProductos() {
+    localStorage.setItem('productos', JSON.stringify(productos));
 }
 
-function loadProducts() {
-    const savedProducts = JSON.parse(localStorage.getItem('productsWithReviews'));
-    if (savedProducts) {
-        products = savedProducts;
+function cargarProductos() {
+    const productosGuardados = JSON.parse(localStorage.getItem('productos'));
+    if (productosGuardados) {
+        productos = productosGuardados;
     } else {
-        products = initialProducts;
-        saveProducts();
+        productos = productosIniciales;
+        guardarProductos();
     }
 }
 
-function getStarRating(rating) {
-    const fullStar = '⭐';
-    return fullStar.repeat(rating);
+function obtenerEstrellasCalificacion(calificacion) {
+    return '⭐'.repeat(calificacion);
 }
 
-function renderReviews(reviews) {
-    const reviewsContainer = document.getElementById('reviews-container');
-    if (!reviewsContainer) return;
-
-    reviewsContainer.innerHTML = '';
-    if (reviews.length === 0) {
-        reviewsContainer.innerHTML = '<p class="text-muted fst-italic text-center">Este producto no tiene reseñas aún. ¡Sé el primero en dejar una!</p>';
+function renderizarResenas(resenas) {
+    const contenedorResenas = document.getElementById('contenedor-resenas');
+    if (!contenedorResenas) return;
+    contenedorResenas.innerHTML = '';
+    if (resenas.length === 0) {
+        contenedorResenas.innerHTML = '<p class="text-muted fst-italic text-center">Este producto no tiene reseñas. ¡Sé el primero en dejar una!</p>';
     } else {
-        reviews.forEach(review => {
-            const reviewDiv = document.createElement('div');
-            reviewDiv.className = 'card card-body mb-2';
-            reviewDiv.innerHTML = `
+        resenas.forEach(resena => {
+            const divResena = document.createElement('div');
+            divResena.className = 'card card-body mb-2';
+            divResena.innerHTML = `
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <strong>${review.user}</strong>
-                    <span class="text-warning">${getStarRating(review.rating)}</span>
+                    <strong>${resena.usuario}</strong>
+                    <span class="text-warning">${obtenerEstrellasCalificacion(resena.calificacion)}</span>
                 </div>
-                <p class="mb-0">${review.text}</p>
-            `;
-            reviewsContainer.appendChild(reviewDiv);
+                <p class="mb-0">${resena.texto}</p>`;
+            contenedorResenas.appendChild(divResena);
         });
     }
 }
 
-function renderCategories() {
-    if (!categoryList) return;
-
-    const uniqueCategories = ['Todas', ...new Set(products.map(p => p.category))];
-    categoryList.innerHTML = '';
-
-    uniqueCategories.forEach(cat => {
+function renderizarCategorias() {
+    if (!listaCategorias) return;
+    const categoriasUnicas = ['Todas', ...new Set(productos.map(p => p.categoria))];
+    listaCategorias.innerHTML = '';
+    categoriasUnicas.forEach(cat => {
         const li = document.createElement('li');
         li.className = 'list-group-item';
-        li.setAttribute('data-category', cat);
+        li.setAttribute('data-categoria', cat);
         li.textContent = cat;
-
-        if (cat === currentCategory) {
+        if (cat === categoriaActual) {
             li.classList.add('active');
         }
-
         li.addEventListener('click', () => {
-            currentCategory = cat;
-            renderCategories();
-            renderProducts();
-
-            if (categoryDescriptionEl) {
-                categoryDescriptionEl.textContent = categoryDescriptions[cat] || '';
-                categoryDescriptionEl.style.display = 'block';
+            categoriaActual = cat;
+            renderizarCategorias();
+            renderizarProductos();
+            if (elementoDescripcionCategoria) {
+                elementoDescripcionCategoria.textContent = descripcionesCategorias[cat] || '';
+                elementoDescripcionCategoria.style.display = 'block';
             }
         });
-        categoryList.appendChild(li);
+        listaCategorias.appendChild(li);
     });
 }
 
-function renderProducts() {
-    const maxPrice = currentMaxPrice;
-    const query = currentQuery.trim().toLowerCase();
-    const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
+function renderizarProductos() {
+    if (!contenedorProductos) return;
 
-    let filtered = products.filter(p => {
-        const okCategory = (currentCategory === 'Todas') || (p.category === currentCategory);
-        const okPrice = p.price <= maxPrice;
-        const okQuery = p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query);
-        return okCategory && okPrice && okQuery;
+    const precioMaximo = precioMaximoActual;
+    const consulta = consultaActual.trim().toLowerCase();
+    const esPaginaPrincipal = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
+
+    let filtrados = productos.filter(p => {
+        const categoriaOK = (categoriaActual === 'Todas') || (p.categoria === categoriaActual);
+        const precioOK = p.precio <= precioMaximo;
+        const consultaOK = p.nombre.toLowerCase().includes(consulta) || p.descripcion.toLowerCase().includes(consulta);
+        return categoriaOK && precioOK && consultaOK;
     });
 
-    if (isIndexPage) {
-        filtered = filtered.filter(p => p.badge === 'Oferta').slice(0, 3);
+    if (esPaginaPrincipal) {
+        filtrados = filtrados.filter(p => p.etiqueta === 'Oferta').slice(0, 3);
     }
 
-    if (!productsContainer) {
-        return;
-    }
+    contenedorProductos.innerHTML = '';
 
-    productsContainer.innerHTML = '';
-    if (filtered.length === 0) {
-        if (noResults) noResults.style.display = 'block';
+    if (filtrados.length === 0) {
+        if (mensajeSinResultados) mensajeSinResultados.style.display = 'block';
         return;
     } else {
-        if (noResults) noResults.style.display = 'none';
+        if (mensajeSinResultados) mensajeSinResultados.style.display = 'none';
     }
 
-    filtered.forEach(p => {
-        const col = document.createElement('div');
-        col.className = 'col-sm-6 col-md-4 mb-4';
+    filtrados.forEach(p => {
+        const columna = document.createElement('div');
+        columna.className = 'col-sm-6 col-md-4 mb-4';
+        const calificacionPromedio = p.resenas.length > 0 ? (p.resenas.reduce((acc, r) => acc + r.calificacion, 0) / p.resenas.length).toFixed(1) : 'Sin valorar';
+        const textoResena = p.resenas.length > 0 ? `(${p.resenas.length})` : '';
+        const porcentajeDescuento = p.precioConDescuento ? Math.round(((p.precio - p.precioConDescuento) / p.precio) * 100) : 0;
+        const insigniaDescuento = porcentajeDescuento > 0 ? `<span class="badge bg-success ms-2">-${porcentajeDescuento}%</span>` : '';
+        const precioFinal = p.precioConDescuento !== undefined ? p.precioConDescuento : p.precio;
+        const precioMostrado = formatearPrecio(precioFinal);
+        const precioOriginalMostrado = formatearPrecio(p.precio);
 
-        const averageRating = p.reviews.length > 0
-            ? (p.reviews.reduce((acc, r) => acc + r.rating, 0) / p.reviews.length).toFixed(1)
-            : 'Sin valorar';
-        const reviewText = p.reviews.length > 0 ? `(${p.reviews.length})` : '';
-
-        const discountPercentage = p.discountPrice ? Math.round(((p.price - p.discountPrice) / p.price) * 100) : 0;
-        const discountBadge = discountPercentage > 0 ? `<span class="badge bg-success ms-2">-${discountPercentage}%</span>` : '';
-        
-        const precioFinal = p.discountPrice !== undefined ? p.discountPrice : p.price;
-        const priceDisplay = precioFinal === 0 ? 'Gratis' : formatPrice(precioFinal);
-
-        col.innerHTML = `
-        <div class="card product-card h-100 shadow-sm" style="cursor: pointer;" data-id="${p.id}">
-            <img src="${p.img}" alt="${p.name}" class="product-img card-img-top">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title text-center mb-1">${p.name}</h5>
-                <p class="text-center text-muted fw-light fst-italic mb-2">${p.origin}</p>
-                <div class="text-center mb-2">
-                    <span class="small text-warning">${getStarRating(Math.round(averageRating))}</span>
-                    <span class="small text-muted">${averageRating} ${reviewText}</span>
+        columna.innerHTML = `
+            <div class="card tarjeta-producto h-100 shadow-sm" style="cursor: pointer;" data-id="${p.id}">
+                <img src="${p.imagen}" alt="${p.nombre}" class="imagen-producto card-img-top">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-center mb-1">${p.nombre}</h5>
+                    <p class="text-center text-muted fw-light fst-italic mb-2">${p.origen}</p>
+                    <div class="text-center mb-2">
+                        <span class="small text-warning">${obtenerEstrellasCalificacion(Math.round(calificacionPromedio))}</span>
+                        <span class="small text-muted">${calificacionPromedio} ${textoResena}</span>
+                    </div>
+                    <p class="card-text text-center descripcion-producto">${p.descripcion.substring(0, 70)}...</p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                        ${p.precioConDescuento !== undefined
+                            ? `<span class="precio fw-bold" style="color: #FFD700;">${precioMostrado}</span><small class="text-muted text-decoration-line-through ms-2">${precioOriginalMostrado}</small>${insigniaDescuento}`
+                            : `<span class="precio fw-bold">${precioMostrado}</span>`}
+                        <span class="text-success fw-bold small">Stock: <span class="stock-disponible">${p.stock} ${p.unidad}</span></span>
+                    </div>
                 </div>
-                <p class="card-text text-center product-description">${p.description.substring(0, 70)}...</p>
-                <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
-                    ${
-                        p.discountPrice !== undefined
-                        ? `<span class="price fw-bold" style="color: #FFD700;">${priceDisplay}</span>
-                        <small class="text-muted text-decoration-line-through ms-2">${formatPrice(p.price)}</small>${discountBadge}`
-                        : `<span class="price fw-bold">${priceDisplay}</span>`
-                    }
-                    <span class="text-success fw-bold small">Stock: <span class="stock-display ">${p.stock} ${p.unit}</span></span>
-                </div>
-            </div>
-        </div>
-        `;
-        productsContainer.appendChild(col);
+            </div>`;
+        contenedorProductos.appendChild(columna);
     });
 }
 
-
-// --- FUNCIÓN CORREGIDA ---
-function showProductDetails(productId) {
-    currentProductId = productId;
-    const product = products.find(p => p.id === parseInt(currentProductId));
-    
-    if (!product) {
+function mostrarDetallesProducto(idProducto) {
+    idProductoActual = idProducto;
+    const producto = productos.find(p => p.id === parseInt(idProductoActual));
+    if (!producto) {
         console.error("Producto no encontrado");
         return;
     }
 
-    modalTitle.textContent = product.name;
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    tituloModal.textContent = producto.nombre;
+    const sesionIniciada = localStorage.getItem('sesionIniciada') === 'true';
+    const precioFinal = producto.precioConDescuento !== undefined ? producto.precioConDescuento : producto.precio;
+    const precioMostrado = formatearPrecio(precioFinal);
+    const precioOriginalMostrado = formatearPrecio(producto.precio);
 
-    // Lógica para mostrar 'Gratis'
-    const precioFinal = product.discountPrice !== undefined ? product.discountPrice : product.price;
-    const priceDisplay = precioFinal === 0 ? 'Gratis' : formatPrice(precioFinal);
-    const originalPriceDisplay = formatPrice(product.price);
-
-    modalContent.innerHTML = `
-        <img src="${product.img}" alt="${product.name}" class="img-fluid mb-3 w-100 rounded">
+    contenidoModal.innerHTML = `
+        <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid mb-3 w-100 rounded">
         <p><strong>Precio:</strong>
-            ${product.discountPrice !== undefined
-                ? `<span style="color: #FFD700; font-weight:700;">${priceDisplay}</span>
-                   <small class="text-muted text-decoration-line-through ms-2">${originalPriceDisplay}</small>`
-                : priceDisplay
-            }
-             por ${product.unit}
+            ${producto.precioConDescuento !== undefined
+                ? `<span style="color: #FFD700; font-weight:700;">${precioMostrado}</span><small class="text-muted text-decoration-line-through ms-2">${precioOriginalMostrado}</small>`
+                : precioMostrado} por ${producto.unidad}
         </p>
-        <p><strong>Categoría:</strong> ${product.category}</p>
-        <p><strong>Origen:</strong> ${product.origin}</p>
-        <p><strong>Descripción:</strong> ${product.description}</p>
-        <p class="mb-3"><strong>Stock disponible:</strong> <span class="stock-display-modal">${product.stock}</span> ${product.unit}${product.stock !== 1 ? 's' : ''}</p>
-
+        <p><strong>Categoría:</strong> ${producto.categoria}</p>
+        <p><strong>Origen:</strong> ${producto.origen}</p>
+        <p><strong>Descripción:</strong> ${producto.descripcion}</p>
+        <p class="mb-3"><strong>Stock disponible:</strong> <span class="stock-disponible-modal">${producto.stock}</span> ${producto.unidad}${producto.stock !== 1 ? 's' : ''}</p>
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <label for="quantity-modal" class="me-2 fw-bold">Cantidad:</label>
-            <input type="number" id="quantity-modal" class="form-control w-25 text-center me-3" value="1" min="1" max="${product.stock}">
-            <button class="btn btn-primary add-to-cart-modal" data-id="${product.id}">
-                Agregar al Carrito
-            </button>
+            <label for="cantidad-modal" class="me-2 fw-bold">Cantidad:</label>
+            <input type="number" id="cantidad-modal" class="form-control w-25 text-center me-3" value="1" min="1" max="${producto.stock}">
+            <button class="btn btn-primario agregar-al-carrito-modal" data-id="${producto.id}">Agregar al Carrito</button>
         </div>
+        <div id="seccion-formulario-resena" style="display: none;">
+            <h5>Deja tu reseña</h5>
+            <form id="formulario-resena">
+                <div class="mb-3">
+                    <label for="calificacion-resena" class="form-label">Calificación (1-5)</label>
+                    <input type="number" class="form-control" id="calificacion-resena" min="1" max="5" required>
+                </div>
+                <div class="mb-3">
+                    <label for="texto-resena" class="form-label">Comentario</label>
+                    <textarea class="form-control" id="texto-resena" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primario w-100">Enviar Reseña</button>
+            </form>
+        </div>
+        <p id="mensaje-seccion-resena" class="text-center text-muted fst-italic mt-3" style="display: none;">Inicia sesión para dejar una reseña.</p>
+        <h5 class="mt-4">Reseñas de Clientes</h5>
+        <div id="contenedor-resenas"></div>
     `;
 
-    const quantityInput = document.getElementById('quantity-modal');
-    const addToCartBtn = document.querySelector('.add-to-cart-modal');
-    if (product.stock <= 0) {
-        quantityInput.value = 0;
-        quantityInput.setAttribute('disabled', 'disabled');
-        addToCartBtn.setAttribute('disabled', 'disabled');
-        addToCartBtn.textContent = 'Sin Stock';
+    const inputCantidad = document.getElementById('cantidad-modal');
+    const botonAgregar = document.querySelector('.agregar-al-carrito-modal');
+    if (producto.stock <= 0) {
+        inputCantidad.value = 0;
+        inputCantidad.setAttribute('disabled', 'disabled');
+        botonAgregar.setAttribute('disabled', 'disabled');
+        botonAgregar.textContent = 'Sin Stock';
     }
 
-    const reviewFormSection = document.getElementById('review-form-section');
-    const reviewSectionMessage = document.getElementById('review-section-message');
-    if(reviewFormSection && reviewSectionMessage){
-        if (isLoggedIn) {
-            reviewFormSection.style.display = 'block';
-            reviewSectionMessage.style.display = 'none';
+    const seccionFormularioResena = document.getElementById('seccion-formulario-resena');
+    const mensajeSeccionResena = document.getElementById('mensaje-seccion-resena');
+    if (seccionFormularioResena && mensajeSeccionResena) {
+        if (sesionIniciada) {
+            seccionFormularioResena.style.display = 'block';
+            mensajeSeccionResena.style.display = 'none';
         } else {
-            reviewFormSection.style.display = 'none';
-            reviewSectionMessage.style.display = 'block';
+            seccionFormularioResena.style.display = 'none';
+            mensajeSeccionResena.style.display = 'block';
         }
     }
-
-    renderReviews(product.reviews);
-    productDetailModal.show();
+    renderizarResenas(producto.resenas);
+    modalDetalleProducto.show();
 }
-
-// --- FUNCIÓN AÑADIDA ---
-function updateAuthUI() {
-    const authButtons = document.getElementById('authButtons');
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    if (authButtons) {
-        authButtons.innerHTML = '';
-        if (isLoggedIn && currentUser) {
-            let adminLink = currentUser.isAdmin ? `<li><a class="dropdown-item" href="admin.html">Panel de Admin</a></li>` : '';
-            authButtons.innerHTML = `
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--color-text-main);">
-                        Hola, ${currentUser.nombre}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="perfil.html">Mi Perfil</a></li>
-                        ${adminLink}
-                        <li><hr class="dropdown-divider"></li>
-                        <li><button id="logoutBtn" class="dropdown-item">Cerrar sesión</button></li>
-                    </ul>
-                </div>
-            `;
-            document.getElementById('logoutBtn').addEventListener('click', () => {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('cart');
-                alert('Has cerrado sesión.');
-                window.location.href = 'index.html';
-            });
-        } else {
-            authButtons.innerHTML = `
-                <a href="login.html" class="btn btn-sm btn-accent" style="background-color: var(--color-primary);">
-                    <span style="color:#fff;">Iniciar sesión</span>
-                </a>
-                <a href="registro.html" class="btn btn-sm btn-accent" style="background-color: var(--color-primary);">
-                    <span style="color:#fff;">Regístrate</span>
-                </a>
-            `;
-        }
-    }
-}
-
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadProducts();
+    cargarProductos();
 
-    const reviewForm = document.getElementById('review-form');
-    if (reviewForm) {
-        reviewForm.addEventListener('submit', (e) => {
+    if (formularioResena) {
+        formularioResena.addEventListener('submit', (e) => {
             e.preventDefault();
+            const calificacion = parseInt(document.getElementById('calificacion-resena').value);
+            const textoResena = document.getElementById('texto-resena').value;
+            const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
 
-            const rating = parseInt(document.getElementById('review-rating').value);
-            const reviewText = document.getElementById('review-text').value;
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-            if (rating < 1 || rating > 5) {
+            if (calificacion < 1 || calificacion > 5) {
                 alert('La valoración debe ser entre 1 y 5.');
                 return;
             }
+            if (!usuarioActual) {
+                alert('Debes iniciar sesión para dejar una reseña.');
+                return;
+            }
 
-            const newReview = {
-                user: currentUser.nombre,
-                rating: rating,
-                text: reviewText
-            };
-
-            const productToReview = products.find(p => p.id === parseInt(currentProductId));
-            productToReview.reviews.push(newReview);
-
-            saveProducts();
-
-            renderReviews(productToReview.reviews);
-            renderProducts();
-
-            document.getElementById('review-rating').value = '';
-            document.getElementById('review-text').value = '';
-        });
-    }
-
-    if (priceValue && priceRange) {
-        priceValue.textContent = Number(priceRange.value).toLocaleString('es-CL');
-    }
-
-    renderCategories();
-    renderProducts();
-    updateCartCount();
-    renderCartDropdown();
-    updateAuthUI(); // Llamada a la función
-
-    if (categoryDescriptionEl) {
-        categoryDescriptionEl.textContent = categoryDescriptions['Todas'];
-        categoryDescriptionEl.style.display = 'block';
-    }
-
-    const shareBtn = document.getElementById('shareProductBtn');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', async () => {
-            const productTitle = document.getElementById('productDetailModalLabel').textContent;
-            const productUrl = window.location.href;
-            const fullText = `${productTitle} - ${productUrl}`;
-
-            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-
-            if (isMobile && navigator.share) {
-                try {
-                    await navigator.share({
-                        title: `Mira este producto: ${productTitle}`,
-                        text: "Lo encontré en HuertoHogar 🌱",
-                        url: productUrl
-                    });
-                } catch (err) {
-                    console.log("Error al compartir:", err);
-                }
-            } else {
-                try {
-                    await navigator.clipboard.writeText(fullText);
-                    alert("📋 Enlace copiado al portapapeles");
-                } catch (err) {
-                    alert("❌ No se pudo copiar el enlace, copia manualmente:\n" + fullText);
-                }
+            const nuevaResena = { usuario: usuarioActual.nombre, calificacion: calificacion, texto: textoResena };
+            const productoAResenar = productos.find(p => p.id === parseInt(idProductoActual));
+            if (productoAResenar) {
+                productoAResenar.resenas.push(nuevaResena);
+                guardarProductos();
+                renderizarResenas(productoAResenar.resenas);
+                renderizarProductos();
+                document.getElementById('calificacion-resena').value = '';
+                document.getElementById('texto-resena').value = '';
             }
         });
+    }
+
+    if (valorPrecio && rangoPrecio) {
+        valorPrecio.textContent = Number(rangoPrecio.value).toLocaleString('es-CL');
+    }
+
+    renderizarCategorias();
+    renderizarProductos();
+    actualizarContadorCarrito();
+    renderizarDesplegableCarrito();
+
+    if (elementoDescripcionCategoria) {
+        elementoDescripcionCategoria.textContent = descripcionesCategorias['Todas'];
+        elementoDescripcionCategoria.style.display = 'block';
     }
 });
 
-if (productsContainer) {
-    productsContainer.addEventListener("click", e => {
-        const card = e.target.closest('.product-card');
-        if (card) {
-            const productId = card.dataset.id;
-            showProductDetails(productId);
+if (contenedorProductos) {
+    contenedorProductos.addEventListener("click", e => {
+        const tarjeta = e.target.closest('.tarjeta-producto');
+        if (tarjeta) {
+            const idProducto = tarjeta.dataset.id;
+            mostrarDetallesProducto(idProducto);
         }
     });
 }
 
-if (modalContent) {
-    modalContent.addEventListener("click", (e) => {
-        if (e.target.classList.contains("add-to-cart-modal")) {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn !== 'true') {
+if (contenidoModal) {
+    contenidoModal.addEventListener("click", (e) => {
+        if (e.target.classList.contains("agregar-al-carrito-modal")) {
+            const sesionIniciada = localStorage.getItem('sesionIniciada');
+            if (sesionIniciada !== 'true') {
                 alert('Debes iniciar sesión para comprar.');
-                productDetailModal.hide();
+                modalDetalleProducto.hide();
+                return;
+            }
+            const boton = e.target;
+            const idProducto = parseInt(boton.dataset.id);
+            const cantidad = parseInt(document.getElementById('cantidad-modal').value);
+            const productoAAgregar = productos.find(p => p.id === idProducto);
+
+            if (!productoAAgregar) {
+                console.error("Producto no encontrado en la base de datos.");
                 return;
             }
 
-            const btn = e.target;
-            const productId = parseInt(btn.dataset.id);
-            const quantity = parseInt(document.getElementById('quantity-modal').value);
-            const productToAdd = products.find(p => p.id === productId);
-
-            if (quantity <= 0) {
+            if (cantidad <= 0) {
                 alert('La cantidad debe ser mayor a 0.');
                 return;
             }
-            if (quantity > productToAdd.stock) {
-                alert(`No puedes comprar ${quantity} ${productToAdd.unit}${quantity > 1 ? 's' : ''}. El stock disponible es de ${productToAdd.stock}.`);
+            if (cantidad > productoAAgregar.stock) {
+                alert(`No puedes comprar ${cantidad} ${productoAAgregar.unidad}${cantidad > 1 ? 's' : ''}. El stock disponible es de ${productoAAgregar.stock}.`);
                 return;
             }
-
-            addToCart(productToAdd, quantity);
-            productDetailModal.hide();
+            agregarAlCarrito(productoAAgregar, cantidad);
+            modalDetalleProducto.hide();
         }
     });
 }
 
-function updateCartCount() {
-    if (cartCount) {
-        cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+function actualizarContadorCarrito() {
+    if (contadorCarrito) {
+        contadorCarrito.textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
     }
 }
 
-function renderCartDropdown() {
-    if (cartItems) {
-        if (cart.length === 0) {
-            cartItems.innerHTML = `<span class="text-muted">Tu carrito está vacío</span>`;
-            if (cartTotal) cartTotal.textContent = "$0";
-            return;
-        }
-
-        cartItems.innerHTML = "";
-        let total = 0;
-
-        cart.forEach((item, index) => {
-            const product = products.find(p => p.id === item.id);
-            if (!product) return;
-
-            total += item.price * item.quantity;
-            cartItems.innerHTML += `
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                        <strong>${item.name}</strong><br>
-                        <small>${formatPrice(item.price)} x ${item.quantity} ${product.unit}${item.quantity > 1 ? 's' : ''}</small>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <button class="btn btn-sm btn-outline-secondary" data-action="decrease" data-index="${index}">-</button>
-                        <span class="mx-2">${item.quantity}</span>
-                        <button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="${index}">+</button>
-                    </div>
+function renderizarDesplegableCarrito() {
+    if (!itemsCarrito) return;
+    
+    if (carrito.length === 0) {
+        itemsCarrito.innerHTML = `<span class="text-muted">Tu carrito está vacío</span>`;
+        if (totalCarrito) totalCarrito.textContent = "$0";
+        return;
+    }
+    
+    itemsCarrito.innerHTML = "";
+    let total = 0;
+    carrito.forEach((item, indice) => {
+        const producto = productos.find(p => p.id === item.id);
+        if (!producto) return;
+        total += item.precio * item.cantidad;
+        itemsCarrito.innerHTML += `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <strong>${item.nombre}</strong><br>
+                    <small>${formatearPrecio(item.precio)} x ${item.cantidad} ${producto.unidad}${item.cantidad > 1 ? 's' : ''}</small>
                 </div>
-            `;
-        });
-
-        if (cartTotal) cartTotal.textContent = formatPrice(total);
-    }
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-outline-secondary" data-accion="disminuir" data-indice="${indice}">-</button>
+                    <span class="mx-2">${item.cantidad}</span>
+                    <button class="btn btn-sm btn-outline-secondary" data-accion="aumentar" data-indice="${indice}">+</button>
+                </div>
+            </div>`;
+    });
+    if (totalCarrito) totalCarrito.textContent = formatearPrecio(total);
 }
 
-function addToCart(product, quantity) {
-    const productIndex = products.findIndex(p => p.id === product.id);
-    products[productIndex].stock -= quantity;
-
-    const finalPrice = product.discountPrice !== undefined ? product.discountPrice : product.price;
-
-    const existingCartItem = cart.find(item => item.id === product.id);
-    if (existingCartItem) {
-        existingCartItem.quantity += quantity;
+function agregarAlCarrito(producto, cantidad) {
+    const indiceProducto = productos.findIndex(p => p.id === producto.id);
+    productos[indiceProducto].stock -= cantidad;
+    const precioFinal = producto.precioConDescuento !== undefined ? producto.precioConDescuento : producto.precio;
+    const itemExistente = carrito.find(item => item.id === producto.id);
+    if (itemExistente) {
+        itemExistente.cantidad += cantidad;
     } else {
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: finalPrice,
-            quantity: quantity,
-        });
+        carrito.push({ id: producto.id, nombre: producto.nombre, precio: precioFinal, cantidad: cantidad, unidad: producto.unidad });
     }
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
-    renderCartDropdown();
-    renderProducts();
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    guardarProductos(); 
+    actualizarContadorCarrito();
+    renderizarDesplegableCarrito();
+    renderizarProductos();
 }
 
-
-if (cartItems) {
-    cartItems.addEventListener("click", (e) => {
+if (itemsCarrito) {
+    itemsCarrito.addEventListener("click", (e) => {
         e.stopPropagation();
-        const target = e.target;
-        if (target.dataset.action === "decrease" || target.dataset.action === "increase") {
-            const index = parseInt(target.dataset.index);
-            const amount = target.dataset.action === "increase" ? 1 : -1;
-            changeQuantity(index, amount);
+        const objetivo = e.target;
+        if (objetivo.dataset.accion === "disminuir" || objetivo.dataset.accion === "aumentar") {
+            const indice = parseInt(objetivo.dataset.indice);
+            const cantidad = objetivo.dataset.accion === "aumentar" ? 1 : -1;
+            cambiarCantidad(indice, cantidad);
         }
     });
 }
 
-const clearCartBtn = document.getElementById("clearCartBtn");
-if (clearCartBtn) {
-    clearCartBtn.addEventListener("click", (e) => {
+if (botonLimpiarCarrito) {
+    botonLimpiarCarrito.addEventListener("click", (e) => {
         e.stopPropagation();
-        cart.forEach(item => {
-            const product = products.find(p => p.id === parseInt(item.id));
-            if (product) {
-                product.stock += item.quantity;
+        carrito.forEach(item => {
+            const producto = productos.find(p => p.id === parseInt(item.id));
+            if (producto) {
+                producto.stock += item.cantidad;
             }
         });
-        localStorage.removeItem("cart");
-        cart = [];
-        updateCartCount();
-        renderCartDropdown();
-        renderProducts();
+        localStorage.removeItem("carrito");
+        carrito = [];
+        guardarProductos(); 
+        actualizarContadorCarrito();
+        renderizarDesplegableCarrito();
+        renderizarProductos();
     });
 }
 
-function changeQuantity(index, amount) {
-    const item = cart[index];
-    const product = products.find(p => p.id === parseInt(item.id));
-    if (!product) return;
+function cambiarCantidad(indice, cantidad) {
+    const item = carrito[indice];
+    const producto = productos.find(p => p.id === parseInt(item.id));
+    if (!producto) return;
 
-    if (amount > 0) {
-        if (product.stock <= 0) {
+    if (cantidad > 0) {
+        if (producto.stock <= 0) {
             alert("No hay más stock disponible de este producto.");
             return;
         }
-        product.stock -= amount;
-        item.quantity += amount;
+        producto.stock -= cantidad;
+        item.cantidad += cantidad;
     } else {
-        if (item.quantity <= 1) {
-            product.stock += 1; // Devuelve 1 al stock cuando se elimina
-            cart.splice(index, 1);
+        if (item.cantidad <= 1) {
+            producto.stock += 1;
+            carrito.splice(indice, 1);
         } else {
-            product.stock += 1;
-            item.quantity -= 1;
+            producto.stock += 1;
+            item.cantidad -= 1;
         }
     }
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
-    renderCartDropdown();
-    renderProducts();
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    guardarProductos(); 
+    actualizarContadorCarrito();
+    renderizarDesplegableCarrito();
+    renderizarProductos();
 }
 
-if (priceRange) {
-    priceRange.addEventListener('input', (e) => {
-        currentMaxPrice = Number(e.target.value);
-        if (priceValue) priceValue.textContent = currentMaxPrice.toLocaleString('es-CL');
-        renderProducts();
+if (rangoPrecio) {
+    rangoPrecio.addEventListener('input', (e) => {
+        precioMaximoActual = Number(e.target.value);
+        if (valorPrecio) valorPrecio.textContent = precioMaximoActual.toLocaleString('es-CL');
+        renderizarProductos();
     });
 }
 
-if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-        currentCategory = 'Todas';
-        currentMaxPrice = Number(priceRange.max);
-        priceRange.value = currentMaxPrice;
-        if (priceValue) priceValue.textContent = currentMaxPrice.toLocaleString('es-CL');
-        if (searchInput) searchInput.value = '';
-        currentQuery = '';
-        renderCategories();
-        renderProducts();
+if (botonLimpiarFiltros) {
+    botonLimpiarFiltros.addEventListener('click', () => {
+        categoriaActual = 'Todas';
+        precioMaximoActual = Number(rangoPrecio.max);
+        rangoPrecio.value = precioMaximoActual;
+        if (valorPrecio) valorPrecio.textContent = precioMaximoActual.toLocaleString('es-CL');
+        if (campoBusqueda) campoBusqueda.value = '';
+        consultaActual = '';
+        renderizarCategorias();
+        renderizarProductos();
     });
 }
 
-if (document.getElementById('searchBtn')) {
-    document.getElementById('searchBtn').addEventListener('click', () => {
-        currentQuery = searchInput.value;
-        renderProducts();
+const botonBuscar = document.getElementById('botonBuscar');
+if (botonBuscar) {
+    botonBuscar.addEventListener('click', () => {
+        consultaActual = campoBusqueda.value;
+        renderizarProductos();
     });
 }
 
-if (searchInput) {
-    searchInput.addEventListener('keyup', (e) => {
+if (campoBusqueda) {
+    campoBusqueda.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
-            currentQuery = searchInput.value;
-            renderProducts();
+            consultaActual = campoBusqueda.value;
+            renderizarProductos();
         }
     });
 }
 
-function formatPrice(n) {
+function formatearPrecio(n) {
     return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
 }
 
-const goToCheckoutBtn = document.getElementById('goToCheckoutBtn');
-if (goToCheckoutBtn) {
-    goToCheckoutBtn.addEventListener('click', () => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-        if (!isLoggedIn) {
+if (botonIrAPagar) {
+    botonIrAPagar.addEventListener('click', () => {
+        const sesionIniciada = localStorage.getItem('sesionIniciada') === 'true';
+        if (!sesionIniciada) {
             alert('Debes iniciar sesión para continuar con la compra.');
-        } else if (cart.length === 0) {
+        } else if (carrito.length === 0) {
             alert('Tu carrito está vacío. ¡Agrega productos para continuar!');
         } else {
             window.location.href = 'compra.html';

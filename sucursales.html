@@ -6,154 +6,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sucursales - HuertoHogar</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=falta la key de prueba &callback=initMaps&libraries=marker"
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_AQUI&callback=iniciarMapas&libraries=marker"
         async defer></script>
 </head>
 
 <body>
-
-    <nav class="navbar navbar-expand-lg shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow-sm barra-navegacion">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-                <img src="img/logo.jpg" alt="HuertoHogar" class="logo-img">
-                <span style="font-family:'Playfair Display', serif; color: var(--color-secondary); font-weight:700;">
-                    HuertoHogar
-                </span>
+                <img src="img/logo.jpg" alt="HuertoHogar" class="imagen-logo">
+                <span
+                    style="font-family:'Playfair Display', serif; color: var(--color-secundario); font-weight:700;">HuertoHogar</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navegacionPrincipal">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="mainNav">
+            <div class="collapse navbar-collapse" id="navegacionPrincipal">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="sucursales.html">Sucursales</a></li>
-                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link enlace-navegacion" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link enlace-navegacion" href="productos.html">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link enlace-navegacion" href="blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link enlace-navegacion active"
+                            href="sucursales.html">Sucursales</a></li>
+                    <li class="nav-item"><a class="nav-link enlace-navegacion" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link enlace-navegacion" href="contacto.html">Contacto</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
-                    <form class="d-flex" role="search" id="searchForm">
-                        <input id="searchInput" class="form-control form-control-sm me-2" type="search"
-                            placeholder="Buscar productos">
-                        <button class="btn btn-sm btn-accent" type="button" id="searchBtn">
-                            <span style="color:#fffdfd;">Buscar</span>
-                        </button>
-                    </form>
-                    <div id="authButtons" class="d-flex gap-2"></div>
+                    <div id="botonesAutenticacion" class="d-flex gap-2"></div>
                 </div>
             </div>
         </div>
     </nav>
-
     <main class="container my-5">
         <h1 class="text-center mb-5">Nuestras Sucursales</h1>
-
         <div class="row g-4">
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Santiago Centro</h5>
-                        <p class="text-secondary">Av. Libertador 123, Santiago</p>
-                        <div id="map-santiago-centro" class="sucursal-map"></div>
+                        <p class="texto-secundario">Av. Libertador 123, Santiago</p>
+                        <div id="mapa-santiago-centro" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Santiago Oriente</h5>
-                        <p class="text-secondary">Av. Apoquindo 456, Las Condes</p>
-                        <div id="map-santiago-oriente" class="sucursal-map"></div>
+                        <p class="texto-secundario">Av. Apoquindo 456, Las Condes</p>
+                        <div id="mapa-santiago-oriente" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Santiago Poniente</h5>
-                        <p class="text-secondary">Av. Pajaritos 789, Maipú</p>
-                        <div id="map-santiago-poniente" class="sucursal-map"></div>
+                        <p class="texto-secundario">Av. Pajaritos 789, Maipú</p>
+                        <div id="mapa-santiago-poniente" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Concepción</h5>
-                        <p class="text-secondary">Av. O’Higgins 321</p>
-                        <div id="map-concepcion" class="sucursal-map"></div>
+                        <p class="texto-secundario">Av. O’Higgins 321</p>
+                        <div id="mapa-concepcion" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Viña del Mar</h5>
-                        <p class="text-secondary">Av. Valparaíso 654</p>
-                        <div id="map-vina-del-mar" class="sucursal-map"></div>
+                        <p class="texto-secundario">Av. Valparaíso 654</p>
+                        <div id="mapa-vina-del-mar" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Puerto Montt</h5>
-                        <p class="text-secondary">Mall Paseo Costanera Piso 2 Local 21</p>
-                        <div id="map-puerto-montt" class="sucursal-map"></div>
+                        <p class="texto-secundario">Mall Paseo Costanera Piso 2 Local 21</p>
+                        <div id="mapa-puerto-montt" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Villarrica</h5>
-                        <p class="text-secondary">Av. Pedro de Valdivia 159</p>
-                        <div id="map-villarrica" class="sucursal-map"></div>
+                        <p class="texto-secundario">Calle Fresia 75, Villarrica</p>
+                        <div id="mapa-villarrica" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Nacimiento</h5>
-                        <p class="text-secondary">San Martin 494</p>
-                        <div id="map-nacimiento" class="sucursal-map"></div>
+                        <p class="texto-secundario">Calle El Roble 10, Nacimiento</p>
+                        <div id="mapa-nacimiento" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-                <div class="card product-card">
+                <div class="card tarjeta-producto h-100">
                     <div class="card-body">
                         <h5 class="card-title">Sucursal Valparaíso</h5>
-                        <p class="text-secondary">Independencia 1713</p>
-                        <div id="map-valparaiso" class="sucursal-map"></div>
+                        <p class="texto-secundario">Calle Condell 500, Valparaíso</p>
+                        <div id="mapa-valparaiso" class="mapa-sucursal"></div>
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
-
     <footer>
         © 2025 HuertoHogar — Productos frescos y sostenibles
     </footer>
-
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/autenticacion.js"></script>
     <script src="js/script.js"></script>
     <script src="js/sucursales.js"></script>
 </body>

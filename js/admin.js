@@ -1,193 +1,270 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
 
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    if (!currentUser || !currentUser.isAdmin) {
+    if (!usuarioActual || !usuarioActual.esAdmin) {
         window.location.href = 'index.html';
+        return;
     }
 
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('cart');
+    const botonCerrarSesion = document.getElementById('botonCerrarSesion');
+    if (botonCerrarSesion) {
+        botonCerrarSesion.addEventListener('click', () => {
+            localStorage.removeItem('sesionIniciada');
+            localStorage.removeItem('usuarioActual');
+            localStorage.removeItem('carrito');
             window.location.href = 'index.html';
         });
     }
 
-    // --- Funciones de Validación ---
-    function validarProductoFormulario() {
-        const codigo = document.getElementById('codigoProductoEditar')?.value.trim() || '';
-        const nombre = document.getElementById('nombreProductoEditar')?.value.trim() || '';
-        const descripcion = document.getElementById('descripcionProductoEditar')?.value.trim() || '';
-        const precio = parseFloat(document.getElementById('precioProductoEditar')?.value);
-        const stock = parseInt(document.getElementById('stockProductoEditar')?.value, 10);
-        const stockCritico = document.getElementById('stockCriticoProductoEditar')?.value.trim(); // Se deja como string para la validación
-        const categoria = document.getElementById('categoriaProductoEditar')?.value || '';
-        const descuento = parseInt(document.getElementById('descuentoProductoEditar')?.value, 10);
+    const cuerpoTablaBlog = document.getElementById('cuerpoTablaBlog');
+    const mensajeSinPublicaciones = document.getElementById('mensajeSinPublicaciones');
+    const modalPublicacion = document.getElementById('modalPublicacionBlog') ? new bootstrap.Modal(document.getElementById('modalPublicacionBlog')) : null;
+    const formularioPublicacion = document.getElementById('formularioPublicacionBlog');
+    const botonCrearPublicacion = document.getElementById('botonCrearPublicacion');
+    const tituloModal = document.getElementById('tituloModalPublicacion');
 
-        // Limpiar mensajes de error previos
-        document.querySelectorAll(`.error-message`).forEach(el => el.textContent = '');
+    if (cuerpoTablaBlog) {
+        const publicacionesIniciales = [
+            { id: 1, titulo: "5 Prácticas Sostenibles para tu Huerto", imagen: "img/blog-sostenibilidad.jpg", fecha: "2025-06-20", categoria: "Sostenibilidad", contenido: `<p>Implementar prácticas sostenibles...</p>` },
+            { id: 2, titulo: "Receta: Ensalada de Quínoa y Pimientos", imagen: "img/blog-recetas.jpg", fecha: "2025-06-18", categoria: "Recetas", contenido: `<p>Una receta fresca y nutritiva...</p>` },
+            { id: 3, titulo: "Nuestra Huella de Carbono", imagen: "img/blog-huella.jpg", fecha: "2025-06-15", categoria: "Sostenibilidad", contenido: `<p>En HuertoHogar, estamos comprometidos...</p>` },
+            { id: 4, titulo: "Contribuciones a la Comunidad", imagen: "img/blog-comunidad.jpg", fecha: "2025-06-10", categoria: "Comunidad", contenido: `<p>Creemos en el poder de la comunidad...</p>` },
+            { id: 5, titulo: "Cómo Cultivar un Huerto Urbano", imagen: "img/blog-huerto-urbano.jpg", fecha: "2025-06-05", categoria: "Sostenibilidad", contenido: `<p>No necesitas un gran jardín...</p>` },
+            { id: 6, titulo: "Batido Verde Desintoxicante", imagen: "img/blog-batido-verde.jpg", fecha: "2025-05-30", categoria: "Recetas", contenido: `<p>Un batido lleno de nutrientes...</p>` }
+        ];
 
-        let esValido = true;
-        // Validación del Código (ID)
-        if (codigo.length < 3) { esValido = false; document.getElementById(`error-codigo-editar`).textContent = 'Código requerido y mínimo 3 caracteres.'; }
-        if (nombre.length === 0 || nombre.length > 100) { esValido = false; document.getElementById(`error-nombre-editar`).textContent = 'Nombre requerido y máximo 100 caracteres.'; }
-        if (descripcion.length > 500) { esValido = false; document.getElementById(`error-descripcion-editar`).textContent = 'Máximo 500 caracteres.'; }
-        if (isNaN(precio) || precio < 0) { esValido = false; document.getElementById(`error-precio-editar`).textContent = 'Precio requerido y debe ser un número >= 0.'; }
-        if (isNaN(stock) || stock < 0 || !Number.isInteger(stock)) { esValido = false; document.getElementById(`error-stock-editar`).textContent = 'Stock requerido, número entero >= 0.'; }
-        
-        // Validación del Stock Crítico (OPCIONAL)
-        if (stockCritico !== '' && (isNaN(parseInt(stockCritico)) || parseInt(stockCritico) < 0 || !Number.isInteger(parseInt(stockCritico)))) {
-            esValido = false;
-            document.getElementById(`error-stock-critico-editar`).textContent = 'Stock crítico es opcional, pero si lo ingresas debe ser un número entero >= 0.';
+        function obtenerPublicaciones() {
+            const publicaciones = localStorage.getItem('publicacionesBlog');
+            if (!publicaciones) {
+                localStorage.setItem('publicacionesBlog', JSON.stringify(publicacionesIniciales));
+                return publicacionesIniciales;
+            }
+            return JSON.parse(publicaciones);
         }
-        
-        if (categoria === '') { esValido = false; document.getElementById(`error-categoria-editar`).textContent = 'Selecciona una categoría.'; }
-        if (isNaN(descuento) || descuento < 0 || descuento > 100 || !Number.isInteger(descuento)) { esValido = false; document.getElementById(`error-descuento-editar`).textContent = 'Descuento debe ser un número entero entre 0 y 100.'; }
 
-        return esValido;
+        function guardarPublicaciones(publicaciones) {
+            localStorage.setItem('publicacionesBlog', JSON.stringify(publicaciones));
+        }
+
+        function renderizarPublicaciones() {
+            const publicaciones = obtenerPublicaciones();
+            cuerpoTablaBlog.innerHTML = '';
+
+            if (publicaciones.length === 0) {
+                mensajeSinPublicaciones.style.display = 'block';
+            } else {
+                mensajeSinPublicaciones.style.display = 'none';
+                publicaciones.sort((a, b) => b.id - a.id);
+                publicaciones.forEach(publicacion => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td>${publicacion.id}</td>
+                        <td>${publicacion.titulo}</td>
+                        <td><span class="badge bg-success">${publicacion.categoria}</span></td>
+                        <td>${publicacion.fecha}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning boton-editar" data-id="${publicacion.id}"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-danger boton-eliminar" data-id="${publicacion.id}"><i class="bi bi-trash"></i></button>
+                        </td>
+                    `;
+                    cuerpoTablaBlog.appendChild(fila);
+                });
+            }
+        }
+
+        botonCrearPublicacion.addEventListener('click', () => {
+            formularioPublicacion.reset();
+            document.getElementById('idPublicacionEditar').value = '';
+            tituloModal.textContent = 'Nueva Publicación';
+            modalPublicacion.show();
+        });
+
+        formularioPublicacion.addEventListener('submit', (evento) => {
+            evento.preventDefault();
+            const idPublicacion = document.getElementById('idPublicacionEditar').value;
+            const publicaciones = obtenerPublicaciones();
+
+            if (idPublicacion) {
+                const indice = publicaciones.findIndex(p => p.id == idPublicacion);
+                if (indice > -1) {
+                    publicaciones[indice].titulo = document.getElementById('tituloPublicacion').value;
+                    publicaciones[indice].categoria = document.getElementById('categoriaPublicacion').value;
+                    publicaciones[indice].imagen = document.getElementById('imagenPublicacion').value;
+                    publicaciones[indice].contenido = document.getElementById('contenidoPublicacion').value;
+                }
+            } else {
+                const nuevoId = publicaciones.length > 0 ? Math.max(...publicaciones.map(p => p.id)) + 1 : 1;
+                const nuevaPublicacion = {
+                    id: nuevoId,
+                    titulo: document.getElementById('tituloPublicacion').value,
+                    categoria: document.getElementById('categoriaPublicacion').value,
+                    imagen: document.getElementById('imagenPublicacion').value,
+                    fecha: new Date().toISOString().slice(0, 10),
+                    contenido: document.getElementById('contenidoPublicacion').value,
+                };
+                publicaciones.push(nuevaPublicacion);
+            }
+
+            guardarPublicaciones(publicaciones);
+            renderizarPublicaciones();
+            modalPublicacion.hide();
+            alert('Publicación guardada con éxito.');
+        });
+
+        cuerpoTablaBlog.addEventListener('click', (evento) => {
+            const objetivo = evento.target.closest('button');
+            if (!objetivo) return;
+
+            const idPublicacion = objetivo.dataset.id;
+
+            if (objetivo.classList.contains('boton-editar')) {
+                const publicaciones = obtenerPublicaciones();
+                const publicacionAEditar = publicaciones.find(p => p.id == idPublicacion);
+                if (publicacionAEditar) {
+                    document.getElementById('idPublicacionEditar').value = publicacionAEditar.id;
+                    document.getElementById('tituloPublicacion').value = publicacionAEditar.titulo;
+                    document.getElementById('categoriaPublicacion').value = publicacionAEditar.categoria;
+                    document.getElementById('imagenPublicacion').value = publicacionAEditar.imagen;
+                    document.getElementById('contenidoPublicacion').value = publicacionAEditar.contenido;
+                    tituloModal.textContent = `Editando Publicación #${publicacionAEditar.id}`;
+                    modalPublicacion.show();
+                }
+            }
+
+            if (objetivo.classList.contains('boton-eliminar')) {
+                if (confirm(`¿Estás seguro de que quieres eliminar la publicación con ID: ${idPublicacion}?`)) {
+                    let publicaciones = obtenerPublicaciones();
+                    publicaciones = publicaciones.filter(p => p.id != idPublicacion);
+                    guardarPublicaciones(publicaciones);
+                    renderizarPublicaciones();
+                    alert('Publicación eliminada.');
+                }
+            }
+        });
+        renderizarPublicaciones();
     }
 
-    function validarUsuarioFormulario(elementIdPrefix) {
-        const run = document.getElementById(`${elementIdPrefix}runUsuario`)?.value.trim().toUpperCase() || '';
-        const nombre = document.getElementById(`${elementIdPrefix}nombreUsuario`)?.value.trim() || '';
-        const apellidos = document.getElementById(`${elementIdPrefix}apellidosUsuario`)?.value.trim() || '';
-        const correo = document.getElementById(`${elementIdPrefix}correoUsuario`)?.value.trim() || '';
-        const tipoUsuario = document.getElementById(`${elementIdPrefix}tipoUsuario`)?.value || '';
-
-        document.querySelectorAll(`.error-message`).forEach(el => el.textContent = '');
-
-        let esValido = true;
-        if (!validarRut(run)) { esValido = false; document.getElementById(`error-run${elementIdPrefix}`).textContent = 'RUN inválido.'; }
-        if (nombre.length === 0 || nombre.length > 50) { esValido = false; document.getElementById(`error-nombre${elementIdPrefix}`).textContent = 'Nombre requerido, máximo 50 caracteres.'; }
-        if (apellidos.length === 0 || apellidos.length > 100) { esValido = false; document.getElementById(`error-apellidos${elementIdPrefix}`).textContent = 'Apellidos requeridos, máximo 100 caracteres.'; }
-        if (!validarEmail(correo)) { esValido = false; document.getElementById(`error-correo${elementIdPrefix}`).textContent = 'Correo inválido. Solo @duoc.cl, @profesor.duoc.cl y @gmail.com.'; }
-        if (tipoUsuario === '') { esValido = false; document.getElementById(`error-tipo-usuario${elementIdPrefix}`).textContent = 'Selecciona un tipo de usuario.'; }
-
-        return esValido;
-    }
 
     function validarRut(rut) {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-        let tmp = rut.split('-');
-        let digv = tmp[1];
-        let rutSolo = tmp[0];
-        if (digv === 'K') digv = 'k';
+        let partes = rut.split('-');
+        let digitoVerificador = partes[1];
+        let rutSinDigito = partes[0];
+        if (digitoVerificador === 'K') digitoVerificador = 'k';
         let suma = 0;
         let factor = 2;
-        for (let i = rutSolo.length - 1; i >= 0; i--) { suma += parseInt(rutSolo.charAt(i)) * factor; factor = (factor === 7) ? 2 : factor + 1; }
+        for (let i = rutSinDigito.length - 1; i >= 0; i--) {
+            suma += parseInt(rutSinDigito.charAt(i)) * factor;
+            factor = (factor === 7) ? 2 : factor + 1;
+        }
         let dvCalculado = 11 - (suma % 11);
         if (dvCalculado === 11) dvCalculado = '0';
         if (dvCalculado === 10) dvCalculado = 'k';
-        return dvCalculado.toString() === digv;
+        return dvCalculado.toString() === digitoVerificador;
     }
 
-    function validarEmail(email) {
-        const emailRegex = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
-        return emailRegex.test(email);
+    function validarCorreo(correo) {
+        const expresionRegular = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
+        return expresionRegular.test(correo);
     }
 
-    // --- Lógica de la página de Productos ---
-    const productosTableBody = document.getElementById('productos-table-body');
-    const noProductsMessage = document.getElementById('no-products-message');
-    const editarProductoModalEl = document.getElementById('editarProductoModal');
-    let editarProductoModal = null;
+    const cuerpoTablaProductos = document.getElementById('cuerpoTablaProductos');
+    const mensajeSinProductos = document.getElementById('mensajeSinProductos');
+    const elementoModalEditarProducto = document.getElementById('modalEditarProducto');
+    let modalEditarProducto = null;
 
-    function obtenerCategoriasUnicas() {
-        const productosGuardados = JSON.parse(localStorage.getItem('productsWithReviews')) || [];
-        const categoriasSet = new Set(productosGuardados.map(p => p.category));
-        return Array.from(categoriasSet).filter(Boolean);
-    }
+    if (elementoModalEditarProducto) {
+        modalEditarProducto = new bootstrap.Modal(elementoModalEditarProducto);
 
-    if (editarProductoModalEl) {
-        editarProductoModal = new bootstrap.Modal(editarProductoModalEl);
-        const formularioEditarProducto = document.getElementById('formularioEditarProducto');
+        function obtenerCategoriasUnicas() {
+            const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
+            const categorias = new Set(productosGuardados.map(p => p.categoria));
+            return Array.from(categorias).filter(Boolean);
+        }
 
         function renderizarProductosAdmin() {
-            const productos = JSON.parse(localStorage.getItem('productsWithReviews')) || [];
-            if (productosTableBody) {
-                productosTableBody.innerHTML = '';
+            const productos = JSON.parse(localStorage.getItem('productos')) || [];
+            if (cuerpoTablaProductos) {
+                cuerpoTablaProductos.innerHTML = '';
                 if (productos.length === 0) {
-                    noProductsMessage.style.display = 'block';
+                    mensajeSinProductos.style.display = 'block';
                 } else {
-                    noProductsMessage.style.display = 'none';
+                    mensajeSinProductos.style.display = 'none';
                     productos.forEach(producto => {
                         const fila = document.createElement('tr');
-                        
-                        const precioFinal = producto.discountPrice !== undefined ? producto.discountPrice : producto.price;
-                        const precioDisplay = precioFinal === 0 ? 'Gratis' : `$${(precioFinal || 0).toFixed(2)}`;
-                        const stockCriticoAlerta = (producto.stockCritico !== null && producto.stock <= producto.stockCritico) ? '<span class="badge bg-danger ms-2">Stock Crítico</span>' : '';
-                        
-                        // CORRECCIÓN: Se añade la categoría y se cambia el color de la etiqueta
+                        const precioFinal = producto.precioConDescuento !== undefined ? producto.precioConDescuento : producto.precio;
+                        const precioMostrar = precioFinal === 0 ? 'Gratis' : `$${(precioFinal || 0).toLocaleString('es-CL')}`;
+                        const alertaStockCritico = (producto.stockCritico !== null && producto.stock <= producto.stockCritico) ? '<span class="badge bg-danger ms-2">Stock Crítico</span>' : '';
+
                         fila.innerHTML = `
                             <td>${producto.id || ''}</td>
-                            <td>${producto.name}</td>
-                            <td>${precioDisplay}</td>
-                            <td>${producto.stock} ${stockCriticoAlerta}</td>
-                            <td>${producto.category || 'N/A'}</td>
-                            <td>${producto.origin || 'N/A'}</td>
-                            <td><span class="badge bg-success">${producto.badge || 'Normal'}</span></td>
+                            <td>${producto.nombre}</td>
+                            <td>${precioMostrar}</td>
+                            <td>${producto.stock} ${alertaStockCritico}</td>
+                            <td>${producto.categoria || 'N/A'}</td>
+                            <td>${producto.origen || 'N/A'}</td>
                             <td>
-                                <button class="btn btn-sm btn-warning editar-btn" data-id="${producto.id}"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-sm btn-danger eliminar-btn" data-id="${producto.id}"><i class="bi bi-trash"></i></button>
+                                <span class="badge ${producto.etiqueta === 'Oferta' ? 'bg-warning' : 'bg-success'}">
+                                    ${producto.etiqueta || 'Normal'}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-warning boton-editar" data-id="${producto.id}"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-sm btn-danger boton-eliminar" data-id="${producto.id}"><i class="bi bi-trash"></i></button>
                             </td>
                         `;
-                        productosTableBody.appendChild(fila);
+                        cuerpoTablaProductos.appendChild(fila);
                     });
                 }
             }
         }
 
-        if (productosTableBody) {
-            productosTableBody.addEventListener('click', (e) => {
-                 if (e.target.closest('.eliminar-btn')) {
-                    const productId = parseInt(e.target.closest('.eliminar-btn').dataset.id);
-                    if (confirm(`¿Estás seguro de que quieres eliminar el producto con ID: ${productId}?`)) {
-                        let productos = JSON.parse(localStorage.getItem('productsWithReviews')) || [];
-                        productos = productos.filter(p => p.id !== productId);
-                        localStorage.setItem('productsWithReviews', JSON.stringify(productos));
+        if (cuerpoTablaProductos) {
+            cuerpoTablaProductos.addEventListener('click', (evento) => {
+                if (evento.target.closest('.boton-eliminar')) {
+                    const idProducto = parseInt(evento.target.closest('.boton-eliminar').dataset.id);
+                    if (confirm(`¿Estás seguro de que quieres eliminar el producto con ID: ${idProducto}?`)) {
+                        let productos = JSON.parse(localStorage.getItem('productos')) || [];
+                        productos = productos.filter(p => p.id !== idProducto);
+                        localStorage.setItem('productos', JSON.stringify(productos));
                         renderizarProductosAdmin();
                         alert('Producto eliminado.');
                     }
                 }
-                
-                if (e.target.closest('.editar-btn')) {
-                    const productId = parseInt(e.target.closest('.editar-btn').dataset.id);
-                    const productos = JSON.parse(localStorage.getItem('productsWithReviews')) || [];
-                    const productoAEditar = productos.find(p => p.id === productId);
 
+                if (evento.target.closest('.boton-editar')) {
+                    const idProducto = parseInt(evento.target.closest('.boton-editar').dataset.id);
+                    const productos = JSON.parse(localStorage.getItem('productos')) || [];
+                    const productoAEditar = productos.find(p => p.id === idProducto);
                     if (productoAEditar) {
-                        const descuento = productoAEditar.discountPrice ? Math.round(((productoAEditar.price - productoAEditar.discountPrice) / productoAEditar.price) * 100) : 0;
+                        const descuento = productoAEditar.precioConDescuento ?
+                            Math.round(((productoAEditar.precio - productoAEditar.precioConDescuento) / productoAEditar.precio) * 100) : 0;
 
-                        document.getElementById('productoIdEditar').value = productoAEditar.id;
+                        document.getElementById('idProductoEditar').value = productoAEditar.id;
                         document.getElementById('codigoProductoEditar').value = productoAEditar.id;
-                        document.getElementById('nombreProductoEditar').value = productoAEditar.name;
-                        document.getElementById('descripcionProductoEditar').value = productoAEditar.description || '';
-                        document.getElementById('precioProductoEditar').value = productoAEditar.price;
+                        document.getElementById('nombreProductoEditar').value = productoAEditar.nombre;
+                        document.getElementById('descripcionProductoEditar').value = productoAEditar.descripcion || '';
+                        document.getElementById('precioProductoEditar').value = productoAEditar.precio;
                         document.getElementById('stockProductoEditar').value = productoAEditar.stock;
                         document.getElementById('stockCriticoProductoEditar').value = productoAEditar.stockCritico || '';
                         document.getElementById('descuentoProductoEditar').value = descuento;
-                        document.getElementById('origenProductoEditar').value = productoAEditar.origin || '';
-                        document.getElementById('unitProductoEditar').value = productoAEditar.unit || '';
-                        document.getElementById('badgeProductoEditar').value = productoAEditar.badge || '';
-                        
-                        const categoriaSelect = document.getElementById('categoriaProductoEditar');
+                        document.getElementById('origenProductoEditar').value = productoAEditar.origen || '';
+                        document.getElementById('unidadProductoEditar').value = productoAEditar.unidad || '';
+                        document.getElementById('etiquetaProductoEditar').value = productoAEditar.etiqueta || '';
+
+                        const selectorCategoria = document.getElementById('categoriaProductoEditar');
                         const categorias = obtenerCategoriasUnicas();
-                        categoriaSelect.innerHTML = '<option value="" selected disabled>Selecciona una categoría</option>';
-                        
+                        selectorCategoria.innerHTML = '<option value="" selected disabled>Selecciona una categoría</option>';
                         categorias.forEach(cat => {
-                            const option = document.createElement('option');
-                            option.value = cat;
-                            option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-                            if (cat === productoAEditar.category) {
-                                option.selected = true;
+                            const opcion = document.createElement('option');
+                            opcion.value = cat;
+                            opcion.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+                            if (cat === productoAEditar.categoria) {
+                                opcion.selected = true;
                             }
-                            categoriaSelect.appendChild(option);
+                            selectorCategoria.appendChild(opcion);
                         });
-                        
-                        editarProductoModal.show();
+                        modalEditarProducto.show();
                     } else {
                         alert('Producto no encontrado.');
                     }
@@ -195,115 +272,110 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        const formularioEditarProducto = document.getElementById('formularioEditarProducto');
         if (formularioEditarProducto) {
             formularioEditarProducto.addEventListener('submit', (evento) => {
                 evento.preventDefault();
-                const oldId = parseInt(document.getElementById('productoIdEditar').value);
-                let productos = JSON.parse(localStorage.getItem('productsWithReviews')) || [];
-                const productoIndex = productos.findIndex(p => p.id === oldId);
+                const idAnterior = parseInt(document.getElementById('idProductoEditar').value);
+                let productos = JSON.parse(localStorage.getItem('productos')) || [];
+                const indiceProducto = productos.findIndex(p => p.id === idAnterior);
 
-                if (productoIndex !== -1) {
+                if (indiceProducto !== -1) {
                     const precio = parseFloat(document.getElementById('precioProductoEditar').value);
                     const descuento = parseInt(document.getElementById('descuentoProductoEditar').value, 10);
                     const stockCritico = document.getElementById('stockCriticoProductoEditar').value.trim();
 
-                    productos[productoIndex] = {
-                        ...productos[productoIndex],
+                    productos[indiceProducto] = {
+                        ...productos[indiceProducto],
                         id: parseInt(document.getElementById('codigoProductoEditar').value.trim()),
-                        name: document.getElementById('nombreProductoEditar').value.trim(),
-                        description: document.getElementById('descripcionProductoEditar').value.trim(),
-                        price: precio,
+                        nombre: document.getElementById('nombreProductoEditar').value.trim(),
+                        descripcion: document.getElementById('descripcionProductoEditar').value.trim(),
+                        precio: precio,
                         stock: parseInt(document.getElementById('stockProductoEditar').value, 10),
                         stockCritico: stockCritico === '' ? null : parseInt(stockCritico, 10),
-                        category: document.getElementById('categoriaProductoEditar').value,
-                        origin: document.getElementById('origenProductoEditar').value.trim(),
-                        unit: document.getElementById('unitProductoEditar').value.trim(),
-                        badge: document.getElementById('badgeProductoEditar').value.trim(),
-                        discountPrice: descuento > 0 ? precio * (1 - descuento / 100) : undefined
+                        categoria: document.getElementById('categoriaProductoEditar').value,
+                        origen: document.getElementById('origenProductoEditar').value.trim(),
+                        unidad: document.getElementById('unidadProductoEditar').value.trim(),
+                        etiqueta: document.getElementById('etiquetaProductoEditar').value.trim(),
+                        precioConDescuento: descuento > 0 ? precio * (1 - descuento / 100) : undefined
                     };
-                    
-                    localStorage.setItem('productsWithReviews', JSON.stringify(productos));
+                    localStorage.setItem('productos', JSON.stringify(productos));
                     renderizarProductosAdmin();
-                    alert('✅ Producto editado con éxito.');
-                    editarProductoModal.hide();
+                    alert('Producto editado con éxito.');
+                    modalEditarProducto.hide();
                 }
             });
         }
         renderizarProductosAdmin();
     }
 
-     // --- Lógica de la página de Usuarios (sin cambios) ---
-    // ...
-});
 
-    // --- Lógica de la página de Usuarios ---
-    const usuariosTableBody = document.getElementById('usuarios-table-body');
-    const noUsersMessage = document.getElementById('no-users-message');
-    const editarUsuarioModalEl = document.getElementById('editarUsuarioModal');
-    let editarUsuarioModal = null;
+    const cuerpoTablaUsuarios = document.getElementById('cuerpoTablaUsuarios');
+    const mensajeSinUsuarios = document.getElementById('mensajeSinUsuarios');
+    const elementoModalEditarUsuario = document.getElementById('modalEditarUsuario');
+    let modalEditarUsuario = null;
 
-    if (editarUsuarioModalEl) {
-        editarUsuarioModal = new bootstrap.Modal(editarUsuarioModalEl);
-        const formularioEditarUsuario = document.getElementById('formularioEditarUsuario');
+    if (elementoModalEditarUsuario) {
+        modalEditarUsuario = new bootstrap.Modal(elementoModalEditarUsuario);
 
         function renderizarUsuariosAdmin() {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            if (usuariosTableBody) {
-                usuariosTableBody.innerHTML = '';
-                if (users.length === 0) {
-                    noUsersMessage.style.display = 'block';
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            if (cuerpoTablaUsuarios) {
+                cuerpoTablaUsuarios.innerHTML = '';
+                if (usuarios.length === 0) {
+                    mensajeSinUsuarios.style.display = 'block';
                 } else {
-                    noUsersMessage.style.display = 'none';
-                    users.forEach(user => {
+                    mensajeSinUsuarios.style.display = 'none';
+                    usuarios.forEach(usuario => {
                         const fila = document.createElement('tr');
-                        const userRol = user.isAdmin ? 'Administrador' : (user.isVendedor ? 'Vendedor' : 'Cliente');
+                        const rolUsuario = usuario.esAdmin ? 'Administrador' : (usuario.esVendedor ? 'Vendedor' : 'Cliente');
                         fila.innerHTML = `
-                            <td>${user.rut || 'N/A'}</td>
-                            <td>${user.nombre} ${user.apellidos || ''}</td>
-                            <td>${user.email}</td>
-                            <td>${userRol}</td>
+                            <td>${usuario.rut || 'N/A'}</td>
+                            <td>${usuario.nombre} ${usuario.apellidos || ''}</td>
+                            <td>${usuario.correo}</td>
+                            <td>${rolUsuario}</td>
                             <td>
-                                <button class="btn btn-sm btn-warning editar-btn" data-email="${user.email}"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-sm btn-danger eliminar-btn" data-email="${user.email}"><i class="bi bi-trash"></i></button>
+                                <button class="btn btn-sm btn-warning boton-editar" data-correo="${usuario.correo}"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-sm btn-danger boton-eliminar" data-correo="${usuario.correo}"><i class="bi bi-trash"></i></button>
                             </td>
                         `;
-                        usuariosTableBody.appendChild(fila);
+                        cuerpoTablaUsuarios.appendChild(fila);
                     });
                 }
             }
         }
 
-        if (usuariosTableBody) {
-            usuariosTableBody.addEventListener('click', (e) => {
-                if (e.target.closest('.eliminar-btn')) {
-                    const userEmail = e.target.closest('.eliminar-btn').dataset.email;
-                    if (confirm(`¿Estás seguro de que quieres eliminar al usuario con correo: ${userEmail}?`)) {
-                        let users = JSON.parse(localStorage.getItem('users')) || [];
-                        users = users.filter(u => u.email !== userEmail);
-                        localStorage.setItem('users', JSON.stringify(users));
+        if (cuerpoTablaUsuarios) {
+            cuerpoTablaUsuarios.addEventListener('click', (evento) => {
+                if (evento.target.closest('.boton-eliminar')) {
+                    const correoUsuario = evento.target.closest('.boton-eliminar').dataset.correo;
+                    if (confirm(`¿Estás seguro de que quieres eliminar al usuario con correo: ${correoUsuario}?`)) {
+                        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+                        usuarios = usuarios.filter(u => u.correo !== correoUsuario);
+                        localStorage.setItem('usuarios', JSON.stringify(usuarios));
                         renderizarUsuariosAdmin();
                         alert('Usuario eliminado.');
                     }
                 }
 
-                if (e.target.closest('.editar-btn')) {
-                    const userEmail = e.target.closest('.editar-btn').dataset.email;
-                    const users = JSON.parse(localStorage.getItem('users')) || [];
-                    const userAEditar = users.find(u => u.email === userEmail);
+                if (evento.target.closest('.boton-editar')) {
+                    const correoUsuario = evento.target.closest('.boton-editar').dataset.correo;
+                    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+                    const usuarioAEditar = usuarios.find(u => u.correo === correoUsuario);
 
-                    if (userAEditar) {
-                        document.getElementById('usuarioEmailEditar').value = userAEditar.email;
-                        document.getElementById('runUsuarioEditar').value = userAEditar.rut || '';
-                        document.getElementById('nombreUsuarioEditar').value = userAEditar.nombre;
-                        document.getElementById('apellidosUsuarioEditar').value = userAEditar.apellidos || '';
-                        document.getElementById('correoUsuarioEditar').value = userAEditar.email;
-                        
-                        let userRole = 'cliente';
-                        if (userAEditar.isAdmin) userRole = 'administrador';
-                        else if (userAEditar.isVendedor) userRole = 'vendedor';
-                        document.getElementById('tipoUsuarioEditar').value = userRole;
+                    if (usuarioAEditar) {
+                        document.getElementById('idCorreoUsuario').value = usuarioAEditar.correo;
+                        document.getElementById('runUsuarioEditar').value = usuarioAEditar.rut || '';
+                        document.getElementById('nombreUsuarioEditar').value = usuarioAEditar.nombre;
+                        document.getElementById('apellidosUsuarioEditar').value = usuarioAEditar.apellidos || '';
+                        document.getElementById('correoUsuarioEditar').value = usuarioAEditar.correo;
 
-                        editarUsuarioModal.show();
+                        let rolUsuario = 'cliente';
+                        if (usuarioAEditar.esAdmin) rolUsuario = 'administrador';
+                        else if (usuarioAEditar.esVendedor) rolUsuario = 'vendedor';
+                        document.getElementById('tipoUsuarioEditar').value = rolUsuario;
+
+                        modalEditarUsuario.show();
                     } else {
                         alert('Usuario no encontrado.');
                     }
@@ -311,35 +383,34 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        const formularioEditarUsuario = document.getElementById('formularioEditarUsuario');
         if (formularioEditarUsuario) {
             formularioEditarUsuario.addEventListener('submit', (evento) => {
                 evento.preventDefault();
-                if (validarUsuarioFormulario('Editar')) {
-                    const email = document.getElementById('usuarioEmailEditar').value;
-                    const run = document.getElementById('runUsuarioEditar').value.trim().toUpperCase();
-                    const nombre = document.getElementById('nombreUsuarioEditar').value.trim();
-                    const apellidos = document.getElementById('apellidosUsuarioEditar').value.trim();
-                    const tipoUsuario = document.getElementById('tipoUsuarioEditar').value;
+                const correo = document.getElementById('idCorreoUsuario').value;
+                const run = document.getElementById('runUsuarioEditar').value.trim().toUpperCase();
+                const nombre = document.getElementById('nombreUsuarioEditar').value.trim();
+                const apellidos = document.getElementById('apellidosUsuarioEditar').value.trim();
+                const tipoUsuario = document.getElementById('tipoUsuarioEditar').value;
 
-                    let users = JSON.parse(localStorage.getItem('users')) || [];
-                    const userIndex = users.findIndex(u => u.email === email);
+                let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+                const indiceUsuario = usuarios.findIndex(u => u.correo === correo);
 
-                    if (userIndex !== -1) {
-                        users[userIndex].rut = run;
-                        users[userIndex].nombre = nombre;
-                        users[userIndex].apellidos = apellidos;
-                        users[userIndex].isAdmin = tipoUsuario === 'administrador';
-                        users[userIndex].isVendedor = tipoUsuario === 'vendedor';
+                if (indiceUsuario !== -1) {
+                    usuarios[indiceUsuario].rut = run;
+                    usuarios[indiceUsuario].nombre = nombre;
+                    usuarios[indiceUsuario].apellidos = apellidos;
+                    usuarios[indiceUsuario].esAdmin = tipoUsuario === 'administrador';
+                    usuarios[indiceUsuario].esVendedor = tipoUsuario === 'vendedor';
 
-                        localStorage.setItem('users', JSON.stringify(users));
-                        renderizarUsuariosAdmin();
-
-                        alert('✅ Usuario editado con éxito.');
-                        editarUsuarioModal.hide();
-                    }
+                    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+                    renderizarUsuariosAdmin();
+                    alert('Usuario editado con éxito.');
+                    modalEditarUsuario.hide();
                 }
             });
         }
 
         renderizarUsuariosAdmin();
     }
+});
