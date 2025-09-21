@@ -113,9 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Función para mostrar el modal de la boleta
     function mostrarBoleta(detallesCompra) {
-        // Llenar el modal con los datos
         document.getElementById('boletaId').textContent = detallesCompra.id;
         document.getElementById('boletaFecha').textContent = new Date(detallesCompra.fecha).toLocaleString();
 
@@ -133,12 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('boletaPuntosGanados').textContent = detallesCompra.puntosGanados;
         document.getElementById('boletaSaldoFinal').textContent = usuarioActual.puntos;
 
-        // Mostrar el modal
         const myModal = new bootstrap.Modal(document.getElementById('modalBoleta'));
         myModal.show();
     }
 
-    // Función para descargar la boleta
     function descargarBoleta(detallesCompra) {
         const contenido = `
 Boleta de Compra HuertoHogar
@@ -170,7 +166,6 @@ Gracias por su compra.
         URL.revokeObjectURL(url);
     }
 
-    // Evento del botón de finalizar compra
     botonFinalizar.addEventListener('click', () => {
         const metodoSeleccionado = selectorMetodoEntrega.value;
         let esValido = true;
@@ -265,15 +260,12 @@ Gracias por su compra.
 
         localStorage.removeItem('carrito');
 
-        // Llama a la función para mostrar el modal de la boleta
         mostrarBoleta(detallesCompra);
 
-        // Agrega un listener al botón de descarga dentro del evento de click de finalizar compra
         document.getElementById('btnDescargarBoleta').addEventListener('click', () => {
             descargarBoleta(detallesCompra);
         });
 
-        // Redirecciona al usuario cuando el modal se cierra
         const modalBoletaElement = document.getElementById('modalBoleta');
         modalBoletaElement.addEventListener('hidden.bs.modal', () => {
             window.location.href = 'index.html';

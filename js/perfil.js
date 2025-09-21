@@ -153,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     claseEstado = 'bg-primary';
             }
 
-            // NUEVA LÓGICA: MOSTRAR DETALLES DE BOLETA
             const detallesBoleta = `
                 <div class="row small text-muted mt-2">
                     <div class="col-6">
