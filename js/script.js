@@ -245,35 +245,6 @@ function mostrarDetallesProducto(idProducto) {
 document.addEventListener('DOMContentLoaded', () => {
     cargarProductos();
 
-    if (formularioResena) {
-        formularioResena.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const calificacion = parseInt(document.getElementById('calificacion-resena').value);
-            const textoResena = document.getElementById('texto-resena').value;
-            const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
-
-            if (calificacion < 1 || calificacion > 5) {
-                alert('La valoración debe ser entre 1 y 5.');
-                return;
-            }
-            if (!usuarioActual) {
-                alert('Debes iniciar sesión para dejar una reseña.');
-                return;
-            }
-
-            const nuevaResena = { usuario: usuarioActual.nombre, calificacion: calificacion, texto: textoResena };
-            const productoAResenar = productos.find(p => p.id === parseInt(idProductoActual));
-            if (productoAResenar) {
-                productoAResenar.resenas.push(nuevaResena);
-                guardarProductos();
-                renderizarResenas(productoAResenar.resenas);
-                renderizarProductos();
-                document.getElementById('calificacion-resena').value = '';
-                document.getElementById('texto-resena').value = '';
-            }
-        });
-    }
-
     if (valorPrecio && rangoPrecio) {
         valorPrecio.textContent = Number(rangoPrecio.value).toLocaleString('es-CL');
     }
@@ -328,6 +299,35 @@ if (contenidoModal) {
             }
             agregarAlCarrito(productoAAgregar, cantidad);
             modalDetalleProducto.hide();
+        }
+    });
+
+        contenidoModal.addEventListener('submit', (e) => {
+        if (e.target.id === 'formulario-resena') {
+            e.preventDefault();
+            const calificacion = parseInt(document.getElementById('calificacion-resena').value);
+            const textoResena = document.getElementById('texto-resena').value;
+            const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+
+            if (calificacion < 1 || calificacion > 5) {
+                alert('La valoración debe ser entre 1 y 5.');
+                return;
+            }
+            if (!usuarioActual) {
+                alert('Debes iniciar sesión para dejar una reseña.');
+                return;
+            }
+
+            const nuevaResena = { usuario: usuarioActual.nombre, calificacion: calificacion, texto: textoResena };
+            const productoAResenar = productos.find(p => p.id === parseInt(idProductoActual));
+            if (productoAResenar) {
+                productoAResenar.resenas.push(nuevaResena);
+                guardarProductos();
+                renderizarResenas(productoAResenar.resenas);
+                renderizarProductos();
+                document.getElementById('calificacion-resena').value = '';
+                document.getElementById('texto-resena').value = '';
+            }
         }
     });
 }
