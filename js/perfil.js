@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let usuarioActual = JSON.parse(localStorage.getItem('usuarioActual'));
+    const elementoPuntos = document.getElementById('puntos-fidelizacion');
     const formularioPerfil = document.getElementById('formularioPerfil');
     const inputNombrePerfil = document.getElementById('nombrePerfil');
     const inputCorreoPerfil = document.getElementById('correoPerfil');
@@ -28,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'Nacimiento': { lat: -37.5085, lng: -72.6369, direccion: 'Calle El Roble 10, Nacimiento' },
         'Valparaíso': { lat: -33.0458, lng: -71.6197, direccion: 'Calle Condell 500, Valparaíso' }
     };
+
+    const estadosPedido = ['Confirmado', 'En preparación', 'En camino', 'Entregado'];
+    const diasEntrega = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     function encontrarSucursalMasCercana(direccionUsuario) {
         if (!direccionUsuario) return 'Desconocida';
@@ -57,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dvCalculado === 10) dvCalculado = 'k';
         return dvCalculado.toString() === digitoVerificador;
     }
+    function formatearPrecio(numero) {
+        return numero.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+    }
 
     function guardarUsuarioActual(usuarioActualizado) {
         localStorage.setItem('usuarioActual', JSON.stringify(usuarioActualizado));
@@ -72,6 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
         inputNombrePerfil.value = usuarioActual.nombre || '';
         inputCorreoPerfil.value = usuarioActual.correo || '';
         inputRutPerfil.value = usuarioActual.rut || '';
+        usuarioActual.puntos = usuarioActual.puntos || 0;
+        elementoPuntos.textContent = `Puntos de fidelización: ${usuarioActual.puntos}`;
     }
 
     function renderizarDirecciones() {
@@ -100,7 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderizarHistorialCompras() {
-        const historial = usuarioActual.historial || [];
+        const historial = usuarioActual.historial.map(compra => {
+            if (!compra.estado) {
+                return { ...compra, estado: 'Listo para Retirar' };
+            }
+            return compra;
+        }) || [];
+        
         contenedorHistorialCompras.innerHTML = '';
         if (historial.length === 0) {
             mensajeSinHistorial.style.display = 'block';
@@ -116,6 +131,42 @@ document.addEventListener('DOMContentLoaded', () => {
             let textoBoton = 'Ver más';
             let claseBoton = '';
 
+            const estadoActual = compra.estado; 
+            let claseEstado = '';
+            switch (estadoActual) {
+                case 'En preparación':
+                    claseEstado = 'bg-warning text-dark';
+                    break;
+                case 'En camino':
+                    claseEstado = 'bg-info text-dark';
+                    break;
+                case 'Entregado':
+                    claseEstado = 'bg-success';
+                    break;
+                case 'Listo para Retirar':
+                    claseEstado = 'bg-primary';
+                    break;
+                case 'Retirado':
+                    claseEstado = 'bg-secondary';
+                    break;
+                default:
+                    claseEstado = 'bg-primary';
+            }
+
+            // NUEVA LÓGICA: MOSTRAR DETALLES DE BOLETA
+            const detallesBoleta = `
+                <div class="row small text-muted mt-2">
+                    <div class="col-6">
+                        <p class="mb-0">Total original: <strong>${formatearPrecio(compra.totalOriginal)}</strong></p>
+                        <p class="mb-0">Puntos usados: <strong>${compra.puntosUsados || 0}</strong></p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <p class="mb-0">Puntos ganados: <strong>${compra.puntosGanados || 0}</strong></p>
+                        <p class="mb-0">Total final: <strong>${formatearPrecio(compra.totalFinal)}</strong></p>
+                    </div>
+                </div>
+            `;
+            
             if (tipoEntrega.toLowerCase() === 'domicilio') {
                 const sucursalCercana = encontrarSucursalMasCercana(compra.direccion);
                 textoInfoEntrega = `Dirección: ${compra.direccion || 'Sin dirección'}`;
@@ -130,22 +181,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <p class="mb-1">Tipo de Entrega: <strong class="text-capitalize">${tipoEntrega}</strong></p>
                     <p class="mb-1">${textoInfoEntrega}</p>
-                    <p class="mb-1">Estado: <span class="badge bg-success">En Reparto</span></p>
+                    <p class="mb-1">Estado: <span class="badge ${claseEstado}">${estadoActual}</span></p>
                     <p class="mb-1 text-muted small">Despachado desde sucursal: ${sucursalCercana}</p>
                     <small>Productos: ${compra.items.map(item => `${item.nombre} (${item.cantidad})`).join(', ')}</small>
+                    ${detallesBoleta}
                     <div class="mt-2">
                         <button type="button" class="btn btn-sm ${claseBoton} boton-seguimiento"
                             data-bs-toggle="modal" data-bs-target="#modalSeguimiento"
-                            data-tipo-entrega="${tipoEntrega}" data-info="${valorDataInfo}" data-sucursal-origen="${sucursalCercana}">
+                            data-tipo-entrega="${tipoEntrega}" data-info="${valorDataInfo}" data-sucursal-origen="${sucursalCercana}"
+                            data-estado="${estadoActual}">
                             ${textoBoton}
                         </button>
                     </div>
                 `;
-            } else {
+            } else { 
                 textoInfoEntrega = `Sucursal: ${compra.sucursal || 'Sin sucursal'}`;
                 valorDataInfo = compra.sucursal || 'Sin sucursal';
                 textoBoton = 'Ver Ubicación';
                 claseBoton = 'btn-success';
+                
+                const estadoRetiro = estadoActual;
+                const claseRetiro = estadoRetiro === 'Retirado' ? 'bg-secondary' : 'bg-primary';
 
                 itemCompra.innerHTML = `
                     <div class="d-flex w-100 justify-content-between">
@@ -154,8 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <p class="mb-1">Tipo de Entrega: <strong class="text-capitalize">${tipoEntrega}</strong></p>
                     <p class="mb-1">${textoInfoEntrega}</p>
-                    <p class="mb-1">Estado: <span class="badge bg-primary">Listo para Retirar</span></p>
+                    <p class="mb-1">Estado: <span class="badge ${claseRetiro}">${estadoRetiro}</span></p>
                     <small>Productos: ${compra.items.map(item => `${item.nombre} (${item.cantidad})`).join(', ')}</small>
+                    ${detallesBoleta}
                     <div class="mt-2">
                         <button type="button" class="btn btn-sm ${claseBoton} boton-seguimiento"
                             data-bs-toggle="modal" data-bs-target="#modalSeguimiento"
@@ -177,50 +234,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const tituloModal = document.getElementById('tituloModalSeguimiento');
         const cuerpoModal = document.getElementById('cuerpoModalSeguimiento');
         let contenido = '';
+        const sucursalKeys = Object.keys(sucursales);
+        const sucursalRandom = sucursalKeys[Math.floor(Math.random() * sucursalKeys.length)];
+        const datosSucursalRandom = sucursales[sucursalRandom];
 
         if (tipoEntrega.toLowerCase() === 'retiro en sucursal') {
             const datosSucursal = sucursales[info];
             tituloModal.textContent = 'Detalles de la Sucursal';
             if (datosSucursal) {
-                contenido = `<p><strong>Sucursal:</strong> ${info}</p><p><strong>Dirección:</strong> ${datosSucursal.direccion}</p><p><strong>Estado:</strong> <span class="badge bg-primary">Listo para Retirar</span></p><div id="mapa-sucursal" style="height: 300px; width: 100%;"></div>`;
+                const urlOpenStreetMap = `https://www.openstreetmap.org/export/embed.html?bbox=${datosSucursal.lng - 0.01},${datosSucursal.lat - 0.005},${datosSucursal.lng + 0.01},${datosSucursal.lat + 0.005}&marker=${datosSucursal.lat},${datosSucursal.lng}&zoom=15`;
+                contenido = `<p><strong>Sucursal:</strong> ${info}</p><p><strong>Dirección:</strong> ${datosSucursal.direccion}</p><p><strong>Estado:</strong> <span class="badge bg-primary">Listo para Retirar</span></p><iframe width="100%" height="300" frameborder="0" style="border:0" src="${urlOpenStreetMap}" allowfullscreen></iframe>`;
             } else {
                 contenido = `<p><strong>Sucursal:</strong> ${info}</p><p>Dirección no disponible. Contacte a soporte.</p>`;
             }
         } else if (tipoEntrega.toLowerCase() === 'domicilio') {
             const sucursalOrigen = boton.getAttribute('data-sucursal-origen');
+            const estadoPedido = boton.getAttribute('data-estado');
+            const fechaEntregaPreferida = diasEntrega[Math.floor(Math.random() * diasEntrega.length)];
             tituloModal.textContent = 'Seguimiento del Pedido';
-            contenido = `<p>Tu pedido será enviado a la dirección: <strong>${info}</strong>.</p><p><strong>Estado:</strong> <span class="badge bg-success">En Reparto</span></p><p><strong>Origen:</strong> Sucursal ${sucursalOrigen}</p><p><strong>Tiempo estimado de llegada:</strong> 1-2 días hábiles</p><div id="mapa-seguimiento" style="height: 300px; width: 100%; margin-top: 1rem;"></div>`;
+
+            let mapaHtml = '';
+            if (estadoPedido === 'En camino') {
+                const urlOpenStreetMap = `https://www.openstreetmap.org/export/embed.html?bbox=${datosSucursalRandom.lng - 0.01},${datosSucursalRandom.lat - 0.005},${datosSucursalRandom.lng + 0.01},${datosSucursalRandom.lat + 0.005}&marker=${datosSucursalRandom.lat},${datosSucursalRandom.lng}&zoom=15`;
+                mapaHtml = `<iframe width="100%" height="300" frameborder="0" style="border:0" src="${urlOpenStreetMap}" allowfullscreen></iframe>`;
+            } else {
+                mapaHtml = `<p class="text-center text-muted">El mapa de seguimiento estará disponible una vez que el pedido esté 'En camino'.</p>`;
+            }
+
+            contenido = `
+                <p>Tu pedido será enviado a la dirección: <strong>${info}</strong>.</p>
+                <p><strong>Estado:</strong> <span class="badge ${estadoPedido === 'Entregado' ? 'bg-success' : 'bg-info text-dark'}">${estadoPedido}</span></p>
+                <p><strong>Origen:</strong> Sucursal ${sucursalOrigen}</p>
+                <p><strong>Fecha de entrega preferida:</strong> ${fechaEntregaPreferida}</p>
+                <p><strong>Tiempo estimado:</strong> ${estadoPedido === 'Entregado' ? '¡Pedido entregado!' : '1-2 días hábiles'}</p>
+                ${mapaHtml}
+            `;
+
         } else {
             tituloModal.textContent = 'Información del Pedido';
             contenido = `<p>No se encontró información detallada para este pedido.</p>`;
         }
 
         cuerpoModal.innerHTML = contenido;
-
-        if (tipoEntrega.toLowerCase() === 'retiro en sucursal' && sucursales[info]) {
-            const datosSucursal = sucursales[info];
-            const opcionesMapa = { center: { lat: datosSucursal.lat, lng: datosSucursal.lng }, zoom: 15 };
-            const mapa = new google.maps.Map(document.getElementById('mapa-sucursal'), opcionesMapa);
-            new google.maps.marker.AdvancedMarkerElement({ position: { lat: datosSucursal.lat, lng: datosSucursal.lng }, map: mapa, title: info });
-        }
-        if (tipoEntrega.toLowerCase() === 'domicilio') {
-            const geocodificador = new google.maps.Geocoder();
-            const sucursalOrigen = boton.getAttribute('data-sucursal-origen');
-            const coordsSucursal = sucursales[sucursalOrigen];
-            if (coordsSucursal) {
-                geocodificador.geocode({ 'address': info + ', Chile' }, (resultados, estado) => {
-                    if (estado === 'OK') {
-                        const ubicacionUsuario = resultados[0].geometry.location;
-                        const opcionesMapa = { center: ubicacionUsuario, zoom: 12 };
-                        const mapa = new google.maps.Map(document.getElementById('mapa-seguimiento'), opcionesMapa);
-                        new google.maps.marker.AdvancedMarkerElement({ position: ubicacionUsuario, map: mapa, title: 'Tu Dirección' });
-                        new google.maps.marker.AdvancedMarkerElement({ position: coordsSucursal, map: mapa, title: 'Sucursal de Origen' });
-                    } else {
-                        console.error('La geocodificación no tuvo éxito por el siguiente motivo: ' + estado);
-                    }
-                });
-            }
-        }
     });
 
     formularioPerfil.addEventListener('submit', (e) => {
@@ -300,43 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
-    const inputDireccion = document.getElementById('calleDireccion');
-    const inputCiudad = document.getElementById('ciudadDireccion');
-    const inputRegion = document.getElementById('regionDireccion');
-
-    if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-        const autocompletar = new google.maps.places.Autocomplete(inputDireccion, {
-            types: ['address'],
-            componentRestrictions: { 'country': 'cl' }
-        });
-        autocompletar.addListener('place_changed', () => {
-            const lugar = autocompletar.getPlace();
-            if (!lugar.geometry) return;
-            inputDireccion.value = '';
-            inputCiudad.value = '';
-            inputRegion.value = '';
-            for (const componente of lugar.address_components) {
-                const tipoComponente = componente.types[0];
-                switch (tipoComponente) {
-                    case 'street_number':
-                        inputDireccion.value = `${componente.long_name} `;
-                        break;
-                    case 'route':
-                        inputDireccion.value += componente.long_name;
-                        break;
-                    case 'locality':
-                        inputCiudad.value = componente.long_name;
-                        break;
-                    case 'administrative_area_level_1':
-                        inputRegion.value = componente.long_name;
-                        break;
-                }
-            }
-        });
-    } else {
-        console.error("API de Google Maps Places no se ha cargado correctamente.");
-    }
 
     cargarDatosUsuario();
     renderizarDirecciones();

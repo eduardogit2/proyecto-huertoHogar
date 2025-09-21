@@ -86,14 +86,18 @@
                         </div>
                         <div class="mb-3">
                             <label for="apellidosUsuarioEditar" class="form-label">Apellidos</label>
-                            <input type="text" class="form-control" id="apellidosUsuarioEditar" required
-                                maxlength="100">
+                            <input type="text" class="form-control" id="apellidosUsuarioEditar" maxlength="100">
                             <div class="text-danger mensaje-error" id="error-apellidos-editar"></div>
                         </div>
                         <div class="mb-3">
                             <label for="correoUsuarioEditar" class="form-label">Correo Electrónico</label>
                             <input type="email" class="form-control" id="correoUsuarioEditar" required readonly>
                             <div class="text-danger mensaje-error" id="error-correo-editar"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contrasenaUsuarioEditar" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="contrasenaUsuarioEditar" minlength="4">
+                            <div class="text-danger mensaje-error" id="error-contrasena-editar"></div>
                         </div>
                         <div class="mb-3">
                             <label for="tipoUsuarioEditar" class="form-label">Tipo de Usuario</label>

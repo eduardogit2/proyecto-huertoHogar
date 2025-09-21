@@ -144,30 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderizarPublicaciones();
     }
 
-
-    function validarRut(rut) {
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-        let partes = rut.split('-');
-        let digitoVerificador = partes[1];
-        let rutSinDigito = partes[0];
-        if (digitoVerificador === 'K') digitoVerificador = 'k';
-        let suma = 0;
-        let factor = 2;
-        for (let i = rutSinDigito.length - 1; i >= 0; i--) {
-            suma += parseInt(rutSinDigito.charAt(i)) * factor;
-            factor = (factor === 7) ? 2 : factor + 1;
-        }
-        let dvCalculado = 11 - (suma % 11);
-        if (dvCalculado === 11) dvCalculado = '0';
-        if (dvCalculado === 10) dvCalculado = 'k';
-        return dvCalculado.toString() === digitoVerificador;
-    }
-
-    function validarCorreo(correo) {
-        const expresionRegular = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
-        return expresionRegular.test(correo);
-    }
-
     const cuerpoTablaProductos = document.getElementById('cuerpoTablaProductos');
     const mensajeSinProductos = document.getElementById('mensajeSinProductos');
     const elementoModalEditarProducto = document.getElementById('modalEditarProducto');
@@ -196,6 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const precioMostrar = precioFinal === 0 ? 'Gratis' : `$${(precioFinal || 0).toLocaleString('es-CL')}`;
                         const alertaStockCritico = (producto.stockCritico !== null && producto.stock <= producto.stockCritico) ? '<span class="badge bg-danger ms-2">Stock Crítico</span>' : '';
 
+                        const descuento = producto.precioConDescuento !== undefined ? Math.round(((producto.precio - producto.precioConDescuento) / producto.precio) * 100) : 0;
+                        const textoDescuento = descuento > 0 ? ` (${descuento}% de dcto.)` : '';
+                        
+                        const etiqueta = producto.precioConDescuento !== undefined ? 'Oferta' : 'Normal';
+                        
                         fila.innerHTML = `
                             <td>${producto.id || ''}</td>
                             <td>${producto.nombre}</td>
@@ -204,8 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <td>${producto.categoria || 'N/A'}</td>
                             <td>${producto.origen || 'N/A'}</td>
                             <td>
-                                <span class="badge ${producto.etiqueta === 'Oferta' ? 'bg-warning' : 'bg-success'}">
-                                    ${producto.etiqueta || 'Normal'}
+                                <span class="badge ${etiqueta === 'Oferta' ? 'bg-warning' : 'bg-success'}">
+                                    ${etiqueta} ${textoDescuento}
                                 </span>
                             </td>
                             <td>
@@ -237,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const productos = JSON.parse(localStorage.getItem('productos')) || [];
                     const productoAEditar = productos.find(p => p.id === idProducto);
                     if (productoAEditar) {
-                        const descuento = productoAEditar.precioConDescuento ?
+                        const descuento = productoAEditar.precioConDescuento !== undefined ?
                             Math.round(((productoAEditar.precio - productoAEditar.precioConDescuento) / productoAEditar.precio) * 100) : 0;
 
                         document.getElementById('idProductoEditar').value = productoAEditar.id;
@@ -250,8 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('descuentoProductoEditar').value = descuento;
                         document.getElementById('origenProductoEditar').value = productoAEditar.origen || '';
                         document.getElementById('unidadProductoEditar').value = productoAEditar.unidad || '';
-                        document.getElementById('etiquetaProductoEditar').value = productoAEditar.etiqueta || '';
-
+                        
                         const selectorCategoria = document.getElementById('categoriaProductoEditar');
                         const categorias = obtenerCategoriasUnicas();
                         selectorCategoria.innerHTML = '<option value="" selected disabled>Selecciona una categoría</option>';
@@ -284,6 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const precio = parseFloat(document.getElementById('precioProductoEditar').value);
                     const descuento = parseInt(document.getElementById('descuentoProductoEditar').value, 10);
                     const stockCritico = document.getElementById('stockCriticoProductoEditar').value.trim();
+                    
+                    const precioConDescuento = descuento > 0 ? precio * (1 - descuento / 100) : undefined;
+                    const etiqueta = descuento > 0 ? 'Oferta' : 'Normal';
 
                     productos[indiceProducto] = {
                         ...productos[indiceProducto],
@@ -296,8 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         categoria: document.getElementById('categoriaProductoEditar').value,
                         origen: document.getElementById('origenProductoEditar').value.trim(),
                         unidad: document.getElementById('unidadProductoEditar').value.trim(),
-                        etiqueta: document.getElementById('etiquetaProductoEditar').value.trim(),
-                        precioConDescuento: descuento > 0 ? precio * (1 - descuento / 100) : undefined
+                        etiqueta: etiqueta,
+                        precioConDescuento: precioConDescuento
                     };
                     localStorage.setItem('productos', JSON.stringify(productos));
                     renderizarProductosAdmin();
@@ -308,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderizarProductosAdmin();
     }
-
 
     const cuerpoTablaUsuarios = document.getElementById('cuerpoTablaUsuarios');
     const mensajeSinUsuarios = document.getElementById('mensajeSinUsuarios');
@@ -369,6 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('nombreUsuarioEditar').value = usuarioAEditar.nombre;
                         document.getElementById('apellidosUsuarioEditar').value = usuarioAEditar.apellidos || '';
                         document.getElementById('correoUsuarioEditar').value = usuarioAEditar.correo;
+                        
+                        document.getElementById('contrasenaUsuarioEditar').value = '';
 
                         let rolUsuario = 'cliente';
                         if (usuarioAEditar.esAdmin) rolUsuario = 'administrador';
@@ -387,12 +371,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (formularioEditarUsuario) {
             formularioEditarUsuario.addEventListener('submit', (evento) => {
                 evento.preventDefault();
-                const correo = document.getElementById('idCorreoUsuario').value;
+                
+                let esValido = true;
                 const run = document.getElementById('runUsuarioEditar').value.trim().toUpperCase();
                 const nombre = document.getElementById('nombreUsuarioEditar').value.trim();
                 const apellidos = document.getElementById('apellidosUsuarioEditar').value.trim();
-                const tipoUsuario = document.getElementById('tipoUsuarioEditar').value;
+                const contrasena = document.getElementById('contrasenaUsuarioEditar').value.trim();
+                
+                document.getElementById('error-run-editar').textContent = '';
+                document.getElementById('error-nombre-editar').textContent = '';
+                document.getElementById('error-apellidos-editar').textContent = '';
+                document.getElementById('error-contrasena-editar').textContent = '';
 
+                if (!validarRut(run)) {
+                    document.getElementById('error-run-editar').textContent = 'El RUN ingresado no es válido.';
+                    esValido = false;
+                }
+                
+                if (nombre.length === 0 || nombre.length > 50) {
+                    document.getElementById('error-nombre-editar').textContent = 'El nombre es requerido (máximo 50 caracteres).';
+                    esValido = false;
+                }
+                
+                if (apellidos.length === 0 || apellidos.length > 100) {
+                    document.getElementById('error-apellidos-editar').textContent = 'Los apellidos son requeridos (máximo 100 caracteres).';
+                    esValido = false;
+                }
+                
+                if (contrasena.length > 0 && contrasena.length < 4) {
+                    document.getElementById('error-contrasena-editar').textContent = 'La contraseña debe tener al menos 4 caracteres.';
+                    esValido = false;
+                }
+
+                if (!esValido) {
+                    return;
+                }
+
+                const correo = document.getElementById('idCorreoUsuario').value;
+                const tipoUsuario = document.getElementById('tipoUsuarioEditar').value;
+                
                 let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
                 const indiceUsuario = usuarios.findIndex(u => u.correo === correo);
 
@@ -402,6 +419,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     usuarios[indiceUsuario].apellidos = apellidos;
                     usuarios[indiceUsuario].esAdmin = tipoUsuario === 'administrador';
                     usuarios[indiceUsuario].esVendedor = tipoUsuario === 'vendedor';
+                    
+                    if (contrasena !== '') {
+                        usuarios[indiceUsuario].contrasena = contrasena;
+                    }
 
                     localStorage.setItem('usuarios', JSON.stringify(usuarios));
                     renderizarUsuariosAdmin();
@@ -410,7 +431,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-
         renderizarUsuariosAdmin();
+    }
+    
+    function validarRut(rut) {
+        if (!/^[0-9]+-?[0-9kK]{1}$/.test(rut)) return false;
+        
+        let rutFormateado = rut.replace(/-/g, '').toUpperCase();
+        let cuerpo = rutFormateado.slice(0, -1);
+        let digitoVerificador = rutFormateado.slice(-1);
+
+        if (cuerpo.length < 7) return false;
+
+        let suma = 0;
+        let factor = 2;
+        for (let i = cuerpo.length - 1; i >= 0; i--) {
+            suma += parseInt(cuerpo.charAt(i)) * factor;
+            factor = (factor === 7) ? 2 : factor + 1;
+        }
+        
+        let dvCalculado = 11 - (suma % 11);
+        dvCalculado = (dvCalculado === 11) ? '0' : ((dvCalculado === 10) ? 'K' : dvCalculado.toString());
+
+        return dvCalculado === digitoVerificador;
+    }
+
+    function validarCorreo(correo) {
+        const expresionRegular = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
+        return expresionRegular.test(correo);
     }
 });

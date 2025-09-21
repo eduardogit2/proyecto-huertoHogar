@@ -5,9 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         let partes = rut.split('-');
-        let digitoVerificador = partes[1];
+        let digitoVerificador = partes[1].toLowerCase();
         let rutSinDigito = partes[0];
-        if (digitoVerificador === 'K') digitoVerificador = 'k';
 
         let suma = 0;
         let factor = 2;
@@ -25,6 +24,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const expresionRegular = /@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
         return expresionRegular.test(correo);
     }
+    
+    function generarRutEmpresa() {
+        const numero = Math.floor(Math.random() * (220000000 - 50000000 + 1)) + 50000000;
+        const rutSinDigito = numero.toString();
+        
+        let suma = 0;
+        let factor = 2;
+        for (let i = rutSinDigito.length - 1; i >= 0; i--) {
+            suma += parseInt(rutSinDigito.charAt(i)) * factor;
+            factor = (factor === 7) ? 2 : factor + 1;
+        }
+        let dvCalculado = 11 - (suma % 11);
+        let digitoVerificador = '';
+
+        if (dvCalculado === 11) {
+            digitoVerificador = '0';
+        } else if (dvCalculado === 10) {
+            digitoVerificador = 'K';
+        } else {
+            digitoVerificador = dvCalculado.toString();
+        }
+        
+        return `${rutSinDigito}-${digitoVerificador}`;
+    }
 
     function obtenerUsuariosEInicializarAdmin() {
         let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
@@ -34,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nuevoAdmin = {
                 id: usuarios.length > 0 ? Math.max(...usuarios.map(u => u.id)) + 1 : 1,
                 nombre: 'Admin',
+                rut: generarRutEmpresa(), 
                 correo: 'admin@huertohogar.cl',
                 contrasena: 'admin',
                 esAdmin: true

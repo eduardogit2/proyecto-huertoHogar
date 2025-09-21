@@ -483,6 +483,9 @@ if (campoBusqueda) {
 }
 
 function formatearPrecio(n) {
+    if (n === 0) {
+        return "Gratis";
+    }
     return n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
 }
 

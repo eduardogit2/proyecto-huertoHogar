@@ -14,8 +14,6 @@
 </head>
 
 <body>
-    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_AQUI&libraries=places,geocoding" async
-        defer></script>
     <nav class="navbar navbar-expand-lg shadow-sm barra-navegacion">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
@@ -47,6 +45,10 @@
             <div class="col-md-9">
                 <div class="card shadow-lg p-4">
                     <h2 class="card-title text-center mb-4" style="color: var(--color-primario);">Mi Perfil</h2>
+                    <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
+                        <i class="bi bi-star-fill"></i>
+                        <span id="puntos-fidelizacion">Puntos de fidelización: 0</span>
+                    </div>
                     <ul class="nav nav-tabs" id="pestanasPerfil" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="pestana-perfil" data-bs-toggle="tab"
@@ -142,5 +144,4 @@
     <script src="js/perfil.js"></script>
     <script src="js/autenticacion.js"></script>
 </body>
-
 </html>

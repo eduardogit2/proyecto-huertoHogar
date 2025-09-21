@@ -1,4 +1,3 @@
-// Las funciones de inicio y manejo de datos se mantienen igual, ya que no necesitan cambios.
 function obtenerPublicacionesDeAlmacenamiento() {
     let publicaciones = JSON.parse(localStorage.getItem('publicacionesBlog'));
     if (!publicaciones || publicaciones.length === 0) {
@@ -117,7 +116,6 @@ function obtenerPublicacionesDeAlmacenamiento() {
     return publicaciones;
 }
 
-// Variables globales se mantienen igual
 let publicacionesBlog = obtenerPublicacionesDeAlmacenamiento();
 const descripcionesCategorias = {
     "Todos": "Explora todos los artículos de nuestro blog, desde recetas saludables hasta consejos de sostenibilidad, pensados para ti y para el planeta.",

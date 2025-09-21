@@ -19,13 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const camposNuevaDireccion = document.getElementById('camposNuevaDireccion');
     const checkboxGuardarDireccion = document.getElementById('checkboxGuardarDireccion');
 
+    const seccionPuntos = document.getElementById('seccionPuntos');
+    const usarPuntosCheckbox = document.getElementById('usarPuntosCheckbox');
+    const puntosDisponiblesSpan = document.getElementById('puntosDisponibles');
+
     const inputCalle = document.getElementById('calleDireccion');
     const inputCiudad = document.getElementById('ciudadDireccion');
     const inputRegion = document.getElementById('regionDireccion');
-
     if (!usuarioActual.direcciones) {
         usuarioActual.direcciones = [];
     }
+    usuarioActual.puntos = usuarioActual.puntos || 0;
 
     function formatearPrecio(numero) {
         return numero.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
@@ -51,43 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-        const autocompletar = new google.maps.places.Autocomplete(inputCalle, {
-            types: ['address'],
-            componentRestrictions: { 'country': 'cl' }
-        });
-        autocompletar.addListener('place_changed', () => {
-            const lugar = autocompletar.getPlace();
-            if (!lugar.geometry) return;
-
-            inputCalle.value = '';
-            inputCiudad.value = '';
-            inputRegion.value = '';
-
-            for (const componente of lugar.address_components) {
-                const tipoComponente = componente.types[0];
-                switch (tipoComponente) {
-                    case 'street_number':
-                        inputCalle.value = `${componente.long_name} `;
-                        break;
-                    case 'route':
-                        inputCalle.value += componente.long_name;
-                        break;
-                    case 'locality':
-                        inputCiudad.value = componente.long_name;
-                        break;
-                    case 'administrative_area_level_1':
-                        inputRegion.value = componente.long_name;
-                        break;
-                }
-            }
-        });
-    } else {
-        console.error("API de Google Maps Places no se ha cargado correctamente.");
-    }
-
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     let total = 0;
+
     if (carrito.length === 0) {
         mensajeSinProductos.style.display = 'block';
         botonFinalizar.style.display = 'none';
@@ -99,11 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         total += item.precio * item.cantidad;
         const divItem = document.createElement('div');
         divItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
-
         const unidadPlural = item.cantidad > 1 && ['bolsa', 'litro', 'frasco', 'kg'].includes(item.unidad)
             ? item.unidad + 's'
             : item.unidad;
-
         divItem.innerHTML = `
             <div>
                 <strong>${item.nombre}</strong>
@@ -113,6 +81,21 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         resumenCompra.appendChild(divItem);
     });
+
+    if (usuarioActual.puntos > 0) {
+        seccionPuntos.style.display = 'block';
+        puntosDisponiblesSpan.textContent = `Tienes ${usuarioActual.puntos} puntos.`;
+    }
+
+    function actualizarTotal() {
+        let totalActual = total;
+        if (usarPuntosCheckbox.checked) {
+            totalActual = Math.max(0, totalActual - usuarioActual.puntos);
+        }
+        elementoTotalFinal.textContent = formatearPrecio(totalActual);
+    }
+
+    usarPuntosCheckbox.addEventListener('change', actualizarTotal);
 
     elementoTotalFinal.textContent = formatearPrecio(total);
 
@@ -130,17 +113,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Función para mostrar el modal de la boleta
+    function mostrarBoleta(detallesCompra) {
+        // Llenar el modal con los datos
+        document.getElementById('boletaId').textContent = detallesCompra.id;
+        document.getElementById('boletaFecha').textContent = new Date(detallesCompra.fecha).toLocaleString();
+
+        const boletaProductos = document.getElementById('boletaProductos');
+        boletaProductos.innerHTML = '';
+        detallesCompra.items.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.nombre} (${item.cantidad} ${item.unidad}) - ${formatearPrecio(item.precio * item.cantidad)}`;
+            boletaProductos.appendChild(li);
+        });
+
+        document.getElementById('boletaTotalOriginal').textContent = formatearPrecio(detallesCompra.totalOriginal);
+        document.getElementById('boletaPuntosUsados').textContent = `-${detallesCompra.puntosUsados || 0}`;
+        document.getElementById('boletaTotalFinal').textContent = formatearPrecio(detallesCompra.totalFinal);
+        document.getElementById('boletaPuntosGanados').textContent = detallesCompra.puntosGanados;
+        document.getElementById('boletaSaldoFinal').textContent = usuarioActual.puntos;
+
+        // Mostrar el modal
+        const myModal = new bootstrap.Modal(document.getElementById('modalBoleta'));
+        myModal.show();
+    }
+
+    // Función para descargar la boleta
+    function descargarBoleta(detallesCompra) {
+        const contenido = `
+Boleta de Compra HuertoHogar
+----------------------------
+Pedido: #${detallesCompra.id}
+Fecha: ${new Date(detallesCompra.fecha).toLocaleString()}
+----------------------------
+Productos:
+${detallesCompra.items.map(item => `  - ${item.nombre} x ${item.cantidad} ${item.unidad} - ${formatearPrecio(item.precio * item.cantidad)}`).join('\n')}
+----------------------------
+Detalle:
+Total original: ${formatearPrecio(detallesCompra.totalOriginal)}
+Puntos usados: -${detallesCompra.puntosUsados || 0}
+Total final: ${formatearPrecio(detallesCompra.totalFinal)}
+----------------------------
+Puntos ganados en esta compra: ${detallesCompra.puntosGanados}
+Nuevo saldo de puntos: ${usuarioActual.puntos}
+----------------------------
+Gracias por su compra.
+`;
+        const blob = new Blob([contenido], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Boleta_Pedido_${detallesCompra.id}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Evento del botón de finalizar compra
     botonFinalizar.addEventListener('click', () => {
         const metodoSeleccionado = selectorMetodoEntrega.value;
-        let detallesCompra = {
-            id: Date.now(),
-            fecha: new Date().toISOString(),
-            items: carrito,
-            total: total
-        };
-
         let esValido = true;
         let mensajeAlerta = '';
+        let detallesCompra = {};
 
         if (!metodoSeleccionado) {
             esValido = false;
@@ -151,8 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 esValido = false;
                 mensajeAlerta = 'Por favor, selecciona una sucursal para el retiro.';
             } else {
-                detallesCompra.tipoEntrega = 'retiro en sucursal';
-                detallesCompra.sucursal = sucursalSeleccionada;
+                detallesCompra = { tipoEntrega: 'retiro en sucursal', sucursal: sucursalSeleccionada };
             }
         } else if (metodoSeleccionado === 'domicilio') {
             const opcionSeleccionada = selectorDireccion.value;
@@ -182,8 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (esValido) {
-                detallesCompra.tipoEntrega = 'domicilio';
-                detallesCompra.direccion = direccionSeleccionada;
+                detallesCompra = { tipoEntrega: 'domicilio', direccion: direccionSeleccionada };
             }
         }
 
@@ -191,6 +224,31 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(mensajeAlerta);
             return;
         }
+
+        let totalCompra = total;
+        let puntosGanados = 0;
+        let puntosUsados = 0;
+
+        if (usarPuntosCheckbox.checked && usuarioActual.puntos > 0) {
+            puntosUsados = usuarioActual.puntos;
+            totalCompra = Math.max(0, totalCompra - puntosUsados);
+            usuarioActual.puntos = 0;
+        }
+
+        puntosGanados = Math.floor(totalCompra / 1000);
+        usuarioActual.puntos += puntosGanados;
+
+        detallesCompra = {
+            ...detallesCompra,
+            id: Date.now(),
+            fecha: new Date().toISOString(),
+            items: carrito,
+            totalOriginal: total,
+            totalFinal: totalCompra,
+            puntosUsados: puntosUsados,
+            puntosGanados: puntosGanados,
+            estado: 'En preparación'
+        };
 
         if (!usuarioActual.historial) {
             usuarioActual.historial = [];
@@ -206,7 +264,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         localStorage.removeItem('carrito');
-        alert('¡Compra finalizada con éxito! Gracias por tu pedido.');
-        window.location.href = 'index.html';
+
+        // Llama a la función para mostrar el modal de la boleta
+        mostrarBoleta(detallesCompra);
+
+        // Agrega un listener al botón de descarga dentro del evento de click de finalizar compra
+        document.getElementById('btnDescargarBoleta').addEventListener('click', () => {
+            descargarBoleta(detallesCompra);
+        });
+
+        // Redirecciona al usuario cuando el modal se cierra
+        const modalBoletaElement = document.getElementById('modalBoleta');
+        modalBoletaElement.addEventListener('hidden.bs.modal', () => {
+            window.location.href = 'index.html';
+        }, { once: true });
     });
+
+    renderizarOpcionesDireccion();
+    actualizarTotal();
 });
